@@ -157,29 +157,14 @@
 <script>
 import api from '@/api/customer.js';
 import util from '@/utils/index.js';
+// 认购信息表
 const defForm = {
 	id: null, //[up *]
-	mobile: '', //* 联系方式
-	name: '', //* 姓名
-	comingTime: '', //*来访日期
-	address: '', //居住地址
-	age: null, //年龄
-	sex: 0, //性别
-	acreageRequirement: '', //面积需求
-	focusPoint: '', //关注点
-	homeStructure: '', //家庭结构
-	oldCusomterId: null, //老客户Id（客户来源是 老客户介绍时）
-	// payWay: '', //付款方式
-	productRequirement: '', //产品需求
-	profession: '', //职业类型
-	purpose: '', // 客户意向
-	purposeFloor: '', //意向楼层
-	purposePrice: '', //意向价格
-	resistPoint: '', //抗拒点
-	sourceWay: null, //客户来源
-	// status: 0, //客户状态（0-来电，1-认筹，2签约，3购买）
-	remark: '' //备注
-	// userId: 0 //置业顾问Id
+	customerId:null,//客户ID
+	offerAmount:null,//认购总价
+	prePrice: '', //* 定金
+	acreagePrice: '', //*建面单价
+	houseId: '', //* 房屋Id
 };
 export default {
 	data() {

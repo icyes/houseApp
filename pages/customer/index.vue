@@ -1,3 +1,4 @@
+<!-- 访客登记 -->
 <template>
 	<view class="flex-full">
 		<!-- header 头 -->
@@ -8,9 +9,6 @@
 				<view class="action"><view class="cu-load load-cuIcon" :class="!isLoad ? 'loading' : 'over'"></view></view>
 			</block>
 		</cu-custom>
-		<!-- 抽屉弹窗 -->
-		<scroll-view scroll-y :scroll-x="false" style="overflow-x: hidden;" :scroll-with-animation="!modalName?true:false" :scroll-top="scrollTop" @scrolltolower="scrolltolower" class="DrawerPage" :class="drawerShow ? 'show' : ''">
-			<cu-custom />
 			<!-- 列表头部  -->
 			<list-bar text="客户列表" @showModal="v => (modalName = v)" />
 			<!-- 暂无数据 -->
@@ -171,10 +169,6 @@
 								</view> -->
 				</view>
 			</cu-modal>
-		</scroll-view>
-		<!-- window -->
-		<view class="DrawerClose" :class="drawerShow ? 'show' : ''" @tap="drawerShow = false"><text class="cuIcon-pullright"></text></view>
-		<scroll-view scroll-y class="DrawerWindow" :class="drawerShow ? 'show' : ''"><slot name="window"></slot></scroll-view>
 	</view>
 </template>
 
@@ -184,26 +178,25 @@ import util from '@/utils/index.js';
 import {customerSource,gender} from "@/utils/common/data.js"
 const defForm = {
 	id: null, //[up *]
-	mobile: '', //* 联系方式
 	name: '', //* 姓名
-	comingTime: '', //*来访日期
-	address: '', //居住地址
-	age: null, //年龄
 	sex: 0, //性别
-	acreageRequirement: '', //面积需求
-	focusPoint: '', //关注点
-	homeStructure: '', //家庭结构
-	oldCusomterId: null, //老客户Id（客户来源是 老客户介绍时）
-	// payWay: '', //付款方式
-	productRequirement: '', //产品需求
+	mobile: '', //* 联系方式
+	comingTime: '', //*来访日期
+	age: null, //年龄
+	address: '', //居住地址
 	profession: '', //职业类型
-	purpose: '', // 客户意向
+	homeStructure: '', //家庭结构
+	sourceWay: null, //客户来源
+	buy_motive:null, //置业动机
+	productRequirement: '', //产品需求
+	acreageRequirement: '', //面积需求
 	purposeFloor: '', //意向楼层
 	purposePrice: '', //意向价格
+	purpose: '', // 客户意向
+	payWay: '', //付款方式
+	focusPoint: '', //关注点
 	resistPoint: '', //抗拒点
-	sourceWay: null, //客户来源
-	// status: 0, //客户状态（0-来电，1-认筹，2签约，3购买）
-	remark: '' //备注
+	remark: '' ,//备注
 	// userId: 0 // 置业顾问Id
 };
 export default {
@@ -213,6 +206,7 @@ export default {
 		});
 
 		return {
+			projectId:null,//项目id
 			// 页面抽屉显示判断
 			drawerShow: false,
 			// 滚动窗口位置
@@ -237,7 +231,9 @@ export default {
 		};
 	},
 
-	onLoad() {
+	onLoad(option) {
+		console.log(option);
+		this.projectId = option.id;
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -260,7 +256,25 @@ export default {
 			uni.stopPullDownRefresh();
 		}, 1000);
 	},
-
+		// 上拉触底
+		onReachBottom() {
+			console.log("bottom---")
+			if (this.isLastPage) return;
+			++this.pageNum;
+			this.getList();
+		},
+		
+		// 滚动
+		onPageScroll(res) {
+			// console.log(res);
+			let {scrollTop}=res
+			this.scrollTop = scrollTop;
+			if (!this.backTop && scrollTop > 200) {
+				this.backTop = true;
+			} else if (this.backTop && scrollTop < 200) {
+				this.backTop = false;
+			}
+		},
 	computed: {
 		isEmpty(){
 			return this.list && this.list.length == 0
@@ -279,24 +293,7 @@ export default {
 		}
 	},
 	methods: {
-		// 上拉触底
-		scrolltolower() {
-			console.log("bottom---")
-			if (this.isLastPage) return;
-			++this.pageNum;
-			this.getList();
-		},	
-		// 滚动
-		pageScroll(event) {
-			// console.log(res);
-			let {scrollLeft, scrollTop, scrollHeight, scrollWidth, deltaX, deltaY}=event.detail
-			this.scrollTop = scrollTop;
-			if (!this.backTop && scrollTop > 200) {
-				this.backTop = true;
-			} else if (this.backTop && scrollTop < 200) {
-				this.backTop = false;
-			}
-		},
+
 		// 实时监听滚动
 		scroll: function(e) {
 			this.scrollTop = e.detail.scrollTop;
@@ -323,6 +320,7 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
+				projectId:this.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize

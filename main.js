@@ -11,6 +11,10 @@ import "@/utils/common/func.js"
 import CuCustom from '@/colorui/components/cu-custom.vue'
 Vue.component('cu-custom', CuCustom)
 
+// project
+import project from '@/pages/project/index.vue'
+Vue.component('project', project)
+
 // Home
 import Home from '@/pages/index/home.vue'
 Vue.component('home', Home)

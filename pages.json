@@ -50,6 +50,18 @@
 			"style": {
 				"enablePullDownRefresh": true
 			}
+		},
+		{
+			"path": "pages/project/index", // 项目管理
+			"style": {
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/project/detail", // 项目管理
+			"style": {
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {

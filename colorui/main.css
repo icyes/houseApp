@@ -73,6 +73,20 @@ image {
 .hide {
 	display: none !important;
 }
+
+.ellipsis {
+	overflow: hidden;
+
+	text-overflow: ellipsis;
+
+	display: -webkit-box;
+
+	-webkit-box-orient: vertical;
+
+	-webkit-line-clamp: 2;
+}
+
+
 /* 
 .DrawerPage .sticky-top {
 	top: 0;

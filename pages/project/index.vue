@@ -1,51 +1,10 @@
 <template>
 	<view class="flex-full">
-		<cu-custom bgColor="bg-gradual-blue" isBack="true">
-			<block slot="backText">返回</block>
-			<block slot="content">来电登记管理</block>
-			<block slot="right">
-				<view class="action"><view class="cu-load load-cuIcon" :class="!isLoad ? 'loading' : 'over'"></view></view>
-			</block>
+		<cu-custom bgColor="bg-gradual-blue">
+			<block slot="content">项目管理</block>
 		</cu-custom>
-		<!-- 列表头部 -->
-		<list-bar text="来电登记列表" @showModal="v => (modalName = v)" />
 		<!-- 顶部搜搜弹窗 -->
 		<filtrate-modal v-model="keyWord" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
-		<!-- 添加弹窗 -->
-		<cu-modal :modalName="modalName" text="客户" @submit="submit" @hideModal="hideModal" :isUpdate="isUpdate">
-			<view class="cu-list sm-border menu text-left solid-top">
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">客户</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="选择客户" placeholder-class="text-gray" v-model="form.customerId" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">获取途径</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写获取途径" placeholder-class="text-gray" v-model="form.acquiringWay" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">来电日期</text></view>
-					<view class="action flex-treble">
-						<picker mode="date" :value="form.callTime" :start="startDate" :end="endDate" @change="bindDateChange">
-							<view v-if="form.callTime" class="uni-input">{{ form.callTime }}</view>
-							<view v-else class="text-gray">选择来电日期</view>
-						</picker>
-					</view>
-				</view>
-				
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">询问内容1</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写询问内容1" placeholder-class="text-gray" v-model="form.askContentOne" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">询问内容2</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写询问内容2" placeholder-class="text-gray" v-model="form.askContentTwo" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">备注</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /></view>
-				</view>
-			</view>
-		</cu-modal>
 		<!-- 暂无数据 -->
 		<empty-data :show="list && list.length == 0"></empty-data>
 		<!-- 列表 -->
@@ -53,42 +12,35 @@
 			<view class="cu-list menu-avatar">
 				<view
 					class="cu-item"
-					@tap="link(`./detail?id=${item.id}&indexes=${index}`)"
+					@tap="link(`/pages/project/detail?id=${item.id}&name=${item.projectName}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
 					v-for="(item, index) in list"
 					:key="index"
-					@touchstart="ListTouchStart"
-					@touchmove="ListTouchMove"
-					@touchend="ListTouchEnd"
 					:data-target="'move-box-' + index"
 				>
 					<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
-					<view class="content" style="left:60rpx">
-						<view class="text-grey">{{ item.name }}</view>
+					<view class="flex-sub padding-lr" style="left:60rpx">
+						<view class="text-grey">{{ item.projectName }}</view>
 						<view class="text-gray text-sm">
-							<text class="cuIcon-infofill text-red  margin-right-xs"></text>
-							消息未送达
+							<text class=" text-gray  margin-right-xs">居住地址：</text>
+							{{item.liveAddressConfig}}
+						</view>
+						<view class="text-gray text-sm">
+							<text class=" text-gray  margin-right-xs">工作地址：</text>
+							{{item.workAddressConfig}}
 						</view>
 					</view>
-					<view class="action">
-						<view class="text-grey text-xs">22:20</view>
-						<view class="cu-tag round bg-grey sm">5</view>
-					</view>
-					<view class="move">
-						<view class="bg-cyan" @tap.stop="onEdit(item)">编辑</view>
-						<view class="bg-red" @tap.stop="onCheckDel(item.id)">删除</view>
-					</view>
 				</view>
-				<view class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view>
+				<!-- <view class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view> -->
 			</view>
 			<!-- 回到顶部 -->
-			<back-top :show="backTop" />
+			<!-- <back-top :show="backTop" /> -->
 		</view>
 	</view>
 </template>
 
 <script>
-import api from '@/api/call.js';
+import api from '@/api/project.js';
 import util from '@/utils/index.js';
 const defForm = {
 	  "id": null,  //*
@@ -132,17 +84,11 @@ export default {
 			backTop: false //回到顶部按钮显示状态
 		};
 	},
-	onLoad() {
+	mounted() {
 		this.getList();
-		uni.$on('update', obj => {
-			let { indexes, data } = obj;
-			this.list[indexes] = data;
-		});
 	},
 	onUnload() {
-		uni.$off('update', function(data) {
-			console.log('移除 update 自定义事件');
-		});
+	
 	},
 	onPageScroll(res) {
 		// console.log(res);
@@ -205,21 +151,20 @@ export default {
 		},
 		// 获取列表
 		getList() {
-			this.isLoad = false;
+			// this.isLoad = false;
 			let data = {
-				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
 			};
 			api.list(data).then(res => {
 				console.log('l-', res);
-				this.isLastPage = res.isLastPage;
-				if (this.pageNum == 1) this.list = res.list;
-				else this.list = this.list.concat(res.list);
-
-				setTimeout(() => {
-					this.isLoad = true;
-				}, 500);
+				// this.isLastPage = res.isLastPage;
+				if (this.pageNum == 1) this.list = res;
+				else this.list = this.list.concat(res);
+// 
+// 				setTimeout(() => {
+// 					this.isLoad = true;
+// 				}, 500);
 			});
 		},
 		// 编辑
