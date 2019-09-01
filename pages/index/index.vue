@@ -3,9 +3,9 @@
 		<!-- <basics v-if="PageCur=='basics'"></basics>
 		<components v-if="PageCur=='component'"></components>
 		<plugin v-if="PageCur=='plugin'"></plugin> -->
-		<project v-if="PageCur=='project'"/>
-		<home v-if="PageCur=='home'"/>
-		<view class="cu-bar tabbar bg-white shadow foot">
+		<project />
+		<!-- <home v-if="PageCur=='home'"/> -->
+	<!-- 	<view class="cu-bar tabbar bg-white shadow foot">
 			<view class="action" @click="NavChange" data-cur="project">
 				<view class="cuIcon-cu-image"><image :src="'/static/tabbar/about' + [PageCur == 'project' ? '_cur' : ''] + '.png'"></image></view>
 				<view :class="PageCur == 'project' ? 'text-green' : 'text-gray'">项目管理</view>
@@ -14,7 +14,7 @@
 				<view class="cuIcon-cu-image"><image :src="'/static/tabbar/component' + [PageCur == 'home' ? '_cur' : ''] + '.png'"></image></view>
 				<view :class="PageCur == 'home' ? 'text-green' : 'text-gray'">其它</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 

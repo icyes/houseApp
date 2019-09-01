@@ -48,27 +48,6 @@
 				gridBorder: false,
 				cuIconList: [
 					{
-						cuIcon: 'cardboardfill',
-						color: 'red',
-						badge: 120,
-						name: '客户管理',
-						link: '/pages/customer/index'
-					},
-					{
-						cuIcon: 'recordfill',
-						color: 'orange',
-						badge: 1,
-						name: '来电登记',
-						link: '/pages/call/index'
-					},
-					{
-						cuIcon: 'picfill',
-						color: 'yellow',
-						badge: 0,
-						name: '跟进记录',
-						link: '/pages/follow/index'
-					},
-					{
 						cuIcon: 'noticefill',
 						color: 'olive',
 						badge: 22,

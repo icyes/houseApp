@@ -1,6 +1,6 @@
 <template>
 	<!-- 添加弹窗 -->
-	<view class="cu-modal" :class="modalName == 'formModal' ? 'show' : ''" @tap="$emit('hideModal', null)" @touchmove.stop>
+	<view class="cu-modal" :class="modalName == 'formModal'||show ? 'show' : ''" @tap="$emit('hideModal', null)" @touchmove.stop>
 		<view class="cu-dialog" @tap.stop style="margin-top:100rpx;">
 			<view class="cu-bar bg-white justify-end shadow-lg solid-bottom">
 				<view class="content">{{ isUpdate ? '编辑' : '添加' }}{{ text }}</view>
@@ -33,6 +33,10 @@ export default {
 		modalName: {
 			type: String,
 			default: ''
+		},
+		show:{
+			type:Boolean,
+			default:false,
 		},
 		isUpdate:{
 			type:Boolean,

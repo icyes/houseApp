@@ -44,7 +44,7 @@ export default {
 					cuIcon: 'cardboardfill',
 					color: 'red',
 					badge: 120,
-					name: '客户管理',
+					name: '来访客户',
 					link: '/pages/customer/index'
 				},
 				{

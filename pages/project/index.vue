@@ -1,39 +1,42 @@
 <template>
 	<view class="flex-full">
 		<cu-custom bgColor="bg-gradual-blue">
-			<block slot="content">项目管理</block>
+			<block slot="content">项目列表</block>
 		</cu-custom>
 		<!-- 顶部搜搜弹窗 -->
 		<filtrate-modal v-model="keyWord" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 		<!-- 暂无数据 -->
 		<empty-data :show="list && list.length == 0"></empty-data>
 		<!-- 列表 -->
-		<view :class="list && list.length > 0 ? 'show' : 'hide'">
-			<view class="cu-list menu-avatar">
-				<view
-					class="cu-item"
-					@tap="link(`/pages/project/detail?id=${item.id}&name=${item.projectName}`)"
-					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
-					v-for="(item, index) in list"
-					:key="index"
-					:data-target="'move-box-' + index"
-				>
-					<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
-					<view class="flex-sub padding-lr" style="left:60rpx">
-						<view class="text-grey">{{ item.projectName }}</view>
-						<view class="text-gray text-sm">
-							<text class=" text-gray  margin-right-xs">居住地址：</text>
-							{{item.liveAddressConfig}}
-						</view>
-						<view class="text-gray text-sm">
-							<text class=" text-gray  margin-right-xs">工作地址：</text>
-							{{item.workAddressConfig}}
+		<view  :class="list && list.length > 0 ? 'show' : 'hide'">
+				<view class="cu-card menu-avatar">
+					<view
+						class="cu-item shadow-warp"
+						@tap="link(`/pages/project/detail?id=${item.id}&name=${item.projectName}`)"
+						:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
+						v-for="(item, index) in list"
+						:key="index"
+						:data-target="'move-box-' + index"
+					>
+						<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
+						<view class="flex-sub padding ">
+							<view class="text-grey text-center padding-bottom-sm text-lg">{{ item.projectName }}</view>
+							<view class="flex text-gray text-df text-sm padding-bottom-sm">
+								<text class=" text-black  margin-right-xs  flex-zero">居住地址：</text>
+								<view>{{item.liveAddressConfig}}</view>
+							</view>
+							<view class="text-gray text-sm padding-bottom-sm flex">
+								<text class=" text-black  margin-right-xs  flex-zero">工作地址：</text>
+								<view class="">
+									{{item.workAddressConfig}}
+								</view>
+							</view>
 						</view>
 					</view>
-				</view>
-				<!-- <view class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view> -->
+					<!-- <view class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view> -->
+				
 			</view>
-			<!-- 回到顶部 -->
+		<!-- 回到顶部 -->
 			<!-- <back-top :show="backTop" /> -->
 		</view>
 	</view>

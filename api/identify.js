@@ -1,5 +1,6 @@
 import http from "@/utils/request"
-const prefix = "/app/identity/";
+const prefix = "/app/identify/";
+const formHead = {'X-Requested-Page': 'form','Content-Type':"application/x-www-form-urlencoded"};
 export default {
 	/**
 	 * 小程序端认筹登记管理
@@ -14,7 +15,7 @@ export default {
 	},
 	// 列表
 	list(data) {
-		return http(prefix + 'list', 'post', data);
+		return http(prefix + 'list', 'post', data,formHead);
 	},
 	// 保存
 	save(data) {

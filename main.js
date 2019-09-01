@@ -43,6 +43,10 @@ Vue.component('cu-modal', CuModal)
 import Paging from '@/components/Paging.vue'
 Vue.component('paging', Paging)
 
+// 弹窗modal
+import DrawerModal from '@/components/DrawerModal.vue'
+Vue.component('drawer-modal', DrawerModal)
+
 // 页面抽屉
 // import DrawerPage from '@/components/DrawerPage.vue'
 // Vue.component('drawer-page',DrawerPage)

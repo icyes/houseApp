@@ -2,7 +2,7 @@
 	<view class="flex-full">
 		<cu-custom bgColor="bg-gradual-blue" isBack="true">
 			<block slot="backText">返回</block>
-			<block slot="content">客户管理</block>
+			<block slot="content">认筹记录</block>
 			<block slot="right">
 				<view class="action"><view class="cu-load load-cuIcon" :class="!isLoad ? 'loading' : 'over'"></view></view>
 			</block>
@@ -23,94 +23,29 @@
 					<view class="action flex-treble"><input type="text" placeholder="填写手机号码" placeholder-class="text-gray" v-model="form.mobile" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">来访日期</text></view>
-					<view class="action flex-treble">
-						<picker mode="date" :value="form.comingTime" :start="startDate" :end="endDate" @change="bindDateChange">
-							<view v-if="form.comingTime" class="uni-input">{{ form.comingTime }}</view>
-							<view v-else class="text-gray">选择来访日期</view>
-						</picker>
-					</view>
+					<view class="content flex-sub"><text class="text-grey">身份证</text></view>
+					<view class="action flex-treble"><input type=" number" placeholder="身份证" placeholder-class="text-gray" v-model="form.idCard" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">年龄</text></view>
-					<view class="action flex-treble"><input type=" number" placeholder="填写年龄" placeholder-class="text-gray" v-model="form.age" /></view>
+					<view class="content flex-sub"><text class="text-grey">身份证地址</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="身份证地址" placeholder-class="text-gray" v-model="form.idAddress" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">性别</text></view>
-					<picker class="flex-treble" @change="bindSexChange" :value="sexIdx" :range="sexArray">
-						<view v-if="form.sex" class="uni-input">{{ sexArray[form.sex - 1] }}</view>
-						<view v-else class="text-gray">选择性别</view>
-					</picker>
+					<view class="content flex-sub"><text class="text-grey">工作单位</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="工作单位" placeholder-class="text-gray" v-model="form.company" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">地址</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写居住地址" placeholder-class="text-gray" v-model="form.address" /></view>
+					<view class="content flex-sub"><text class="text-grey">单位地址</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="工作单位地址" placeholder-class="text-gray" v-model="form.companyAddress" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">面积需求</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写面积需求" placeholder-class="text-gray" v-model="form.acreageRequirement" /></view>
+					<view class="content flex-sub"><text class="text-grey">认筹金</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="认筹金" placeholder-class="text-gray" v-model="form.identifyPrice" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">关注点</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写关注点" placeholder-class="text-gray" v-model="form.focusPoint" /></view>
+					<view class="content flex-sub"><text class="text-grey">vip卡号</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="vip" placeholder-class="text-gray" v-model="form.vipCard" /></view>
 				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">家庭结构</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写家庭结构" placeholder-class="text-gray" v-model="form.homeStructure" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">产品需求</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写产品需求" placeholder-class="text-gray" v-model="form.productRequirement" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">职业类型</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写职业类型" placeholder-class="text-gray" v-model="form.profession" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">客户意向</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户意向" placeholder-class="text-gray" v-model="form.purpose" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">意向楼层</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户意向楼层" placeholder-class="text-gray" v-model="form.purposeFloor" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">意向价格</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户意向价格" placeholder-class="text-gray" v-model="form.purposePrice" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">抗拒点</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户抗拒点" placeholder-class="text-gray" v-model="form.resistPoint" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">客户来源</text></view>
-					<picker class="flex-treble" @change="bindSourceWayChange" :value="form.sourceWay" :range="sourceWayArray">
-						<view v-if="form.sourceWay" class="uni-input">{{ sourceWayArray[form.sourceWay - 1] }}</view>
-						<view v-else class="text-gray">选择客户来源</view>
-					</picker>
-				</view>
-				<view v-if="oldCusomterShow" class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">老客户Id号</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写老客户Id号" placeholder-class="text-gray" v-model="form.oldCusomterId" /></view>
-				</view>
-				<!-- <view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">客户状态</text></view>
-						<picker class="flex-treble" @change="bindStatusChange" :value="form.status" :range="statusArray">
-							<view v-if="form.status" class="uni-input">{{ statusArray[form.status] }}</view>
-							<view v-else class="text-gray">选择客户状态</view>
-						</picker>
-					</view> -->
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">备注</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /></view>
-				</view>
-
-				<!-- 	<view class="action flex justify-center padding-lr-xl padding-bottom-xl">
-						<button @click="submit" class=" margin-top cu-btn round bg-green shadow" style="width: 50%;">
-							<text class="cuIcon-upload"></text>
-							提交
-						</button>
-					</view> -->
 			</view>
 		</cu-modal>
 		<!-- 暂无数据 -->
@@ -155,7 +90,7 @@
 </template>
 
 <script>
-import api from '@/api/customer.js';
+import api from '@/api/identify.js';
 import util from '@/utils/index.js';
 // 认筹登记表
 const defForm = {
@@ -165,8 +100,9 @@ const defForm = {
 	idCard: '', //*身份证
 	idAddress: '', //身份证地址
 	company: null, //工作单位
-	companyAddress: 0, //工作单位地址
+	companyAddress: "", //工作单位地址
 	identifyPrice: '', //认筹金
+	vipCard:"" //vip卡号
 
 };
 export default {
@@ -198,7 +134,8 @@ export default {
 			backTop: false //回到顶部按钮显示状态
 		};
 	},
-	onLoad() {
+	onLoad(option) {
+		this.form.projectId = option.id
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -273,6 +210,7 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
+				projectId:this.form.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
@@ -402,7 +340,7 @@ export default {
 		},
 		// 提交表单
 		submit() {
-			if (!this.check()) return;
+			// if (!this.check()) return;
 			let data = { ...this.form };
 			data = this.objFilter(data);
 			const save = data => api.save(data);

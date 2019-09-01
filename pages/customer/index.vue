@@ -50,7 +50,7 @@
 				<back-top :show="backTop" @backTop="scrollTop=0"/>
 			</view>
 			<!-- 顶部搜搜弹窗 -->
-			<filtrate-modal :keyWord="keyWord" v-model="keyWord" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
+			<filtrate-modal :keyWord="keyWord" @input="(v)=>this.keyWord=v" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 			<!-- 添加弹窗 -->
 			<cu-modal
 				:modalName="modalName == 'viewModal' || modalName == 'formModal' ? 'formModal' : ''"
@@ -135,27 +135,6 @@
 							<view v-else class="text-gray">选择客户来源</view>
 						</picker>
 					</view>
-					<view v-if="oldCusomterShow" class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">老客户Id号</text></view>
-						<view class="action flex-treble">
-							<input
-								type="text"
-								@tap="drawerShow = true"
-								data-target="viewModal"
-								disabled
-								placeholder="填写老客户Id号"
-								placeholder-class="text-gray"
-								v-model="form.oldCusomterId"
-							/>
-						</view>
-					</view>
-					<!-- <view class="cu-item flex">
-									<view class="content flex-sub"><text class="text-grey">客户状态</text></view>
-									<picker class="flex-treble" @change="bindStatusChange" :value="form.status" :range="statusArray">
-										<view v-if="form.status" class="uni-input">{{ statusArray[form.status] }}</view>
-										<view v-else class="text-gray">选择客户状态</view>
-									</picker>
-								</view> -->
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">备注</text></view>
 						<view class="action flex-treble"><input type="text" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /></view>
@@ -177,6 +156,7 @@ import customer from '@/api/customer.js';
 import util from '@/utils/index.js';
 import {customerSource,gender} from "@/utils/common/data.js"
 const defForm = {
+	projectId:null,//项目id
 	id: null, //[up *]
 	name: '', //* 姓名
 	sex: 0, //性别
@@ -206,7 +186,6 @@ export default {
 		});
 
 		return {
-			projectId:null,//项目id
 			// 页面抽屉显示判断
 			drawerShow: false,
 			// 滚动窗口位置
@@ -233,7 +212,7 @@ export default {
 
 	onLoad(option) {
 		console.log(option);
-		this.projectId = option.id;
+		this.form.projectId = option.id;
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -320,7 +299,7 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
-				projectId:this.projectId,
+				projectId:this.form.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize

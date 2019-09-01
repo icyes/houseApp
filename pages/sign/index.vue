@@ -2,7 +2,7 @@
 	<view class="flex-full">
 		<cu-custom bgColor="bg-gradual-blue" isBack="true">
 			<block slot="backText">返回</block>
-			<block slot="content">客户管理</block>
+			<block slot="content">签约登记</block>
 			<block slot="right">
 				<view class="action"><view class="cu-load load-cuIcon" :class="!isLoad ? 'loading' : 'over'"></view></view>
 			</block>
@@ -15,102 +15,70 @@
 		<cu-modal :modalName="modalName" text="客户" @submit="submit" @hideModal="hideModal" :isUpdate="isUpdate">
 			<view class="cu-list sm-border menu text-left solid-top">
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">姓名</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写姓名" placeholder-class="text-gray" v-model="form.name" /></view>
+					<view class="content flex-sub"><text class="text-grey">房屋</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="房屋" placeholder-class="text-gray" v-model="form.houseId" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">手机号</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写手机号码" placeholder-class="text-gray" v-model="form.mobile" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">来访日期</text></view>
+					<view class="content flex-sub"><text class="text-grey">签约日期</text></view>
 					<view class="action flex-treble">
-						<picker mode="date" :value="form.comingTime" :start="startDate" :end="endDate" @change="bindDateChange">
-							<view v-if="form.comingTime" class="uni-input">{{ form.comingTime }}</view>
-							<view v-else class="text-gray">选择来访日期</view>
+						<picker mode="date" :value="form.signTime" :start="startDate" :end="endDate" @change="bindDateChange">
+							<view v-if="form.signTime" class="uni-input">{{ form.signTime }}</view>
+							<view v-else class="text-gray">签约日期</view>
 						</picker>
 					</view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">年龄</text></view>
-					<view class="action flex-treble"><input type=" number" placeholder="填写年龄" placeholder-class="text-gray" v-model="form.age" /></view>
+					<view class="content flex-sub"><text class="text-grey">签约总价</text></view>
+					<view class="action flex-treble"><input type=" number" placeholder="签约总价" placeholder-class="text-gray" v-model="form.signAmountPrice" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">性别</text></view>
-					<picker class="flex-treble" @change="bindSexChange" :value="sexIdx" :range="sexArray">
-						<view v-if="form.sex" class="uni-input">{{ sexArray[form.sex - 1] }}</view>
-						<view v-else class="text-gray">选择性别</view>
+					<view class="content flex-sub"><text class="text-grey">见面单价</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="见面单价" placeholder-class="text-gray" v-model="form.signAcreagePrice" /></view>
+				</view>
+				
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">付款方式</text></view>
+					<picker class="flex-treble" @change="bindSexChange" :value="payWay" :range="sexArray">
+						<view v-if="form.payWay" class="uni-input">{{ sexArray[form.sex - 1] }}</view>
+						<view v-else class="text-gray">付款方式</view>
 					</picker>
 				</view>
+		
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">地址</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写居住地址" placeholder-class="text-gray" v-model="form.address" /></view>
+					<view class="content flex-sub"><text class="text-grey">首付金额</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="首付金额" placeholder-class="text-gray" v-model="form.firstPayPrice" /></view>
 				</view>
+				
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">面积需求</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写面积需求" placeholder-class="text-gray" v-model="form.acreageRequirement" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">关注点</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写关注点" placeholder-class="text-gray" v-model="form.focusPoint" /></view>
+					<view class="content flex-sub"><text class="text-grey">贷款金额</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="贷款金额" placeholder-class="text-gray" v-model="form.loansPrivce" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">家庭结构</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写家庭结构" placeholder-class="text-gray" v-model="form.homeStructure" /></view>
+					<view class="content flex-sub"><text class="text-grey">是否交件</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="是否交件" placeholder-class="text-gray" v-model="form.isSubmit" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">产品需求</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写产品需求" placeholder-class="text-gray" v-model="form.productRequirement" /></view>
+					<view class="content flex-sub"><text class="text-grey">是否网签</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="是否网签" placeholder-class="text-gray" v-model="form.isNetSign" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">职业类型</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写职业类型" placeholder-class="text-gray" v-model="form.profession" /></view>
+					<view class="content flex-sub"><text class="text-grey">合同编号</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="合同编号" placeholder-class="text-gray" v-model="form.contractNo" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">客户意向</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户意向" placeholder-class="text-gray" v-model="form.purpose" /></view>
+					<view class="content flex-sub"><text class="text-grey">备案号</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="备案号" placeholder-class="text-gray" v-model="form.recordNo" /></view>
 				</view>
+				
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">意向楼层</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户意向楼层" placeholder-class="text-gray" v-model="form.purposeFloor" /></view>
+					<view class="content flex-sub"><text class="text-grey">认购信息</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="认购信息" placeholder-class="text-gray" v-model="form.offerBuyId" /></view>
 				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">意向价格</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户意向价格" placeholder-class="text-gray" v-model="form.purposePrice" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">抗拒点</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户抗拒点" placeholder-class="text-gray" v-model="form.resistPoint" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">客户来源</text></view>
-					<picker class="flex-treble" @change="bindSourceWayChange" :value="form.sourceWay" :range="sourceWayArray">
-						<view v-if="form.sourceWay" class="uni-input">{{ sourceWayArray[form.sourceWay - 1] }}</view>
-						<view v-else class="text-gray">选择客户来源</view>
-					</picker>
-				</view>
-				<view v-if="oldCusomterShow" class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">老客户Id号</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写老客户Id号" placeholder-class="text-gray" v-model="form.oldCusomterId" /></view>
-				</view>
-				<!-- <view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">客户状态</text></view>
-						<picker class="flex-treble" @change="bindStatusChange" :value="form.status" :range="statusArray">
-							<view v-if="form.status" class="uni-input">{{ statusArray[form.status] }}</view>
-							<view v-else class="text-gray">选择客户状态</view>
-						</picker>
-					</view> -->
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">备注</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /></view>
+					<view class="action flex-treble"><input type="text" placeholder="备注" placeholder-class="text-gray" v-model="form.remark" /></view>
 				</view>
-
-				<!-- 	<view class="action flex justify-center padding-lr-xl padding-bottom-xl">
-						<button @click="submit" class=" margin-top cu-btn round bg-green shadow" style="width: 50%;">
-							<text class="cuIcon-upload"></text>
-							提交
-						</button>
-					</view> -->
+	
 			</view>
 		</cu-modal>
 		<!-- 暂无数据 -->
@@ -159,27 +127,20 @@ import api from '@/api/customer.js';
 import util from '@/utils/index.js';
 const defForm = {
 	id: null, //[up *]
-	mobile: '', //* 联系方式
-	name: '', //* 姓名
-	comingTime: '', //*来访日期
-	address: '', //居住地址
-	age: null, //年龄
-	sex: 0, //性别
-	acreageRequirement: '', //面积需求
-	focusPoint: '', //关注点
-	homeStructure: '', //家庭结构
-	oldCusomterId: null, //老客户Id（客户来源是 老客户介绍时）
-	// payWay: '', //付款方式
-	productRequirement: '', //产品需求
-	profession: '', //职业类型
-	purpose: '', // 客户意向
-	purposeFloor: '', //意向楼层
-	purposePrice: '', //意向价格
-	resistPoint: '', //抗拒点
-	sourceWay: null, //客户来源
-	// status: 0, //客户状态（0-来电，1-认筹，2签约，3购买）
-	remark: '' //备注
-	// userId: 0 //置业顾问Id
+	houseId: '', //* 房屋Id
+	signTime: '', //*签约日期
+	signAmountPrice: '', //签约总价
+	signAcreagePrice: null, //见面单价
+	payWay: 0, //付款方式
+	firstPayPrice: '', //首付金额
+	loansPrivce: '', //贷款金额
+	isSubmit: '', //是否交件
+	isNetSign: null, //是否网签
+	contractNo: '', //合同编号
+	recordNo: '', //备案号
+	remark: '', // 备注
+	offerBuyId: '', //认购信息id
+	
 };
 export default {
 	data() {

@@ -1,5 +1,6 @@
 import http from "@/utils/request"
 const prefix = "/app/follow/";
+const formHead = {'X-Requested-Page': 'form','Content-Type':"application/x-www-form-urlencoded"};
 export default {
 	/**
 	 * 小程序端跟进记录管理

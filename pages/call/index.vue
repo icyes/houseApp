@@ -2,7 +2,7 @@
 	<view class="flex-full">
 		<cu-custom bgColor="bg-gradual-blue" isBack="true">
 			<block slot="backText">返回</block>
-			<block slot="content">来电登记管理</block>
+			<block slot="content">来电登记</block>
 			<block slot="right">
 				<view class="action"><view class="cu-load load-cuIcon" :class="!isLoad ? 'loading' : 'over'"></view></view>
 			</block>
@@ -15,13 +15,22 @@
 		<cu-modal :modalName="modalName" text="客户" @submit="submit" @hideModal="hideModal" :isUpdate="isUpdate">
 			<view class="cu-list sm-border menu text-left solid-top">
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">客户</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="选择客户" placeholder-class="text-gray" v-model="form.customerId" /></view>
+					<view class="content flex-sub"><text class="text-grey">客户姓名</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="来电客户姓名" placeholder-class="text-gray" v-model="form.name" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">获取途径</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写获取途径" placeholder-class="text-gray" v-model="form.acquiringWay" /></view>
+					<view class="content flex-sub"><text class="text-grey">手机号</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="来电客户手机号" placeholder-class="text-gray" v-model="form.mobile" /></view>
 				</view>
+
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">性别</text></view>
+					<picker class="flex-treble" @change="bindSexChange" :value="sexIdx" :range="sexArray">
+						<view v-if="form.sex" class="uni-input">{{ sexArray[form.sex - 1] }}</view>
+						<view v-else class="text-gray">选择性别</view>
+					</picker>
+				</view>
+
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">来电日期</text></view>
 					<view class="action flex-treble">
@@ -31,7 +40,15 @@
 						</picker>
 					</view>
 				</view>
-				
+
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">获取途径</text></view>
+					<picker class="flex-treble" @change="bindSourceWayChange" :value="form.acquiringWay" :range="sourceWayArray">
+						<view v-if="form.acquiringWay" class="uni-input">{{ sourceWayArray[form.acquiringWay - 1] }}</view>
+						<view v-else class="text-gray">选择获取途径</view>
+					</picker>
+				</view>
+
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">询问内容1</text></view>
 					<view class="action flex-treble"><input type="text" placeholder="填写询问内容1" placeholder-class="text-gray" v-model="form.askContentOne" /></view>
@@ -91,17 +108,17 @@
 import api from '@/api/call.js';
 import util from '@/utils/index.js';
 const defForm = {
-	  "id": null,  //*
-	  "projectId":null,//项目id
-	  "name":null ,//来电客户姓名
-	  "mobile":null,//手机号
-	  "sex":1 ,//来电客户性别
-	  "callTime": "2019-08-27T14:03:29.079Z", //*来电日期
-	  "acquiringWay": "string", //获取途径
-	  "askContentOne": "string", //询问内容1
-	  "askContentTwo": "string", //询问内容2
-	  "remark": "string", //备注
-	  "customerId": 0, //*客户表主键
+	id: null, //*
+	projectId: null, //项目id
+	name: null, //来电客户姓名
+	mobile: null, //手机号
+	sex: 1, //来电客户性别
+	callTime: '2019-08-27T14:03:29.079Z', //*来电日期
+	acquiringWay: null, //获取途径
+	askContentOne: 'string', //询问内容1
+	askContentTwo: 'string', //询问内容2
+	remark: 'string' //备注
+	// "customerId": 0, //*客户表主键
 };
 export default {
 	data() {
@@ -128,11 +145,12 @@ export default {
 			isLastPage: false, //是否最后一页
 			pageNum: 1, //页数
 			pageSize: 15, //每页条数
-			isLoad: false, //加载状态
+			isLoad: true, //加载状态
 			backTop: false //回到顶部按钮显示状态
 		};
 	},
-	onLoad() {
+	onLoad(option) {
+		this.form.projectId = Number(option.id);
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -154,15 +172,19 @@ export default {
 	},
 	// 下拉
 	onPullDownRefresh() {
+		this.isRefresh = true;
 		this.pageNum = 1;
 		this.isLastPage = false;
 		this.getList();
 		setTimeout(function() {
 			uni.stopPullDownRefresh();
+			this.isRefresh = false;
 		}, 1000);
 	},
 	// 上拉触底
 	onReachBottom() {
+		if (this.isRefresh) return;
+		console.log('----bottom');
 		if (this.isLastPage) return;
 		++this.pageNum;
 		this.getList();
@@ -205,8 +227,10 @@ export default {
 		},
 		// 获取列表
 		getList() {
+			if (!this.isLoad) return;
 			this.isLoad = false;
 			let data = {
+				objectId: this.form.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
@@ -214,8 +238,9 @@ export default {
 			api.list(data).then(res => {
 				console.log('l-', res);
 				this.isLastPage = res.isLastPage;
-				if (this.pageNum == 1) this.list = res.list;
-				else this.list = this.list.concat(res.list);
+				console.log('pageNum', this.pageNum);
+				if (this.pageNum > 1) this.list = this.list.concat(res.list);
+				else this.list = res.list;
 
 				setTimeout(() => {
 					this.isLoad = true;
@@ -283,9 +308,9 @@ export default {
 				this.scrollTop = 100;
 			}, 300);
 		},
-		// 选择来访日期
+		// 选择来电日期
 		bindDateChange: function(e) {
-			this.form.comingTime = e.target.value;
+			this.form.callTime = e.target.value;
 		},
 		// 选择性别
 		bindSexChange: function(e) {
@@ -293,7 +318,7 @@ export default {
 		},
 		//  客户来源选择
 		bindSourceWayChange: function(e) {
-			this.form.sourceWay = Number(e.target.value) + 1;
+			this.form.acquiringWay = Number(e.target.value) + 1;
 		},
 		// 客户状态选择
 		bindStatusChange: function(e) {
@@ -334,7 +359,7 @@ export default {
 		},
 		// 提交表单
 		submit() {
-			if (!this.check()) return;
+			// if (!this.check()) return;
 			let data = { ...this.form };
 			data = this.objFilter(data);
 			const save = data => api.save(data);

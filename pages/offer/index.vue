@@ -2,115 +2,40 @@
 	<view class="flex-full">
 		<cu-custom bgColor="bg-gradual-blue" isBack="true">
 			<block slot="backText">返回</block>
-			<block slot="content">客户管理</block>
+			<block slot="content">认购登记</block>
 			<block slot="right">
 				<view class="action"><view class="cu-load load-cuIcon" :class="!isLoad ? 'loading' : 'over'"></view></view>
 			</block>
 		</cu-custom>
 		<!-- 列表头部 -->
-		<list-bar text="客户列表" @showModal="v => (modalName = v)" />
+		<list-bar text="客户列表" @showModal="showCuModal" />
 		<!-- 顶部搜搜弹窗 -->
 		<filtrate-modal v-model="keyWord" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 		<!-- 添加弹窗 -->
-		<cu-modal :modalName="modalName" text="客户" @submit="submit" @hideModal="hideModal" :isUpdate="isUpdate">
+		<cu-modal :show="cumodal" text="客户" @submit="submit" @hideModal="hideCuModal" :isUpdate="isUpdate">
 			<view class="cu-list sm-border menu text-left solid-top">
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">姓名</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写姓名" placeholder-class="text-gray" v-model="form.name" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">手机号</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写手机号码" placeholder-class="text-gray" v-model="form.mobile" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">来访日期</text></view>
+				<view class="cu-item flex" @tap="modalName = 'DrawerModalL'">
+					<view class="content flex-sub"><text class="text-grey">选择客户</text></view>
 					<view class="action flex-treble">
-						<picker mode="date" :value="form.comingTime" :start="startDate" :end="endDate" @change="bindDateChange">
-							<view v-if="form.comingTime" class="uni-input">{{ form.comingTime }}</view>
-							<view v-else class="text-gray">选择来访日期</view>
-						</picker>
+						<input type=" number" disabled="true" placeholder="customerId" placeholder-class="text-gray" v-model="form.customerId" />
 					</view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">年龄</text></view>
-					<view class="action flex-treble"><input type=" number" placeholder="填写年龄" placeholder-class="text-gray" v-model="form.age" /></view>
+					<view class="content flex-sub"><text class="text-grey">认购总价</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="认购总价" placeholder-class="text-gray" v-model="form.offerAmount" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">性别</text></view>
-					<picker class="flex-treble" @change="bindSexChange" :value="sexIdx" :range="sexArray">
-						<view v-if="form.sex" class="uni-input">{{ sexArray[form.sex - 1] }}</view>
-						<view v-else class="text-gray">选择性别</view>
-					</picker>
+					<view class="content flex-sub"><text class="text-grey">定金</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="定金" placeholder-class="text-gray" v-model="form.prePrice" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">地址</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写居住地址" placeholder-class="text-gray" v-model="form.address" /></view>
+					<view class="content flex-sub"><text class="text-grey">建面单价</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="建面单价" placeholder-class="text-gray" v-model="form.acreagePrice" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">面积需求</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写面积需求" placeholder-class="text-gray" v-model="form.acreageRequirement" /></view>
+					<view class="content flex-sub"><text class="text-grey">房屋</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="房屋" placeholder-class="text-gray" v-model="form.houseId" /></view>
 				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">关注点</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写关注点" placeholder-class="text-gray" v-model="form.focusPoint" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">家庭结构</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写家庭结构" placeholder-class="text-gray" v-model="form.homeStructure" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">产品需求</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写产品需求" placeholder-class="text-gray" v-model="form.productRequirement" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">职业类型</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写职业类型" placeholder-class="text-gray" v-model="form.profession" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">客户意向</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户意向" placeholder-class="text-gray" v-model="form.purpose" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">意向楼层</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户意向楼层" placeholder-class="text-gray" v-model="form.purposeFloor" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">意向价格</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户意向价格" placeholder-class="text-gray" v-model="form.purposePrice" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">抗拒点</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户抗拒点" placeholder-class="text-gray" v-model="form.resistPoint" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">客户来源</text></view>
-					<picker class="flex-treble" @change="bindSourceWayChange" :value="form.sourceWay" :range="sourceWayArray">
-						<view v-if="form.sourceWay" class="uni-input">{{ sourceWayArray[form.sourceWay - 1] }}</view>
-						<view v-else class="text-gray">选择客户来源</view>
-					</picker>
-				</view>
-				<view v-if="oldCusomterShow" class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">老客户Id号</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写老客户Id号" placeholder-class="text-gray" v-model="form.oldCusomterId" /></view>
-				</view>
-				<!-- <view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">客户状态</text></view>
-						<picker class="flex-treble" @change="bindStatusChange" :value="form.status" :range="statusArray">
-							<view v-if="form.status" class="uni-input">{{ statusArray[form.status] }}</view>
-							<view v-else class="text-gray">选择客户状态</view>
-						</picker>
-					</view> -->
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">备注</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /></view>
-				</view>
-
-				<!-- 	<view class="action flex justify-center padding-lr-xl padding-bottom-xl">
-						<button @click="submit" class=" margin-top cu-btn round bg-green shadow" style="width: 50%;">
-							<text class="cuIcon-upload"></text>
-							提交
-						</button>
-					</view> -->
 			</view>
 		</cu-modal>
 		<!-- 暂无数据 -->
@@ -151,20 +76,21 @@
 			<!-- 回到顶部 -->
 			<back-top :show="backTop" />
 		</view>
+		<drawer-modal :modalName="modalName" @hideModal="hideModal"></drawer-modal>
 	</view>
 </template>
 
 <script>
-import api from '@/api/customer.js';
+import api from '@/api/offerbuy.js';
 import util from '@/utils/index.js';
 // 认购信息表
 const defForm = {
 	id: null, //[up *]
-	customerId:null,//客户ID
-	offerAmount:null,//认购总价
+	customerId: null, //客户ID
+	offerAmount: null, //认购总价
 	prePrice: '', //* 定金
 	acreagePrice: '', //*建面单价
-	houseId: '', //* 房屋Id
+	houseId: '' //* 房屋Id
 };
 export default {
 	data() {
@@ -173,6 +99,8 @@ export default {
 		});
 
 		return {
+			//
+			cumodal: false,
 			// 滚动窗口位置
 			scrollTop: 0,
 
@@ -195,7 +123,8 @@ export default {
 			backTop: false //回到顶部按钮显示状态
 		};
 	},
-	onLoad() {
+	onLoad(option) {
+		this.form.projectId = option.id;
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -217,16 +146,23 @@ export default {
 	},
 	// 下拉
 	onPullDownRefresh() {
+		this.isRefresh = true;
+		if (!!this.modalName) {
+			uni.stopPullDownRefresh();
+			this.isRefresh =true;
+			return false;
+		}
 		this.pageNum = 1;
 		this.isLastPage = false;
 		this.getList();
 		setTimeout(function() {
 			uni.stopPullDownRefresh();
+			this.isRefresh =true;
 		}, 1000);
 	},
 	// 上拉触底
 	onReachBottom() {
-		if (this.isLastPage) return;
+		if (this.isLastPage||this.isRefresh) return;
 		++this.pageNum;
 		this.getList();
 	},
@@ -245,6 +181,11 @@ export default {
 		}
 	},
 	methods: {
+		//
+		showCuModal() {
+			util.pageScrollTo(10);
+			this.cumodal = true;
+		},
 		// 实时监听滚动
 		scroll: function(e) {
 			this.scrollTop = e.detail.scrollTop;
@@ -270,6 +211,7 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
+				projectId: this.form.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
@@ -337,12 +279,16 @@ export default {
 			this.scrollTop = 0;
 			this.modalName = e.currentTarget.dataset.target;
 		},
+		//
+		hideCuModal() {
+			this.cumodal = false;
+			this.form = { ...defForm };
+		},
 		// 影藏弹窗
 		hideModal(e) {
 			this.modalName = null;
 			// 为了让窗口显示时，滚动到最顶部，先改变滚动位置，才能生效
 			setTimeout(() => {
-				this.form = { ...defForm };
 				this.scrollTop = 100;
 			}, 300);
 		},
@@ -408,7 +354,7 @@ export default {
 			submit(data).then(r => {
 				let txt = this.isUpdate ? '更新' : '添加';
 				util.toast('成功');
-				this.hideModal();
+				this.hideCuModal();
 
 				if (this.isUpdate) {
 					// this.list.some((m, i,a) => {

@@ -5,7 +5,7 @@
 			<view class="padding-xl cu-bar bg-gray search">
 				<view class="search-form round" style="background: #fff;">
 					<text class="cuIcon-search"></text>
-					<input type="text" :value="keyWord" @input="$emit('input', $event.target.value)" placeholder="输入姓名或手机号" confirm-type="search" />
+					<input type="text" :value="keyWord" @input="onInput" placeholder="输入姓名或手机号" confirm-type="search" />
 				</view>
 			</view>
 			<view class="cu-bar bg-white">
@@ -35,7 +35,12 @@ export default {
 			default: ''
 		}
 	},
-	methods: {}
+	methods: {
+		onInput(event){
+			console.log(event);
+			this.$emit('input', event.target.value)
+		}
+	}
 };
 </script>
 

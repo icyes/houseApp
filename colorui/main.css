@@ -2966,6 +2966,10 @@ scroll-view.cu-steps .cu-item {
 
 /*  -- flex弹性布局 -- */
 
+.flex-zero{
+	flex:0 0 auto;
+}
+
 .flex {
 	display: flex;
 }
