@@ -21,7 +21,7 @@
 						<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
 						<view class="flex-sub padding ">
 							<view class="text-grey text-center padding-bottom-sm text-lg">{{ item.projectName }}</view>
-							<view class="flex text-gray text-df text-sm padding-bottom-sm">
+							<!-- <view class="flex text-gray text-df text-sm padding-bottom-sm">
 								<text class=" text-black  margin-right-xs  flex-zero">居住地址：</text>
 								<view>{{item.liveAddressConfig}}</view>
 							</view>
@@ -30,7 +30,7 @@
 								<view class="">
 									{{item.workAddressConfig}}
 								</view>
-							</view>
+							</view> -->
 						</view>
 					</view>
 					<!-- <view class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view> -->

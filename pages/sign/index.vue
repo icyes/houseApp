@@ -8,7 +8,7 @@
 			</block>
 		</cu-custom>
 		<!-- 列表头部 -->
-		<list-bar text="客户列表" @showModal="v => (modalName = v)" />
+		<list-bar text="签约列表" @showModal="showCuModal" />
 		<!-- 顶部搜搜弹窗 -->
 		<filtrate-modal v-model="keyWord" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 		<!-- 添加弹窗 -->
@@ -16,7 +16,9 @@
 			<view class="cu-list sm-border menu text-left solid-top">
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">房屋</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="房屋" placeholder-class="text-gray" v-model="form.houseId" /></view>
+					<view class="action flex-treble" @tap="modalName = 'DrawerModalL'">
+						<input type="text" disabled="true" placeholder="房屋" placeholder-class="text-gray" v-model="form.houseName" />
+					</view>
 				</view>
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">签约日期</text></view>
@@ -119,13 +121,31 @@
 			<!-- 回到顶部 -->
 			<back-top :show="backTop" />
 		</view>
+		<drawer-modal :modalName="modalName" @hideModal="hideModal">
+			<view slot="DrawerModalL">
+				<view class="padding-xl cu-bar search">
+					<view class="search-form round" style="background: #fff;">
+						<text class="cuIcon-search"></text>
+						<input type="text" v-model="housekeyWord" @input="getHouse" placeholder="输入房屋名字" confirm-type="search" />
+					</view>
+				</view>
+				<view class="cu-list menu text-left">
+					<view class="cu-item arrow" v-for="(item, index) in house" :key="index">
+						<view class="content" @tap="chooseHouse(item)">
+							<view>{{ item.name }}</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</drawer-modal>
 	</view>
 </template>
 
 <script>
-import api from '@/api/customer.js';
+import api from '@/api/sign.js';
 import util from '@/utils/index.js';
 const defForm = {
+	projectId:null,
 	id: null, //[up *]
 	houseId: '', //* 房屋Id
 	signTime: '', //*签约日期
@@ -171,8 +191,10 @@ export default {
 			backTop: false //回到顶部按钮显示状态
 		};
 	},
-	onLoad() {
+	onLoad(option) {
+		this.form.projectId = option.id;
 		this.getList();
+		this.getHouse();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
 			this.list[indexes] = data;
@@ -221,6 +243,25 @@ export default {
 		}
 	},
 	methods: {
+		showCuModal() {
+			util.pageScrollTo(10);
+			this.cumodal = true;
+		},
+		chooseHouse(item) {
+			this.form.houseId = item.id;
+			this.form.houseName = item.name;
+			this.modalName = '';
+			this.$forceUpdate();
+		},
+		getHouse() {
+			let data = { page: 1, pageSize: 999, projectId: this.form.projectId, keyWord: this.housekeyWord };
+			house.list(data).then(res => {
+				console.log('l-', res);
+				this.house = res.list;
+				// if (this.pageNum == 1) this.list = res.list;
+				// else this.list = this.list.concat(res.list);
+			});
+		},
 		// 实时监听滚动
 		scroll: function(e) {
 			this.scrollTop = e.detail.scrollTop;
@@ -246,6 +287,7 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
+				projectId: this.form.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize

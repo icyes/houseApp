@@ -75,13 +75,13 @@ export default {
 					name: '认购登记',
 					link: '/pages/offer/index'
 				},
-				{
-					cuIcon: 'clothesfill',
-					color: 'blue',
-					badge: 0,
-					name: '签约登记',
-					link: '/pages/sign/index'
-				}
+				// {
+				// 	cuIcon: 'clothesfill',
+				// 	color: 'blue',
+				// 	badge: 0,
+				// 	name: '签约登记',
+				// 	link: '/pages/sign/index'
+				// }
 			]
 		};
 	},

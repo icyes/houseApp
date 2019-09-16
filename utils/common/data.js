@@ -36,15 +36,9 @@ export const customerSource = [
 ]
 
 // 产品需求
-export const productDemand = [{
-		label: "商业",
-		list: ["凤大公路底商", "购物中心商铺", "主题街区商铺", "办公"]
-	},
-	{
-		lable: "住宅",
-		list: ["高层", "洋房", "排屋", "公寓"]
-	}
-]
+export const productDemand = [["商业","住宅"], ["凤大公路底商", "购物中心商铺", "主题街区商铺", "办公"]]
+// ,["高层", "洋房", "排屋", "公寓"]
+
 
 // 
 export const statusArray= ['来电', '认筹', '签约', '购买']
@@ -71,7 +65,7 @@ export const businessPrise = ["8000-10000元", "10000-15000元", "15000-20000元
 export const residentialPrice = ["4000-4500元", "4500-5000元", "5000-6000元", "6000-7000元", "10000元以上"];
 
 // 客户意向
-export const customerIntention = ["A", "B", "C", "D"]
+export const customerIntention = ["A级", "B级", "C级", "D级"]
 
 // 付款方式
 export const payment = ["一次性付款", "银行按揭", "公积金", "组合"]

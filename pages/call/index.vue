@@ -10,9 +10,9 @@
 		<!-- 列表头部 -->
 		<list-bar text="来电登记列表" @showModal="v => (modalName = v)" />
 		<!-- 顶部搜搜弹窗 -->
-		<filtrate-modal v-model="keyWord" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
+		<filtrate-modal :keyWord="keyWord" @input="v => (this.keyWord = v)" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 		<!-- 添加弹窗 -->
-		<cu-modal :modalName="modalName" text="客户" @submit="submit" @hideModal="hideModal" :isUpdate="isUpdate">
+		<cu-modal :modalName="modalName" text="来电登记" @submit="submit" @hideModal="hideModal" :isUpdate="isUpdate">
 			<view class="cu-list sm-border menu text-left solid-top">
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">客户姓名</text></view>
@@ -25,7 +25,9 @@
 
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">性别</text></view>
-					<picker class="flex-treble" @change="bindSexChange" :value="sexIdx" :range="sexArray">
+					<picker class="flex-treble" @change="e=>{
+						this.form.sex = Number(e.target.value) + 1;
+					}" :value="sexIdx" :range="sexArray">
 						<view v-if="form.sex" class="uni-input">{{ sexArray[form.sex - 1] }}</view>
 						<view v-else class="text-gray">选择性别</view>
 					</picker>
@@ -34,7 +36,9 @@
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">来电日期</text></view>
 					<view class="action flex-treble">
-						<picker mode="date" :value="form.callTime" :start="startDate" :end="endDate" @change="bindDateChange">
+						<picker mode="date" :value="form.callTime" :start="startDate" :end="endDate" @change="e=>{
+							this.form.callTime = e.target.value;
+						}">
 							<view v-if="form.callTime" class="uni-input">{{ form.callTime }}</view>
 							<view v-else class="text-gray">选择来电日期</view>
 						</picker>
@@ -43,7 +47,7 @@
 
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">获取途径</text></view>
-					<picker class="flex-treble" @change="bindSourceWayChange" :value="form.acquiringWay" :range="sourceWayArray">
+					<picker class="flex-treble" @change="bindSourceWayChange" :value="form.acquiringWay-1" :range="sourceWayArray">
 						<view v-if="form.acquiringWay" class="uni-input">{{ sourceWayArray[form.acquiringWay - 1] }}</view>
 						<view v-else class="text-gray">选择获取途径</view>
 					</picker>
@@ -64,12 +68,13 @@
 			</view>
 		</cu-modal>
 		<!-- 暂无数据 -->
-		<empty-data :show="list && list.length == 0"></empty-data>
+		<empty-data :show="isEmpty"></empty-data>
 		<!-- 列表 -->
-		<view :class="list && list.length > 0 ? 'show' : 'hide'">
+		<view :class="!isEmpty ? 'show' : 'hide'">
 			<view class="cu-list menu-avatar">
 				<view
 					class="cu-item"
+					style="min-height: 180rpx;"
 					@tap="link(`./detail?id=${item.id}&indexes=${index}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
 					v-for="(item, index) in list"
@@ -80,23 +85,28 @@
 					:data-target="'move-box-' + index"
 				>
 					<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
-					<view class="content" style="left:60rpx">
+					<view class="content" style="left:30rpx">
 						<view class="text-grey">{{ item.name }}</view>
 						<view class="text-gray text-sm">
-							<text class="cuIcon-infofill text-red  margin-right-xs"></text>
-							消息未送达
+							<text class="cuIcon-title text-red  margin-right-xs"></text>
+							{{item.askContentOne}}
+						</view>
+						<view class="text-gray text-sm">
+							<text class="cuIcon-title text-red  margin-right-xs"></text>
+							{{item.askContentTwo}}
 						</view>
 					</view>
-					<view class="action">
-						<view class="text-grey text-xs">22:20</view>
-						<view class="cu-tag round bg-grey sm">5</view>
+					<view class="action padding-right" style="width: auto;text-align: right;line-height: 1.6em;">
+						<view class="cu-tag round bg-grey sm">性别：{{item.sex===1?'男':'女'}}</view>
+						<view class="text-grey text-sm">电话：{{item.mobile}}</view>
+							<view class="text-grey text-sm">来电日期：{{item.callTime.substr(0,10)}}</view>
 					</view>
 					<view class="move">
 						<view class="bg-cyan" @tap.stop="onEdit(item)">编辑</view>
 						<view class="bg-red" @tap.stop="onCheckDel(item.id)">删除</view>
 					</view>
 				</view>
-				<view class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view>
+				<view v-if="pageNum>1" class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view>
 			</view>
 			<!-- 回到顶部 -->
 			<back-top :show="backTop" />
@@ -107,17 +117,18 @@
 <script>
 import api from '@/api/call.js';
 import util from '@/utils/index.js';
+import {gender,statusArray,customerSource} from "@/utils/common/data.js"
 const defForm = {
 	id: null, //*
 	projectId: null, //项目id
 	name: null, //来电客户姓名
 	mobile: null, //手机号
 	sex: 1, //来电客户性别
-	callTime: '2019-08-27T14:03:29.079Z', //*来电日期
-	acquiringWay: null, //获取途径
-	askContentOne: 'string', //询问内容1
-	askContentTwo: 'string', //询问内容2
-	remark: 'string' //备注
+	callTime: '', //*来电日期
+	acquiringWay: "", //获取途径
+	askContentOne: '', //询问内容1
+	askContentTwo: '', //询问内容2
+	remark: '' //备注
 	// "customerId": 0, //*客户表主键
 };
 export default {
@@ -134,9 +145,9 @@ export default {
 			listTouchStart: 0,
 			listTouchDirection: null,
 			// 性别选择索引下标
-			sourceWayArray: ['自然上访', '员工邀约', '老客户介绍', '路过', '朋友介绍', '广告媒体', '其他'],
-			statusArray: ['来电', '认筹', '签约', '购买'],
-			sexArray: ['男', '女'],
+			sourceWayArray: customerSource,
+			statusArray:statusArray,
+			sexArray: gender,
 			form: defForm,
 			// 列表
 			list: null,
@@ -189,7 +200,11 @@ export default {
 		++this.pageNum;
 		this.getList();
 	},
+	
 	computed: {
+		isEmpty() {
+			return this.list && this.list.length == 0;
+		},
 		startDate() {
 			return this.getDate('start');
 		},
@@ -244,6 +259,7 @@ export default {
 
 				setTimeout(() => {
 					this.isLoad = true;
+					this.$forceUpdate()
 				}, 500);
 			});
 		},

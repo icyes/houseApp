@@ -1,9 +1,9 @@
 import http from "@/utils/request"
-const prefix = "/app/follow/";
+const prefix = "/web/house/";
 const formHead = {'X-Requested-Page': 'form','Content-Type':"application/x-www-form-urlencoded"};
 export default {
 	/**
-	 * 小程序端跟进记录管理
+	 * 房屋
 	 */
 	// 删除
 	del(data) {
@@ -15,7 +15,7 @@ export default {
 	},
 	// 列表
 	list(data) {
-		return http(prefix + 'list', 'post', data,formHead);
+		return http(prefix + 'select', 'post', data);
 	},
 	// 保存
 	save(data) {

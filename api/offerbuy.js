@@ -15,7 +15,7 @@ export default {
 	},
 	// 列表
 	list(data) {
-		return http(prefix + 'list', 'get', data,formHead);
+		return http(prefix + 'list', 'post', data,formHead);
 	},
 	// 保存
 	save(data) {

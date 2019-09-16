@@ -8,7 +8,7 @@
 		<view class="cu-bar bg-white solid-bottom sticky-top" :class="isEdit ? 'margin-top' : ''">
 			<view class="action">
 				<text class="cuIcon-titles text-orange "></text>
-				客户详情
+				认购详情
 			</view>
 			<view class="action">
 				<text :class="isEdit ? 'text-green' : 'text-grey'" class="padding-lr">编辑</text>
@@ -19,166 +19,216 @@
 			<view class="cu-item shadow-warp">
 				<view class="cu-list sm-border menu text-left solid-top">
 					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">姓名</text></view>
+						<view class="content flex-sub"><text class="text-grey">客户姓名</text></view>
 						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写姓名" placeholder-class="text-gray" v-model="form.name" />
-						</view>
-					</view>
-					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">手机号</text></view>
-						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写手机号码" placeholder-class="text-gray" v-model="form.mobile" />
-						</view>
-					</view>
-					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">来访日期</text></view>
-						<view class="action flex-treble">
-							<picker mode="date" :disabled="isEdit ? false : true" :value="form.comingTime" :start="startDate" :end="endDate" @change="bindDateChange">
-								<view v-if="form.comingTime" class="uni-input">{{ form.comingTime }}</view>
-								<view v-else class="text-gray">选择来访日期</view>
-							</picker>
-						</view>
-					</view>
-					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">年龄</text></view>
-						<view class="action flex-treble">
-							<input type=" number" :disabled="isEdit ? false : true" placeholder="填写年龄" placeholder-class="text-gray" v-model="form.age" />
+							<input :disabled="isEdit ? false : true" type="text" placeholder="客户姓名" placeholder-class="text-gray" v-model="form.name" />
 						</view>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">性别</text></view>
-						<picker class="flex-treble" :disabled="isEdit ? false : true" @change="bindSexChange" :value="sexIdx" :range="sexArray">
+						<picker
+							:disabled="isEdit ? false : true"
+							class="flex-treble"
+							@change="
+								e => {
+									this.form.sex = Number(e.target.value) + 1;
+								}
+							"
+							:value="form.sex ? form.sex - 1 : 0"
+							:range="sexArray"
+						>
 							<view v-if="form.sex" class="uni-input">{{ sexArray[form.sex - 1] }}</view>
 							<view v-else class="text-gray">选择性别</view>
 						</picker>
 					</view>
 					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">地址</text></view>
+						<view class="content flex-sub"><text class="text-grey">电话</text></view>
 						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写居住地址" placeholder-class="text-gray" v-model="form.address" />
+							<input :disabled="isEdit ? false : true" type="text" placeholder="电话" placeholder-class="text-gray" v-model="form.mobile" />
 						</view>
 					</view>
 					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">面积需求</text></view>
+						<view class="content flex-sub"><text class="text-grey">身份证</text></view>
 						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写面积需求" placeholder-class="text-gray" v-model="form.acreageRequirement" />
+							<input :disabled="isEdit ? false : true" type="text" placeholder="身份证" placeholder-class="text-gray" v-model="form.idCard" />
 						</view>
 					</view>
 					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">关注点</text></view>
+						<view class="content flex-sub"><text class="text-grey">通讯地址</text></view>
 						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写关注点" placeholder-class="text-gray" v-model="form.focusPoint" />
+							<input :disabled="isEdit ? false : true" type="text" placeholder="通讯地址" placeholder-class="text-gray" v-model="form.address" />
 						</view>
 					</view>
 					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">家庭结构</text></view>
+						<view class="content flex-sub"><text class="text-grey">认购日期</text></view>
 						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写家庭结构" placeholder-class="text-gray" v-model="form.homeStructure" />
+							<picker
+								:disabled="isEdit ? false : true"
+								mode="date"
+								:value="form.offerBuyTime"
+								:start="startDate"
+								:end="endDate"
+								@change="
+									e => {
+										this.form.offerBuyTime = e.target.value.substr(0,10);
+									}
+								"
+							>
+								<view v-if="form.offerBuyTime" class="uni-input">{{ form.offerBuyTime.substr(0,10)}}</view>
+								<view v-else class="text-gray">选择认购日期</view>
+							</picker>
+						</view>
+					</view>
+					<!-- 		<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">定金</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="定金" placeholder-class="text-gray" v-model="form.prePrice" /></view>
+				</view> -->
+					<view class="cu-item flex">
+						<view class="content flex-sub"><text class="text-grey">房屋</text></view>
+						<view class="action flex-treble" @tap="()=>{
+							if(this.isEdit) (this.modalName = 'DrawerModalL')
+						} ">
+							<input  :disabled="isEdit ? false : true" type="text" disabled="true" placeholder="房屋" placeholder-class="text-gray" v-model="form.houseName" />
 						</view>
 					</view>
 					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">产品需求</text></view>
-						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写产品需求" placeholder-class="text-gray" v-model="form.productRequirement" />
-						</view>
+						<view class="content flex-sub"><text class="text-grey">工作区域</text></view>
+						<view class="action flex-treble"><input type="text" placeholder="工作区域" placeholder-class="text-gray" v-model="form.workAddress" /></view>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">职业类型</text></view>
-						<view class="action flex-treble"><input type="text" placeholder="填写职业类型" placeholder-class="text-gray" v-model="form.profession" /></view>
+						<picker
+							:disabled="isEdit ? false : true"
+							class="flex-treble"
+							@change="
+								e => {
+									this.form.profession = professional[e.target.value];
+								}
+							"
+							:value="professional.indexOf(form.profession) !== -1 ? professional.indexOf(form.profession) : 0"
+							:range="professional"
+						>
+							<view v-if="form.profession" class="uni-input">{{ form.profession }}</view>
+							<view v-else class="text-gray">选择职业类型</view>
+						</picker>
 					</view>
 					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">客户意向</text></view>
-						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写客户意向" placeholder-class="text-gray" v-model="form.purpose" />
-						</view>
+						<view class="content flex-sub"><text class="text-grey">年龄</text></view>
+						<view class="action flex-treble"><input type="text" placeholder="年龄" placeholder-class="text-gray" v-model="form.age" /></view>
 					</view>
 					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">意向楼层</text></view>
-						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写客户意向楼层" placeholder-class="text-gray" v-model="form.purposeFloor" />
-						</view>
+						<view class="content flex-sub"><text class="text-grey">家庭结构</text></view>
+						<picker
+							:disabled="isEdit ? false : true"
+							class="flex-treble"
+							@change="
+								e => {
+									this.form.homeStructure = family[e.target.value];
+								}
+							"
+							:value="family.indexOf(form.homeStructure) !== -1 ? family.indexOf(form.homeStructure) : 0"
+							:range="family"
+						>
+							<view v-if="form.homeStructure" class="uni-input">{{ form.homeStructure }}</view>
+							<view v-else class="text-gray">选择家庭结构</view>
+						</picker>
 					</view>
 					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">意向价格</text></view>
-						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写客户意向价格" placeholder-class="text-gray" v-model="form.purposePrice" />
-						</view>
-					</view>
-					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">抗拒点</text></view>
-						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写客户抗拒点" placeholder-class="text-gray" v-model="form.resistPoint" />
-						</view>
+						<view class="content flex-sub"><text class="text-grey">置业动机</text></view>
+						<picker
+							:disabled="isEdit ? false : true"
+							class="flex-treble"
+							@change="
+								e => {
+									this.form.buyMotive = realEstate[e.target.value];
+								}
+							"
+							:value="realEstate.indexOf(form.buyMotive) !== -1 ? realEstate.indexOf(form.buyMotive) : 0"
+							:range="realEstate"
+						>
+							<view v-if="form.buyMotive" class="uni-input">{{ form.buyMotive }}</view>
+							<view v-else class="text-gray">选择置业动机</view>
+						</picker>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">客户来源</text></view>
-						<picker class="flex-treble" :disabled="isEdit ? false : true" @change="bindSourceWayChange" :value="form.sourceWay" :range="sourceWayArray">
+						<picker
+							:disabled="isEdit ? false : true"
+							class="flex-treble"
+							@change="
+								e => {
+									this.form.sourceWay = Number(e.target.value) + 1;
+								}
+							"
+							:value="form.sourceWay"
+							:range="sourceWayArray"
+						>
 							<view v-if="form.sourceWay" class="uni-input">{{ sourceWayArray[form.sourceWay - 1] }}</view>
 							<view v-else class="text-gray">选择客户来源</view>
 						</picker>
-					</view>
-					<view v-if="oldCusomterShow" class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">老客户Id号</text></view>
-						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写老客户Id号" placeholder-class="text-gray" v-model="form.oldCusomterId" />
-						</view>
-					</view>
-					<!-- <view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">客户状态</text></view>
-						<picker class="flex-treble" @change="bindStatusChange" :value="form.status" :range="statusArray">
-							<view v-if="form.status" class="uni-input">{{ statusArray[form.status] }}</view>
-							<view v-else class="text-gray">选择客户状态</view>
-						</picker>
-					</view> -->
-					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">备注</text></view>
-						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" />
-						</view>
 					</view>
 					<view v-if="isEdit" class="padding-lg flex flex-direction"></view>
 					<view v-if="isEdit" class="fixed-bottom padding flex flex-direction"><button @click="submit" class="cu-btn bg-green lg shadow-blur round">提交</button></view>
 				</view>
 			</view>
 		</view>
+		<drawer-modal :modalName="modalName" @hideModal="hideModal">
+			<view slot="DrawerModalL">
+				<view class="padding-xl cu-bar search">
+					<view class="search-form round" style="background: #fff;">
+						<text class="cuIcon-search"></text>
+						<input type="text" v-model="housekeyWord" @input="getHouse" placeholder="输入房屋名字" confirm-type="search" />
+					</view>
+				</view>
+				<view class="cu-list menu text-left">
+					<view class="cu-item arrow" v-for="(item, index) in house" :key="index">
+						<view class="content" @tap="chooseHouse(item)">
+							<view>{{ item.name }}</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</drawer-modal>
 	</view>
 </template>
 
 <script>
-import api from '@/api/customer.js';
+import api from '@/api/offerbuy.js';
 import util from '@/utils';
+import house from '@/api/house.js';
+import { gender, realEstate, statusArray, customerSource, family, professional } from '@/utils/common/data.js';
 const defForm = {
+	projectId: null,
 	id: null, //[up *]
-	mobile: '', //* 联系方式
-	name: '', //* 姓名
-	comingTime: '', //*来访日期
-	address: '', //居住地址
+	name: null, //认购者信息
+	sex: 1, //性别
+	mobile: null, //电话
+	idCard: null, //身份证
+	address: null, //通讯地址
+	offerBuyTime: null, //认购日期
+	prePrice: '', //* 定金
+	houseId: '', //* 房屋Id
+	houseName:"",
+	workAddress: null, //工作区域
+	profession: null, //职业类型
 	age: null, //年龄
-	sex: 0, //性别
-	acreageRequirement: '', //面积需求
-	focusPoint: '', // 关注点
-	homeStructure: '', //家庭结构
-	oldCusomterId: null, //老客户Id（客户来源是 老客户介绍时）
-	// payWay: '', //付款方式
-	productRequirement: '', // 产品需求
-	profession: '', //职业类型
-	purpose: '', // 客户意向
-	purposeFloor: '', //意向楼层
-	purposePrice: '', //意向价格
-	resistPoint: '', //抗拒点
-	sourceWay: null, //客户来源
-	// status: 0, //客户状态（0-来电，1-认筹，2签约，3购买）
-	remark: '' //备注
-	// userId: 0 // 置业顾问Id
+	homeStructure: null, //家庭结构
+	buyMotive: null, //置业动机
+	sourceWay: null //客户来源
 };
 export default {
 	data() {
 		return {
+			modalName:"",
+			house: [],
 			isEdit: false,
+			sourceWayArray: customerSource,
+			statusArray: statusArray,
+			realEstate, //置业动机
+			family, //家庭结构
+			professional, //职业类型
 			form: defForm,
-			sourceWayArray: ['自然上访', '员工邀约', '老客户介绍', '路过', '朋友介绍', '广告媒体', '其他'],
-			statusArray: ['来电', '认筹', '签约', '购买'],
-			sexArray: ['男', '女']
+			sexArray: gender
 		};
 	},
 	onLoad(option) {
@@ -187,26 +237,42 @@ export default {
 		this.id = id;
 		this.indexes = indexes;
 		this.getDetail();
+		this.getHouse();
 		console.log('page', getCurrentPages());
 	},
-	computed:{
+	computed: {
 		oldCusomterShow() {
 			return this.form.sourceWay == 3;
 		}
 	},
 	methods: {
+		chooseHouse(item) {
+			this.form.houseId = item.id;
+			this.form.houseName = item.name;
+			this.modalName = '';
+			this.$forceUpdate();
+		},
+		getHouse() {
+			let data = {status:1, page: 1, pageSize: 999, projectId: this.form.projectId, keyWord: this.housekeyWord };
+			house.list(data).then(res => {
+				console.log('l-', res);
+				this.house = res.list;
+				// if (this.pageNum == 1) this.list = res.list;
+				// else this.list = this.list.concat(res.list);
+			});
+		},
 		// 获得用户详情
 		getDetail() {
 			api.info(this.id).then(res => {
 				console.log(res);
 				this.form = { ...res };
-				this.oldform = {...res};
+				this.oldform = { ...res };
 			});
 		},
 		// 切换编辑
 		IsEdit(e) {
-			let {value} = e.detail
-			if(!value) this.form = {...this.oldform} 
+			let { value } = e.detail;
+			if (!value) this.form = { ...this.oldform };
 			this.isEdit = value;
 		},
 		// 验证表单
@@ -230,15 +296,15 @@ export default {
 		},
 		// 提交表单
 		submit() {
-			if (!this.check()) return;
+			// if (!this.check()) return;
 			let data = { ...this.form };
 			let indexes = this.indexes;
 			data = this.objFilter(data);
 			api.update(data).then(r => {
 				util.toast('更新成功');
 				this.isEdit = false;
-				this.oldform = {...this.form}
-				  uni.$emit('update',{indexes,data})
+				this.oldform = { ...this.form };
+				uni.$emit('update', { indexes, data });
 			});
 		},
 		// 选择来访日期
@@ -263,7 +329,7 @@ export default {
 			let year = date.getFullYear();
 			let month = date.getMonth() + 1;
 			let day = date.getDate();
-		
+
 			if (type === 'start') {
 				year = year - 60;
 			} else if (type === 'end') {
@@ -272,7 +338,7 @@ export default {
 			month = month > 9 ? month : '0' + month;
 			day = day > 9 ? day : '0' + day;
 			return `${year}-${month}-${day}`;
-		},
+		}
 	}
 };
 </script>

@@ -8,7 +8,7 @@
 		<view class="cu-bar bg-white solid-bottom sticky-top" :class="isEdit ? 'margin-top' : ''">
 			<view class="action">
 				<text class="cuIcon-titles text-orange "></text>
-				客户详情
+				详情
 			</view>
 			<view class="action">
 				<text :class="isEdit ? 'text-green' : 'text-grey'" class="padding-lr">编辑</text>

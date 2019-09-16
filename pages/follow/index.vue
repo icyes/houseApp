@@ -8,11 +8,11 @@
 			</block>
 		</cu-custom>
 		<!-- 列表头部 -->
-		<list-bar text="客户列表" @showModal="v => (modalName = v)" />
+		<list-bar text="跟进列表" @showModal="v => (modalName = v)" />
 		<!-- 顶部搜搜弹窗 -->
-		<filtrate-modal v-model="keyWord" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
+		<filtrate-modal :keyWord="keyWord" @input="v => (this.keyWord = v)" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 		<!-- 添加弹窗 -->
-		<cu-modal :modalName="modalName" text="客户" @submit="submit" @hideModal="hideModal" :isUpdate="isUpdate">
+		<cu-modal :modalName="modalName" text="跟进记录" @submit="submit" @hideModal="hideModal" :isUpdate="isUpdate">
 			<view class="cu-list sm-border menu text-left solid-top">
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">姓名</text></view>
@@ -49,12 +49,13 @@
 			</view>
 		</cu-modal>
 		<!-- 暂无数据 -->
-		<empty-data :show="list && list.length == 0"></empty-data>
+		<empty-data :show="isEmpty"></empty-data>
 		<!-- 列表 -->
-		<view :class="list && list.length > 0 ? 'show' : 'hide'">
+		<view :class="!isEmpty ? 'show' : 'hide'">
 			<view class="cu-list menu-avatar">
 				<view
 					class="cu-item"
+					style="min-height:180rpx"
 					@tap="link(`./detail?id=${item.id}&indexes=${index}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
 					v-for="(item, index) in list"
@@ -65,23 +66,26 @@
 					:data-target="'move-box-' + index"
 				>
 					<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
-					<view class="content" style="left:60rpx">
+					<view class="content" style="left:60rpx;">
 						<view class="text-grey">{{ item.name }}</view>
 						<view class="text-gray text-sm">
-							<text class="cuIcon-infofill text-red  margin-right-xs"></text>
-							消息未送达
+							联系方式:{{item.contactWay}}
+						</view>
+						<view class="text-gray text-sm">
+							联系详情:{{item.contactDetail}}
 						</view>
 					</view>
-					<view class="action">
-						<view class="text-grey text-xs">22:20</view>
-						<view class="cu-tag round bg-grey sm">5</view>
+					<view class="action padding-right" style="width: auto;text-align: right;">
+						<view class="text-grey text-sm">手机号:{{item.mobile}}</view>
+						<view class="text-grey text-sm round">回访日期:{{item.nextVisitTime.substr(0,10)}}</view>
+						<view class="text-grey text-sm round">主题:{{item.subject}}</view>
 					</view>
 					<view class="move">
 						<view class="bg-cyan" @tap.stop="onEdit(item)">编辑</view>
 						<view class="bg-red" @tap.stop="onCheckDel(item.id)">删除</view>
 					</view>
 				</view>
-				<view class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view>
+				<view v-if="pageNum>1" class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view>
 			</view>
 			<!-- 回到顶部 -->
 			<back-top :show="backTop" />
@@ -100,9 +104,9 @@ const defForm = {
 	subject: '', // 主题
 	contactDetail: '', //联系详情
 	nextVisitTime: '', //下次回访日期
-	userId:null,//职业顾问Id
+	// userId:null,//职业顾问Id
 	name: null, //客户姓名
-	mobile: 0, //客户电话
+	mobile: null, //客户电话
 };
 export default {
 	data() {
@@ -155,21 +159,28 @@ export default {
 		}
 	},
 	// 下拉
+	isPullDown:false,
 	onPullDownRefresh() {
+		if(this.isPullDown) return;
+		this.isPullDown = true;
 		this.pageNum = 1;
 		this.isLastPage = false;
 		this.getList();
 		setTimeout(function() {
 			uni.stopPullDownRefresh();
+			this.isPullDown = false;
 		}, 1000);
 	},
 	// 上拉触底
 	onReachBottom() {
-		if (this.isLastPage) return;
+		if (this.isLastPage||this.isPullDown) return;
 		++this.pageNum;
 		this.getList();
 	},
 	computed: {
+		isEmpty() {
+			return this.list && this.list.length == 0;
+		},
 		startDate() {
 			return this.getDate('start');
 		},

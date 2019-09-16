@@ -111,13 +111,8 @@
 		<!-- 侧边抽屉 -->
 		<view class="cu-modal drawer-modal justify-start" :class="modalName == 'DrawerModalL' ? 'show' : ''" @tap="hideModal">
 			<view class="cu-dialog basis-lg" @tap.stop="" :style="[{ top: CustomBar + 'px', height: 'calc(100vh - ' + CustomBar + 'px)' }]">
-				<view class="cu-list menu text-left">
-					<view class="cu-item arrow" v-for="(item, index) in 5" :key="index">
-						<view class="content">
-							<view>Item {{ index + 1 }}</view>
-						</view>
-					</view>
-				</view>
+					<slot name="DrawerModalL"/>
+				
 			</view>
 		</view>
 		<view class="cu-modal drawer-modal justify-end" :class="modalName == 'DrawerModalR' || show ? 'show' : ''" @tap="hideModal">

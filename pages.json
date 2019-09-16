@@ -28,10 +28,18 @@
 			}
 		},
 		{
+			"path": "pages/call/detail", // 详情页
+			"style": {}
+		},
+		{
 			"path": "pages/identity/index", // 认筹登记
 			"style": {
 				"enablePullDownRefresh": true
 			}
+		},
+		{
+			"path": "pages/identity/detail", // 详情页
+			"style": {}
 		},
 		{
 			"path": "pages/follow/index", // 跟进记录
@@ -40,9 +48,18 @@
 			}
 		},
 		{
+			"path": "pages/follow/detail", // 详情页
+			"style": {}
+		},
+		{
 			"path": "pages/offer/index", // 认购登记
 			"style": {
 				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/offer/detail", // 详情页
+			"style": {
 			}
 		},
 		{
