@@ -41,35 +41,35 @@ export default {
 			gridBorder: false,
 			cuIconList: [
 				{
-					cuIcon: 'cardboardfill',
+					cuIcon: 'group',
 					color: 'red',
-					badge: 120,
+					badge: 0,
 					name: '来访客户',
 					link: '/pages/customer/index'
 				},
 				{
-					cuIcon: 'recordfill',
+					cuIcon: 'phone',
 					color: 'orange',
-					badge: 1,
+					badge: 0,
 					name: '来电登记',
 					link: '/pages/call/index'
 				},
 				{
-					cuIcon: 'picfill',
+					cuIcon: 'footprint',
 					color: 'yellow',
 					badge: 0,
 					name: '跟进记录',
 					link: '/pages/follow/index'
 				},
 				{
-					cuIcon: 'noticefill',
+					cuIcon: 'form',
 					color: 'olive',
-					badge: 22,
+					badge: 0,
 					name: '认筹记录',
 					link: '/pages/identity/index'
 				},
 				{
-					cuIcon: 'upstagefill',
+					cuIcon: 'pay',
 					color: 'cyan',
 					badge: 0,
 					name: '认购登记',

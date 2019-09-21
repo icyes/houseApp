@@ -1,11 +1,11 @@
 <template>
-	<view v-if="isload">
+	<view>
 		<cu-custom bgColor="bg-gradual-pink" :isBack="true">
 			<block slot="backText">返回</block>
 			<block slot="content">{{ form.name }}</block>
 		</cu-custom>
 
-		<view class="cu-bar bg-white solid-bottom sticky-top" :class="isEdit ? 'margin-top' : ''">
+		<view class="cu-bar bg-white solid-bottom sticky-top" :class="isEdit ? '' : ''">
 			<view class="action">
 				<text class="cuIcon-titles text-orange "></text>
 				访客详情

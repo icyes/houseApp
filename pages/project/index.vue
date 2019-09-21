@@ -1,43 +1,41 @@
 <template>
 	<view class="flex-full">
-		<cu-custom bgColor="bg-gradual-blue">
+<!-- 		<cu-custom bgColor="bg-gradual-blue">
 			<block slot="content">项目列表</block>
-		</cu-custom>
+		</cu-custom> -->
+		<div class="box-ellipse relative flex-center">
+			<image :src="topImg"
+			 mode="widthFix" class="response"></image>
+			 <text class="text-bold absolute text-white text-shadow -black" style="font-size: 30px;top:100px;opacity:0.9;">华和置业</text>
+		</div>
+		
+		<!-- 退出 -->
+		<div class="fixed shadow text-right bg-white padding-sm padding-right text-gray" 
+		style="top:200px;width: 80px;border-radius:0 50px 50px 0;animationDelay:1.5s"
+		:class="[toggleDelay?'animation-slide-left':'']"
+		@tap="logout()"
+		>
+				登出<text class="cuIcon-expressman padding-lr-xs"></text>
+		</div>
+
 		<!-- 顶部搜搜弹窗 -->
 		<filtrate-modal v-model="keyWord" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 		<!-- 暂无数据 -->
 		<empty-data :show="list && list.length == 0"></empty-data>
 		<!-- 列表 -->
-		<view  :class="list && list.length > 0 ? 'show' : 'hide'">
-				<view class="cu-card menu-avatar">
-					<view
-						class="cu-item shadow-warp"
-						@tap="link(`/pages/project/detail?id=${item.id}&name=${item.projectName}`)"
-						:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
-						v-for="(item, index) in list"
-						:key="index"
-						:data-target="'move-box-' + index"
-					>
-						<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
-						<view class="flex-sub padding ">
-							<view class="text-grey text-center padding-bottom-sm text-lg">{{ item.projectName }}</view>
-							<!-- <view class="flex text-gray text-df text-sm padding-bottom-sm">
-								<text class=" text-black  margin-right-xs  flex-zero">居住地址：</text>
-								<view>{{item.liveAddressConfig}}</view>
-							</view>
-							<view class="text-gray text-sm padding-bottom-sm flex">
-								<text class=" text-black  margin-right-xs  flex-zero">工作地址：</text>
-								<view class="">
-									{{item.workAddressConfig}}
-								</view>
-							</view> -->
-						</view>
-					</view>
-					<!-- <view class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view> -->
+		<view class="nav-list" >
+			<block v-for="(item, index) in list">
 				
-			</view>
-		<!-- 回到顶部 -->
-			<!-- <back-top :show="backTop" /> -->
+			<div v-key="index" hover-class="none" class="nav-li bg-cyan" :style="[{animation: 'show ' + ((index+1)*0.2+1) + 's 1'}]"
+			 @tap="link(`/pages/project/detail?id=${item.id}&name=${item.projectName}`)"
+			 style="width: 100%;"
+			 >
+				<view class="nav-title">{{ item.projectName }}</view>
+				<view class="nav-name"></view>
+				<text class="cuIcon-all"></text>
+			</div>
+			</block>
+		</view>
 		</view>
 	</view>
 </template>
@@ -45,6 +43,8 @@
 <script>
 import api from '@/api/project.js';
 import util from '@/utils/index.js';
+import storage from "@/utils/storage.js"
+import topImg from "@/static/BasicsBg.png"
 const defForm = {
 	  "id": null,  //*
 	  "projectId":null,//项目id
@@ -65,6 +65,11 @@ export default {
 		});
 
 		return {
+			// 退出按钮左移位置
+			outleft:false,
+			// 退出按钮动画显影
+			toggleDelay: false,
+			topImg,
 			// 滚动窗口位置
 			scrollTop: 0,
 
@@ -89,6 +94,7 @@ export default {
 	},
 	mounted() {
 		this.getList();
+		this.ToggleDelay()
 	},
 	onUnload() {
 	
@@ -131,9 +137,22 @@ export default {
 		}
 	},
 	methods: {
+		logout(){
+			this.ToggleDelay();
+			util.showModal("确认退出当前账号").then(()=>{
+				storage.clear()
+				util.navigateTo('/pages/login/login')
+			})
+		},
 		// 实时监听滚动
 		scroll: function(e) {
 			this.scrollTop = e.detail.scrollTop;
+		},
+		ToggleDelay() {
+			this.toggleDelay= true;
+			setTimeout(()=>{
+				this.toggleDelay= false
+			}, 1000)
 		},
 		// 跳转
 

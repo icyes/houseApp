@@ -10,14 +10,16 @@
 			</block>
 		</cu-custom>
 		<!-- 列表头部  -->
-		<list-bar text="访客列表" @showModal="v => (modalName = v)" />
+		<div class="sticky-top">
+			<list-bar text="访客" @showModal="v => (modalName = v)" /> 
+		</div>
 		<!-- 暂无数据 -->
 		<empty-data :show="isEmpty"></empty-data>
 		<!-- 列表 -->
 		<view :class="!isEmpty ? 'show' : 'hide'">
-			<view class="cu-list menu-avatar">
+			<view class="cu-list menu-avatar ">
 				<view
-					class="cu-item"
+					class="cu-item margin-tb padding-tb light shadow shadow-lg  bg-white"
 					style="min-height: 180rpx;"
 					@tap="link(`./detail?id=${item.id}&indexes=${index}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
@@ -29,18 +31,46 @@
 					:data-target="'move-box-' + index"
 				>
 					<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
-					<view class="content" style="left:30rpx">
-						<view class="text-grey">{{ item.name }}</view>
-						<view class="text-gray text-sm">
-							<text class="text-red"></text>
+					<view class="content flex-sub">
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view class="text-grey">
+								{{ item.name }}
+								<text class="margin-left-sm" :class="item.sex === 1 ? 'text-blue cuIcon-male' : 'text-pink cuIcon-female'"></text>
+							</view>
+							<view class="text-df cu-capsule">
+								<text class="cu-tag bg-cyan text-white padding-xs"><text class="cuIcon-time margin-right-xs"></text>来访日期:</text>
+								<text class="cu-tag line-cyan">{{ item.comingTime.substr(0, 10) }}</text>
+							</view>
+						</view>
+						<view class=" text-df padding-bottom-sm text-cut" style="width: calc(100%-60rpx);">
+							<text class="cuIcon-location padding-right-xs"></text>
 							地址：{{ item.address }}
 						</view>
-						<view class="text-gray text-sm">来访日期：{{ item.comingTime.substr(0, 10) }}</view>
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view class="text-df">
+								<text class="cuIcon-phone padding-right-xs"></text>
+								手机号：{{ item.mobile }}
+							</view>
+							<view>
+								<text class="cuIcon-service padding-right-xs"></text>
+								职业：{{ item.profession || '--' }}
+							</view>
+						
+						</view>
+						<view class="flex justify-between align-center">
+					
+							<view class="text-df">
+								<text class="cuIcon-home padding-right-xs"></text>
+								意向楼层：{{ item.purposeFloor||'--' }}
+							</view>
+							<view>
+								<text class="cuIcon-recharge padding-right-xs"></text>
+								意向价格：{{ item.purposePrice||'--' }}
+							</view>
+						
+						</view>
 					</view>
-					<view class="action padding-right" style="width: auto;text-align:right">
-						<view class="text-grey text-sm">手机号：{{ item.mobile }}</view>
-						<view class="cu-tag round bg-grey sm">性别：{{ item.sex === 1 ? '男' : '女' }}</view>
-					</view>
+					<view class="action padding-right " style="width: auto;text-align:right"></view>
 					<view class="move">
 						<view class="bg-cyan" @tap.stop="onEdit(item)">编辑</view>
 						<view class="bg-red" @tap.stop="onCheckDel(item.id)">删除</view>

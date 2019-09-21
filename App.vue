@@ -39,6 +39,7 @@ export default {
 
 <style>
 @import 'colorui/main.css';
+@import 'colorui/animation.css';
 @import 'colorui/icon.css';
 
 .nav-list {
@@ -53,7 +54,7 @@ export default {
 	border-radius: 12upx;
 	width: 45%;
 	margin: 0 2.5% 40upx;
-	background-image: url(https://cdn.nlark.com/yuque/0/2019/png/280374/1552996358352-assets/web-upload/cc3b1807-c684-4b83-8f80-80e5b8a6b975.png);
+	background-image: url(./static/cloud.png);
 	background-size: cover;
 	background-position: center;
 	position: relative;

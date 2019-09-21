@@ -14,7 +14,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	flex: 1;
-	height: 100%;
+	/* height: 100%; */
 	background-color: #f1f1f1;
 	font-size: 28upx;
 	color: #333333;
@@ -41,10 +41,53 @@ image {
 	border-radius: 6upx;
 }
 
+/* ==================
+		定位
+ ==================== */
+
+.absolute {
+	position: absolute !important;
+}
+
+.fixed {
+	position: fixed !important;
+}
+
+.relative {
+	position: relative !important;
+}
 
 /* ==================
         布局
  ==================== */
+
+
+.box-ellipse {
+	/* 只设置左下角和右下角的圆角 */
+	border-radius: 0 0 80% 80%;
+	/* 设置相对定位 */
+	position: relative;
+	/* 宽度120%，-10%让元素集中 */
+	left: -10%;
+	/* 为了实现椭圆效果 */
+	width: 120%;
+	/* 设置高斯模糊 */
+	overflow: hidden;
+}
+
+/* 设置高斯模糊 */
+.blur {
+	filter: blur(30rpx);
+}
+
+.blur-sm {
+	filter: blur(20rpx);
+}
+
+.blur-xs {
+	filter: blur(10rpx);
+}
+
 .sticky-top {
 	position: sticky !important;
 	top: 128rpx;
@@ -2968,8 +3011,22 @@ scroll-view.cu-steps .cu-item {
 
 /*  -- flex弹性布局 -- */
 
-.flex-zero{
-	flex:0 0 auto;
+.flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+
+.flex-column-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-flow: column;
+}
+
+.flex-zero {
+	flex: 0 0 auto;
 }
 
 .flex {
@@ -3821,6 +3878,10 @@ scroll-view.cu-steps .cu-item {
 
 .shadow[class*="-white"] {
 	box-shadow: 6upx 6upx 8upx rgba(26, 26, 26, 0.2);
+}
+
+.light.shadow[class*="-white"] {
+	box-shadow: 6upx 6upx 8upx rgba(26, 26, 26, 0.1);
 }
 
 .text-shadow[class*="-red"] {
