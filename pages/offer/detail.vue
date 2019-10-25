@@ -211,25 +211,7 @@ import api from '@/api/offerbuy.js';
 import util from '@/utils';
 import house from '@/api/house.js';
 import {Age, gender, realEstate, statusArray, customerSource, family, professional } from '@/utils/common/data.js';
-const defForm = {
-	projectId: null,
-	id: null, //[up *]
-	name: null, //认购者信息
-	sex: 1, //性别
-	mobile: null, //电话
-	idCard: null, //身份证
-	address: null, //通讯地址
-	offerBuyTime: null, //认购日期
-	prePrice: '', //* 定金
-	houseId: '', //* 房屋Id
-	houseName:"",
-	workAddress: null, //工作区域
-	profession: null, //职业类型
-	age: null, //年龄
-	homeStructure: null, //家庭结构
-	buyMotive: null, //置业动机
-	sourceWay: null //客户来源
-};
+import {check,defForm} from "./verify.js"
 export default {
 	data() {
 		return {
@@ -311,7 +293,7 @@ export default {
 		},
 		// 提交表单
 		submit() {
-			// if (!this.check()) return;
+			if (!check(this.form)) return;
 			let data = { ...this.form };
 			let indexes = this.indexes;
 			data = this.objFilter(data);

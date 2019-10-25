@@ -227,19 +227,7 @@
 							<view v-else class="text-gray">选择客户来源</view>
 						</picker>
 					</view>
-					<!-- 				<view v-if="oldCusomterShow" class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">老客户Id号</text></view>
-						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写老客户Id号" placeholder-class="text-gray" v-model="form.oldCusomterId" />
-						</view>
-					</view> -->
-					<!-- <view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">客户状态</text></view>
-						<picker class="flex-treble" @change="bindStatusChange" :value="form.status" :range="statusArray">
-							<view v-if="form.status" class="uni-input">{{ statusArray[form.status] }}</view>
-							<view v-else class="text-gray">选择客户状态</view>
-						</picker>
-					</view> -->
+
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">备注</text></view>
 						<view class="action flex-treble">
@@ -272,30 +260,7 @@ import {
 	professional,
 	Age
 } from '@/utils/common/data.js';
-const defForm = {
-	id: null, //[up *]
-	mobile: '', //* 联系方式
-	name: '', //* 姓名
-	comingTime: '', //*来访日期
-	address: '', //居住地址
-	age: null, //年龄
-	sex: 0, //性别
-	acreageRequirement: '', //面积需求
-	focusPoint: '', // 关注点
-	homeStructure: '', //家庭结构
-	oldCusomterId: null, //老客户Id（客户来源是 老客户介绍时）
-	// payWay: '', //付款方式
-	productRequirement: '', // 产品需求
-	profession: '', //职业类型
-	purpose: '', // 客户意向
-	purposeFloor: '', //意向楼层
-	purposePrice: '', //意向价格
-	resistPoint: '', //抗拒点
-	sourceWay: null, //客户来源
-	// status: 0, //客户状态（0-来电，1-认筹，2签约，3购买）
-	remark: '' //备注
-	// userId: 0 // 置业顾问Id
-};
+import {check,defForm} from "./verify.js"
 export default {
 	data() {
 		return {
@@ -319,11 +284,9 @@ export default {
 		};
 	},
 	onLoad(option) {
-		console.log(option);
 		let { id, indexes,projectId } = option;
 		this.id = id;
 		this.projectId = projectId;
-		console.log('this.pp--',this.projectId);
 		this.indexes = indexes;
 		this.getDetail();
 	},
@@ -336,7 +299,6 @@ export default {
 		addFollow(){
 			let form = this.form;
 			let projectId = this.projectId;
-			console.log('this.projectId',projectId);
 			let url = `/pages/follow/index?id=${projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}`;
 			util.navigateTo(url);
 		},
@@ -367,7 +329,6 @@ export default {
 			this.form.productRequirement = this.productDemand[0][i_0] + ':' + this.productDemand[1][i_1];
 		},
 		changeProductDemand: function(e) {
-			console.log('this.productDemand', e);
 			let {
 				detail: { column, value }
 			} = e;
@@ -378,7 +339,6 @@ export default {
 		// 获得用户详情
 		getDetail() {
 			customer.info(this.id).then(res => {
-				console.log(res);
 				this.form = { ...res };
 				this.oldform = { ...res };
 				this.isload = true;
@@ -390,28 +350,9 @@ export default {
 			if (!value) this.form = { ...this.oldform };
 			this.isEdit = value;
 		},
-		// 验证表单
-		check() {
-			let result = true;
-			/* mobile: '', //* 联系方式
-			name: '', //* 姓名
-			comingTime: '', //*来访日期 */
-			let { mobile, name, comingTime } = this.form;
-			if (!mobile) {
-				util.toast('联系方式不能为空');
-				result = false;
-			} else if (!name) {
-				util.toast('姓名不能为空');
-				result = false;
-			} else if (!comingTime) {
-				util.toast('来访日期不能为空');
-				result = false;
-			}
-			return result;
-		},
 		// 提交表单
 		submit() {
-			if (!this.check()) return;
+			if (!check(this.form)) return;
 			let data = { ...this.form };
 			let indexes = this.indexes;
 			data = this.objFilter(data);

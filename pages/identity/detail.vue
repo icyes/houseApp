@@ -34,10 +34,6 @@
 						<view class="content flex-sub"><text class="text-grey">身份证地址</text></view>
 						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="身份证地址" placeholder-class="text-gray" v-model="form.idAddress" /></view>
 					</view>
-				<!-- 	<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">工作单位</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="工作单位" placeholder-class="text-gray" v-model="form.company" /></view>
-					</view> -->
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">单位地址</text></view>
 						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="工作单位地址" placeholder-class="text-gray" v-model="form.companyAddress" /></view>
@@ -48,48 +44,11 @@
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">vip卡号</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="vip" placeholder-class="text-gray" v-model="form.vipCard" /></view>
+						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="vip卡号" placeholder-class="text-gray" v-model="form.vipCard" /></view>
 					</view>
-<!-- 					<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">买售状态</text></view>
-						<picker
-						:disabled="isEdit ? false : true"
-							class="flex-treble"
-							@change="
-								e => {
-									this.form.sellStatus = sellStatus[e.target.value].value;
-								}
-							"
-							range-key="title"
-							:value="form.sellStatus ? form.sellStatus - 1 : 0"
-							:range="sellStatus"
-						>
-							<view v-if="form.sellStatus" class="uni-input">{{ sellStatus[form.sellStatus - 1].title }}</view>
-							<view v-else class="text-gray">选择买售状态</view>
-						</picker>
-					</view> -->
-				<!-- 	<view class="cu-item flex">
-						<view class="content flex-sub"><text class="text-grey">退卡日期</text></view>
-						<picker
-						:disabled="true"
-							class="flex-treble"
-							mode="date"
-							:value="form.refundTime"
-							:start="startDate"
-							:end="endDate"
-							@change="
-								e => {
-									this.form.refundTime = e.target.value ? e.target.value.substr(0, 10) : '--';
-								}
-							"
-						>
-							<view v-if="form.refundTime" class="uni-input">{{ form.refundTime }}</view>
-							<view v-else class="text-gray">选择退卡日期</view>
-						</picker>
-					</view> -->
+
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">认筹日期</text></view>
-						<!-- <view class="action flex-treble"><input type="text" placeholder="认筹日期" placeholder-class="text-gray" v-model="form.identifyTime" /></view> -->
 						<picker
 						:disabled="isEdit ? false : true"
 							class="flex-treble"
@@ -109,7 +68,6 @@
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">职业</text></view>
-						<!-- <view class="action flex-treble"><input type="text" placeholder="职业" placeholder-class="text-gray" v-model="form.profession" /></view> -->
 						<picker
 						:disabled="isEdit ? false : true"
 							class="flex-treble"
@@ -127,7 +85,6 @@
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">年龄</text></view>
-						<!-- <view class="action flex-treble"><input type="text" placeholder="年龄" placeholder-class="text-gray" v-model="form.age" /></view> -->
 						<picker
 							class="flex-treble"
 							@change="
@@ -144,7 +101,6 @@
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">产品需求</text></view>
-						<!-- <view class="action flex-treble"><input type="text" placeholder="产品需求" placeholder-class="text-gray" v-model="form.productRequirement" /></view> -->
 						<picker :disabled="isEdit ? false : true" class="flex-treble" mode="multiSelector" @change="onProductDemand" @columnchange="changeProductDemand" :range="productDemand">
 							<view v-if="form.productRequirement" class="uni-input">{{ form.productRequirement }}</view>
 							<view v-else class="text-gray">选择产品需求</view>
@@ -156,8 +112,6 @@
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">认筹途径</text></view>
-						<!-- 
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="认筹途径" placeholder-class="text-gray" v-model="form.sourceWay" /></view> -->
 						<picker
 						:disabled="isEdit ? false : true"
 							class="flex-treble"
@@ -175,7 +129,6 @@
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">置业动机</text></view>
-						<!-- <view class="action flex-treble"><input type="text" placeholder="置业动机" placeholder-class="text-gray" v-model="form.buyMotive" /></view> -->
 						<picker
 						:disabled="isEdit ? false : true"
 							class="flex-treble"
@@ -211,23 +164,12 @@
 import api from '@/api/identify.js';
 import util from '@/utils';
 import { sellStatus, professional, Age, productDemand,realEstate,sourceWayArray, } from '@/utils/common/data.js';
-const defForm = {
-	id: null, //[up *]
-	name: '', //* 姓名
-	mobile: '', //* 手机号
-	idCard: '', //*身份证
-	idAddress: '', //身份证地址
-	company: null, //工作单位
-	companyAddress: "", //工作单位地址
-	identifyPrice: '', //认筹金
-	vipCard:"" //vip卡号
-};
+import {check,defForm} from "./verify.js"
 export default {
 	data() {
 		return {
 			isEdit: false,
 			form: defForm,
-			// sourceWayArray: ['自然上访', '员工邀约', '老客户介绍', '路过', '朋友介绍', '广告媒体', '其他'],
 			statusArray: ['来电', '认筹', '签约', '购买'],
 			sexArray: ['男', '女'],
 			// dataArray--
@@ -284,28 +226,10 @@ export default {
 			if(!value) this.form = {...this.oldform} 
 			this.isEdit = value;
 		},
-		// 验证表单
-		check() {
-			let result = true;
-			/* mobile: '', //* 联系方式
-			name: '', //* 姓名
-			comingTime: '', //*来访日期 */
-			let { mobile, name, comingTime } = this.form;
-			if (!mobile) {
-				util.toast('联系方式不能为空');
-				result = false;
-			} else if (!name) {
-				util.toast('姓名不能为空');
-				result = false;
-			} else if (!comingTime) {
-				util.toast('来访日期不能为空');
-				result = false;
-			}
-			return result;
-		},
+
 		// 提交表单
 		submit() {
-			// if (!this.check()) return;
+			if (!check(this.form)) return;
 			let data = { ...this.form };
 			let indexes = this.indexes;
 			data = this.objFilter(data);

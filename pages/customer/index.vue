@@ -99,7 +99,7 @@
 					<view class="content flex-sub"><text class="text-grey">来访日期</text></view>
 					<view class="action flex-treble">
 						<picker mode="date" :value="form.comingTime" :start="startDate" :end="endDate" @change="bindDateChange">
-							<view v-if="form.comingTime" class="uni-input">{{ form.comingTime.substr(0, 10) }}</view>
+							<view v-if="form.comingTime" class="uni-input">{{ $moment(form.comingTime).format("YYYY-MM-DD") }}</view>
 							<view v-else class="text-gray">选择来访日期</view>
 						</picker>
 					</view>
@@ -277,6 +277,7 @@
 <script>
 import customer from '@/api/customer.js';
 import util from '@/utils/index.js';
+import {check,defForm} from "./verify.js"
 import {
 	businessPrise,
 	residentialPrice,
@@ -292,31 +293,7 @@ import {
 	professional,
 	Age
 } from '@/utils/common/data.js';
-const defForm = {
-	projectId: null, //项目id
-	id: null, //[up *]
-	name: '', //* 姓名
-	sex: 0, //性别
-	mobile: '', //* 联系方式
-	comingTime: '', //*来访日期
-	age: null, //年龄
-	address: '', //居住地址
-	profession: '', //职业类型
-	homeStructure: '', //家庭结构
-	sourceWay: null, //客户来源
-	buyMotive: null, //置业动机
-	productRequirement: '', //产品需求
-	acreageRequirement: '', //面积需求
-	purposeFloor: '', //意向楼层
-	purposePrice: '', //意向价格
-	purpose: '', // 客户意向
-	payWay: '', //付款方式
-	focusPoint: '', //关注点
-	resistPoint: '', //抗拒点
-	remark: '' //备注
 
-	// userId: 0 // 置业顾问Id
-};
 export default {
 	data() {
 		const currentDate = this.getDate({
@@ -361,7 +338,6 @@ export default {
 	},
 
 	onLoad(option) {
-		console.log(option);
 		this.form.projectId = option.id;
 		this.getList();
 		uni.$on('update', obj => {
@@ -393,7 +369,6 @@ export default {
 
 	// 滚动
 	onPageScroll(res) {
-		// console.log(res);
 		let { scrollTop } = res;
 		this.scrollTop = scrollTop;
 		if (!this.backTop && scrollTop > 200) {
@@ -421,11 +396,9 @@ export default {
 	},
 	methods: {
 		onPurposePrice: function(e) {
-			// console.log(e);
 			let {
 				target: { value }
 			} = e;
-			// console.log(value);
 			let i_0 = !!value[0] ? value[0] : 0;
 			let i_1 = !!value[1] ? value[1] : 0;
 			this.form.purposePrice = this.purposePrice[1][i_1];
@@ -439,11 +412,9 @@ export default {
 			this.$forceUpdate();
 		},
 		onProductDemand: function(e) {
-			// console.log(e);
 			let {
 				target: { value }
 			} = e;
-			// console.log(value);
 			let i_0 = !!value[0] ? value[0] : 0;
 			let i_1 = !!value[1] ? value[1] : 0;
 			this.form.productRequirement = this.productDemand[0][i_0] + ':' + this.productDemand[1][i_1];
@@ -544,7 +515,6 @@ export default {
 		},
 		// 显示添加弹框
 		showModal(e) {
-			// console.log(e);
 			// 设置页面滚动，防止遮罩层下拉刷新
 			util.pageScrollTo(10);
 			// 弹窗滚动条
@@ -592,28 +562,9 @@ export default {
 			day = day > 9 ? day : '0' + day;
 			return `${year}-${month}-${day}`;
 		},
-		// 验证表单
-		check() {
-			let result = true;
-			/* mobile: '', //* 联系方式
-			name: '', //* 姓名
-			comingTime: '', //*来访日期 */
-			let { mobile, name, comingTime } = this.form;
-			if (!mobile) {
-				util.toast('联系方式不能为空');
-				result = false;
-			} else if (!name) {
-				util.toast('姓名不能为空');
-				result = false;
-			} else if (!comingTime) {
-				util.toast('来访日期不能为空');
-				result = false;
-			}
-			return result;
-		},
 		// 提交表单
 		submit() {
-			if (!this.check()) return;
+			if (!check(this.form)) return;
 			let data = { ...this.form };
 			data = this.objFilter(data);
 			const save = data => customer.save(data);

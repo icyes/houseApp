@@ -39,10 +39,7 @@
 					<view class="content flex-sub"><text class="text-grey">身份证地址</text></view>
 					<view class="action flex-treble"><input type="text" placeholder="身份证地址" placeholder-class="text-gray" v-model="form.idAddress" /></view>
 				</view>
-				<!-- <view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">工作单位</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="工作单位" placeholder-class="text-gray" v-model="form.company" /></view>
-				</view> -->
+
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">单位地址</text></view>
 					<view class="action flex-treble"><input type="text" placeholder="工作单位地址" placeholder-class="text-gray" v-model="form.companyAddress" /></view>
@@ -55,41 +52,6 @@
 					<view class="content flex-sub"><text class="text-grey">vip卡号</text></view>
 					<view class="action flex-treble"><input type="text" placeholder="vip" placeholder-class="text-gray" v-model="form.vipCard" /></view>
 				</view>
-	<!-- 			<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">买售状态</text></view>
-					<picker
-						class="flex-treble"
-						@change="
-							e => {
-								this.form.sellStatus = sellStatus[e.target.value].value;
-							}
-						"
-						range-key="title"
-						:value="form.sellStatus ? form.sellStatus - 1 : 0"
-						:range="sellStatus"
-					>
-						<view v-if="form.sellStatus" class="uni-input">{{ sellStatus[form.sellStatus - 1].title }}</view>
-						<view v-else class="text-gray">选择买售状态</view>
-					</picker>
-				</view> -->
-	<!-- 			<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">退卡日期</text></view>
-					<picker
-						class="flex-treble"
-						mode="date"
-						:value="form.refundTime"
-						:start="startDate"
-						:end="endDate"
-						@change="
-							e => {
-								this.form.refundTime = e.target.value ? e.target.value.substr(0, 10) : '--';
-							}
-						"
-					>
-						<view v-if="form.refundTime" class="uni-input">{{ form.refundTime }}</view>
-						<view v-else class="text-gray">选择退卡日期</view>
-					</picker>
-				</view> -->
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">认筹日期</text></view>
 					<!-- <view class="action flex-treble"><input type="text" placeholder="认筹日期" placeholder-class="text-gray" v-model="form.identifyTime" /></view> -->
@@ -157,7 +119,6 @@
 				</view>
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">认筹途径</text></view>
-					<!-- <view class="action flex-treble"><input type="text" placeholder="认筹途径" placeholder-class="text-gray" v-model="form.sourceWay" /></view> -->
 					<picker
 						class="flex-treble"
 						@change="
@@ -174,7 +135,6 @@
 				</view>
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">置业动机</text></view>
-					<!-- <view class="action flex-treble"><input type="text" placeholder="置业动机" placeholder-class="text-gray" v-model="form.buyMotive" /></view> -->
 					<picker
 						class="flex-treble"
 						@change="
@@ -253,54 +213,12 @@
 							<text class=" cuIcon-addressbook  margin-right-xs"></text>
 							身份证地址：{{ item.idAddress }}
 						</view>
-						<!-- 		<view class="text-df text-cut padding-bottom-sm">
-							<text class=" cuIcon-activity  margin-right-xs"></text>
-							工作单位：{{item.company}}
-						</view> -->
+	
 						<view class="text-df text-cut padding-bottom-sm">
 							<text class=" cuIcon-locationfill  margin-right-xs"></text>
 							单位地址：{{ item.companyAddress||"--" }}
 						</view>
-			<!-- 			<view class="text-df text-cut padding-bottom-sm">
-							<text class=" cuIcon-locationfill  margin-right-xs"></text>
-							买售状态：{{ item.sellStatus }}
-						</view>
-						<view class="text-df text-cut padding-bottom-sm">
-							<text class=" cuIcon-locationfill  margin-right-xs"></text>
-							退卡日期：{{ item.refundTime }}
-						</view>
-						<view class="text-df text-cut padding-bottom-sm">
-							<text class=" cuIcon-locationfill  margin-right-xs"></text>
-							认筹日期：{{ item.identifyTime }}
-						</view>
-						<view class="text-df text-cut padding-bottom-sm">
-							<text class=" cuIcon-locationfill  margin-right-xs"></text>
-							职业：{{ item.profession }}
-						</view>
-						<view class="text-df text-cut padding-bottom-sm">
-							<text class=" cuIcon-locationfill  margin-right-xs"></text>
-							年龄：{{ item.age }}
-						</view>
-						<view class="text-df text-cut padding-bottom-sm">
-							<text class=" cuIcon-locationfill  margin-right-xs"></text>
-							产品需求：{{ item.productRequirement }}
-						</view>
-						<view class="text-df text-cut padding-bottom-sm">
-							<text class=" cuIcon-locationfill  margin-right-xs"></text>
-							购买力评估：{{ item.purpose }}
-						</view>
-						<view class="text-df text-cut padding-bottom-sm">
-							<text class=" cuIcon-locationfill  margin-right-xs"></text>
-							认筹途径：{{ item.sourceWay }}
-						</view>
-						<view class="text-df text-cut padding-bottom-sm">
-							<text class=" cuIcon-locationfill  margin-right-xs"></text>
-							置业动机：{{ item.buyMotive }}
-						</view>
-						<view class="text-df text-cut padding-bottom-sm">
-							<text class=" cuIcon-locationfill  margin-right-xs"></text>
-							意向价格：{{ item.purposePrice }}
-						</view> -->
+
 					</view>
 
 					<view class="move">
@@ -320,28 +238,8 @@
 import api from '@/api/identify.js';
 import util from '@/utils/index.js';
 import { sellStatus, professional, Age, productDemand,realEstate,sourceWayArray,offerSattus } from '@/utils/common/data.js';
-// 认筹登记表
-const defForm = {
-	id: null, //[up *]
-	name: '', //* 姓名
-	mobile: '', //* 手机号
-	idCard: '', //*身份证
-	idAddress: '', //身份证地址
-	company: null, //工作单位
-	companyAddress: '', //工作单位地址
-	identifyPrice: '', //认筹金
-	vipCard: '', //vip卡号
-	sellStatus: null,
-	identifyTime: null,
-	refundTime: null,
-	profession: null,
-	age: null,
-	productRequirement: null,
-	purpose: null,
-	sourceWay: null,
-	buyMotive: null,
-	purposePrice: null
-};
+import {check,defForm} from "./verify.js"
+
 export default {
 	data() {
 		const currentDate = this.getDate({
@@ -590,28 +488,9 @@ export default {
 			day = day > 9 ? day : '0' + day;
 			return `${year}-${month}-${day}`;
 		},
-		// 验证表单
-		check() {
-			let result = true;
-			/* mobile: '', //* 联系方式
-			name: '', //* 姓名
-			comingTime: '', //*来访日期 */
-			let { mobile, name, comingTime } = this.form;
-			if (!mobile) {
-				util.toast('联系方式不能为空');
-				result = false;
-			} else if (!name) {
-				util.toast('姓名不能为空');
-				result = false;
-			} else if (!comingTime) {
-				util.toast('来访日期不能为空');
-				result = false;
-			}
-			return result;
-		},
 		// 提交表单
 		submit() {
-			// if (!this.check()) return;
+			if (!check(this.form)) return;
 			let data = { ...this.form };
 			data = this.objFilter(data);
 			const save = data => api.save(data);

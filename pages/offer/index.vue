@@ -293,26 +293,10 @@
 import api from '@/api/offerbuy.js';
 import house from '@/api/house.js';
 import util from '@/utils/index.js';
+import {check,defForm} from "./verify.js"
 import { gender, realEstate, statusArray, customerSource, family, professional, Age, offerSattus } from '@/utils/common/data.js';
 // 认购信息表
-const defForm = {
-	projectId: null,
-	id: null, //[up *]
-	name: null, //认购者信息
-	sex: 1, //性别
-	mobile: null, //电话
-	idCard: null, //身份证
-	address: null, //通讯地址
-	offerBuyTime: "", //认购日期
-	prePrice: '', //* 定金
-	houseId: '', //* 房屋Id
-	workAddress: null, //工作区域
-	profession: null, //职业类型
-	age: null, //年龄
-	homeStructure: null, //家庭结构
-	buyMotive: null, //置业动机
-	sourceWay: null //客户来源
-};
+
 export default {
 	data() {
 		const currentDate = this.getDate({
@@ -601,28 +585,10 @@ export default {
 			day = day > 9 ? day : '0' + day;
 			return `${year}-${month}-${day}`;
 		},
-		// 验证表单
-		check() {
-			let result = true;
-			/* mobile: '', //* 联系方式
-			name: '', //* 姓名
-			comingTime: '', //*来访日期 */
-			let { mobile, name, comingTime } = this.form;
-			if (!mobile) {
-				util.toast('联系方式不能为空');
-				result = false;
-			} else if (!name) {
-				util.toast('姓名不能为空');
-				result = false;
-			} else if (!comingTime) {
-				util.toast('来访日期不能为空');
-				result = false;
-			}
-			return result;
-		},
+
 		// 提交表单
 		submit() {
-			// if (!this.check()) return;
+			if (!check(this.form)) return;
 			let data = { ...this.form };
 			data = this.objFilter(data);
 			const save = data => api.save(data);
