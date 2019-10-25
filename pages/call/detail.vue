@@ -5,11 +5,12 @@
 			<block slot="content">{{ form.name }}</block>
 		</cu-custom>
 
-		<view class="cu-bar bg-white solid-bottom sticky-top" :class="isEdit ? 'margin-top' : ''">
+		<view class="cu-bar bg-white solid-bottom sticky-top flex justify-between" :class="isEdit ? 'margin-top' : ''">
 			<view class="action">
 				<text class="cuIcon-titles text-orange "></text>
 				来电详情
 			</view>
+			<button class="cu-btn  bg-orange margin-right" @tap="() => addFollow()">添加跟进</button>
 			<view class="action">
 				<text :class="isEdit ? 'text-green' : 'text-grey'" class="padding-lr">编辑</text>
 				<switch :class="isEdit ? 'checked' : ''" :checked="isEdit ? true : false" @change="IsEdit"></switch>
@@ -64,7 +65,7 @@
 									}
 								"
 							>
-								<view v-if="form.callTime" class="uni-input">{{ form.callTime.substr(0,10) }}</view>
+								<view v-if="form.callTime" class="uni-input">{{ form.callTime.substr(0, 10) }}</view>
 								<view v-else class="text-gray">选择来电日期</view>
 							</picker>
 						</view>
@@ -72,9 +73,17 @@
 
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">获取途径</text></view>
-						<picker :disabled="isEdit ? false : true" class="flex-treble" @change="e=>{
-							this.form.acquiringWay = Number(e.target.value) + 1;
-						}" :value="form.acquiringWay-1" :range="sourceWayArray">
+						<picker
+							:disabled="isEdit ? false : true"
+							class="flex-treble"
+							@change="
+								e => {
+									this.form.acquiringWay = Number(e.target.value) + 1;
+								}
+							"
+							:value="form.acquiringWay - 1"
+							:range="sourceWayArray"
+						>
 							<view v-if="form.acquiringWay" class="uni-input">{{ sourceWayArray[form.acquiringWay - 1] }}</view>
 							<view v-else class="text-gray">选择获取途径</view>
 						</picker>
@@ -98,7 +107,7 @@
 							<input type="text" :disabled="isEdit ? false : true" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" />
 						</view>
 					</view>
-					
+
 					<view v-if="isEdit" class="padding-lg flex flex-direction"></view>
 					<view v-if="isEdit" class="fixed-bottom padding flex flex-direction"><button @click="submit" class="cu-btn bg-green lg shadow-blur round">提交</button></view>
 				</view>
@@ -135,8 +144,9 @@ export default {
 	},
 	onLoad(option) {
 		console.log(option);
-		let { id, indexes } = option;
+		let { id, indexes, projectId } = option;
 		this.id = id;
+		this.projectId = projectId;
 		this.indexes = indexes;
 		this.getDetail();
 		console.log('page', getCurrentPages());
@@ -147,6 +157,13 @@ export default {
 		}
 	},
 	methods: {
+		addFollow() {
+			let form = this.form;
+			let projectId = this.projectId;
+			console.log('this.projectId', projectId);
+			let url = `/pages/follow/index?id=${projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}`;
+			util.navigateTo(url);
+		},
 		// 获得用户详情
 		getDetail() {
 			api.info(this.id).then(res => {

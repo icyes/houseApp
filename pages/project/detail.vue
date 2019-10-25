@@ -75,6 +75,13 @@ export default {
 					name: '认购登记',
 					link: '/pages/offer/index'
 				},
+				{
+					cuIcon: 'friend',
+					color: 'purple',
+					badge: 0,
+					name: '拓展客户',
+					link: '/pages/tookeen/index'
+				},
 				// {
 				// 	cuIcon: 'clothesfill',
 				// 	color: 'blue',

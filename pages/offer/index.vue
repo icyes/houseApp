@@ -10,8 +10,10 @@
 		<!-- 列表头部 -->
 		<list-bar
 			text="认购列表"
+			:total="total"
 			@showModal="
 				v => {
+					this.form=Object.assign({},defForm);
 					if (v === 'formModal') {
 						this.cumodal = true;
 					} else {
@@ -69,7 +71,7 @@
 							:end="endDate"
 							@change="
 								e => {
-									this.form.offerBuyTime = e.target.value.substr(0, 10);
+									this.form.offerBuyTime = e.target.value?e.target.value.substr(0, 10):'--';
 								}
 							"
 						>
@@ -84,7 +86,7 @@
 				</view> -->
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">房屋</text></view>
-					<view class="action flex-treble" @tap="modalName = 'DrawerModalL'">
+					<view class="action flex-treble" @tap="showHouseModal">
 						<input type="text" disabled="true" placeholder="房屋" placeholder-class="text-gray" v-model="form.houseName" />
 					</view>
 				</view>
@@ -110,7 +112,20 @@
 				</view>
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">年龄</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="年龄" placeholder-class="text-gray" v-model="form.age" /></view>
+					<!-- <view class="action flex-treble"><input type="text" placeholder="年龄" placeholder-class="text-gray" v-model="form.age" /></view> -->
+					<picker
+						class="flex-treble"
+						@change="
+							e => {
+								this.form.age = Age[e.target.value];
+							}
+						"
+						:value="Age.indexOf(form.age) !== -1 && Age.indexOf(form.age) < Age.length ? Age.indexOf(form.age) : 0"
+						:range="Age"
+					>
+						<view v-if="form.age" class="uni-input">{{ form.age }}</view>
+						<view v-else class="text-gray">选择客户年龄</view>
+					</picker>
 				</view>
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">家庭结构</text></view>
@@ -166,9 +181,9 @@
 		<empty-data :show="isEmpty"></empty-data>
 		<!-- 列表 -->
 		<view :class="!isEmpty ? 'show' : 'hide'">
-			<view class="cu-list menu-avatar">
+			<view class="cu-list menu-avatar ">
 				<view
-					class="cu-item"
+					class="cu-item margin-tb light shadow shadow-lg  bg-white"
 					style="min-height: 180px;"
 					@tap="link(`./detail?id=${item.id}&indexes=${index}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
@@ -180,58 +195,65 @@
 					:data-target="'move-box-' + index"
 				>
 					<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
-					<view class="content" style="left:60rpx">
-						<view class="text-grey">{{ item.name }}</view>
-						<view class="text-gray text-sm">
-							<text class="text-grey">身份证：</text>
-							{{ item.idCard }}
+					<view class="content  padding-tb overhide relative flex-sub">
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view class="text-grey">
+								<view
+									class="tip text-white font-size-12"
+									:class="[item.status == 0 ? 'bg-yellow' : '', item.status == 1 ? 'bg-green' : '', item.status == 2 ? 'bg-red' : '']"
+								>
+									{{ offerSattus[item.status] }}
+								</view>
+								<text class="margin-left-xl padding-left-sm">{{ item.name }}</text>
+								<text class="margin-left-sm" :class="item.sex === 1 ? 'text-blue cuIcon-male' : 'text-pink cuIcon-female'"></text>
+								<view class="cu-tag round line-green light shadow margin-left text-cut">房屋:{{ item.houseName }}</view>
+							</view>
+							<view v-if="item.prePrice" class="text-df cu-capsule">
+								<text class="cu-tag radius shadow bg-red text-white padding-xs">
+									<text class="cuIcon-recharge margin-right-xs"></text>
+									定金:
+								</text>
+								<text class="cu-tag shadow radius line-red">{{ item.prePrice || '--' }}</text>
+							</view>
 						</view>
-						<view class="text-gray text-sm">
-							<text class="text-grey">通讯地址：</text>
-							{{ item.address }}
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view class="text-df">
+								<text class="cuIcon-phone padding-right-xs"></text>
+								手机号：{{ item.mobile || '--' }}
+							</view>
+							<view>
+								<text class="cuIcon-timefill padding-right-xs"></text>
+								<text class="">认购日期：</text>
+								{{ item.offerBuyTime }}
+							</view>
 						</view>
-						<view class="text-gray text-sm">
-							<text class="text-grey">房屋：</text>
-							{{ item.houseName }}
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view class="text-df">
+								<text class="cuIcon-searchlist padding-right-xs"></text>
+								身份证：{{ item.idCard || '--' }}
+							</view>
+							<view>
+								<text class="cuIcon-service padding-right-xs"></text>
+								职业：{{ item.profession || '--' }}
+							</view>
 						</view>
-						<view class="text-gray text-sm">
-							<text class="text-grey">工作区域：</text>
-							{{ item.workAddress }}
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view class="text-df">
+								<text class="cuIcon-profile padding-right-xs"></text>
+								置业动机：{{ item.buyMotive || '--' }}
+							</view>
+							<view>
+								<text class="cuIcon-radiobox padding-right-xs"></text>
+								客户来源：{{ item.sourceWay ? sourceWayArray[item.sourceWay - 1] : '--' }}
+							</view>
 						</view>
-						<view class="text-gray text-sm">
-							<text class="text-grey">家庭结构：</text>
-							{{ item.homeStructure }}
-						</view>
-						<view class="text-gray text-sm">
-							<text class="text-grey">客户来源：</text>
-							{{ sourceWayArray[item.sourceWay-1] }}
+						<view class=" text-df padding-bottom-sm text-cut">
+							<text class="cuIcon-location padding-right-xs"></text>
+							<text>通讯地址：</text>
+							{{ item.address || '--' }}
 						</view>
 					</view>
-					<view class="action padding-right flex-zero" style="width: auto;text-align: right;">
-						<view class="text-gray text-sm">
-							<text class="text-grey">定金：</text>
-							{{ item.prePrice||'--' }}
-						</view>
-						<view class="text-gray text-sm">
-							<text class="text-grey">手机号：</text>
-							{{ item.mobile }}
-						</view>
-						<view class="cu-tag round bg-grey sm">性别:{{ item.sex === 1 ? '男' : '女' }}</view>
-						<view class="text-gray text-sm">
-							<text class="text-grey">认购日期：</text>
-							{{ item.offerBuyTime.substr(0, 10) }}
-						</view>
-						
-						<view class="text-gray text-sm">
-							<text class="text-grey">职业类型：</text>
-							{{ item.profession }}
-						</view>
-						<view class="text-gray text-sm">
-							<text class="text-grey">置业动机：</text>
-							{{ item.buyMotive }}
-						</view>
-						<view class="cu-tag round bg-grey sm">年龄:{{ item.age }}</view>
-					</view>
+
 					<view class="move">
 						<view class="bg-cyan" @tap.stop="onEdit(item)">编辑</view>
 						<view class="bg-red" @tap.stop="onCheckDel(item.id)">删除</view>
@@ -247,16 +269,21 @@
 				<view class="padding-xl cu-bar search">
 					<view class="search-form round" style="background: #fff;">
 						<text class="cuIcon-search"></text>
-						<input type="text" v-model="housekeyWord" @input="getHouse" placeholder="输入房屋名字" confirm-type="search" />
+						<input type="text" v-model="housekeyWord" @input="houseSearch()" placeholder="输入房屋名字" confirm-type="search" />
 					</view>
 				</view>
-				<view class="cu-list menu text-left">
-					<view class="cu-item arrow" v-for="(item, index) in house" :key="index">
-						<view class="content" @tap="chooseHouse(item)">
-							<view>{{ item.name }}</view>
+				<scroll-view scroll-y="true" style="height: 500px;" @scrolltolower="houseLower">
+					<view class="cu-list menu text-left">
+						<view class="cu-item arrow" v-for="(item, index) in house.list" :key="index">
+							<view class="content" @tap="chooseHouse(item)">
+								<view>{{ item.name }}</view>
+							</view>
 						</view>
 					</view>
-				</view>
+					<view v-if="house.isLastPage" class="margin-top text-gray text-df">
+						---- 到底了 ----
+					</view>
+				</scroll-view>
 			</view>
 		</drawer-modal>
 	</view>
@@ -266,7 +293,7 @@
 import api from '@/api/offerbuy.js';
 import house from '@/api/house.js';
 import util from '@/utils/index.js';
-import { gender, realEstate, statusArray, customerSource, family, professional } from '@/utils/common/data.js';
+import { gender, realEstate, statusArray, customerSource, family, professional, Age, offerSattus } from '@/utils/common/data.js';
 // 认购信息表
 const defForm = {
 	projectId: null,
@@ -276,7 +303,7 @@ const defForm = {
 	mobile: null, //电话
 	idCard: null, //身份证
 	address: null, //通讯地址
-	offerBuyTime: null, //认购日期
+	offerBuyTime: "", //认购日期
 	prePrice: '', //* 定金
 	houseId: '', //* 房屋Id
 	workAddress: null, //工作区域
@@ -293,8 +320,14 @@ export default {
 		});
 
 		return {
+			total:null,
+			defForm,
 			housekeyWord: '',
-			house: [],
+			house: {
+				list:[],
+				isLastPage: false, //是否最后一页
+				pageNum: 1, //页数
+			},
 			cumodal: false,
 			// 滚动窗口位置
 			scrollTop: 0,
@@ -309,6 +342,8 @@ export default {
 			family, //家庭结构
 			professional, //职业类型
 			form: defForm,
+			Age,
+			offerSattus, //认购状态
 			// 列表
 			list: null,
 			keyWord: '', //搜索关键字姓名和手机
@@ -317,13 +352,13 @@ export default {
 			pageNum: 1, //页数
 			pageSize: 15, //每页条数
 			isLoad: false, //加载状态
-			backTop: false //回到顶部按钮显示状态
+			backTop: false, //回到顶部按钮显示状态
+			
 		};
 	},
 	onLoad(option) {
 		this.form.projectId = option.id;
 		this.getList();
-		this.getHouse();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
 			this.list[indexes] = data;
@@ -353,9 +388,9 @@ export default {
 		this.pageNum = 1;
 		this.isLastPage = false;
 		this.getList();
+		this.isRefresh = true;
 		setTimeout(function() {
 			uni.stopPullDownRefresh();
-			this.isRefresh = true;
 		}, 1000);
 	},
 	// 上拉触底
@@ -382,6 +417,22 @@ export default {
 		}
 	},
 	methods: {
+		// 房屋搜索
+		houseSearch(){
+			console.log("house",this.housekeyWord)
+			this.house={list:[],isLastPage:false,pageNum:1}
+			this.getHouse()
+		},
+		// 显示房屋列表
+		showHouseModal() {
+			this.house={list:[],isLastPage:false,pageNum:1}
+			this.getHouse();
+			this.modalName = 'DrawerModalL';
+		},
+		houseLower(e) {
+			++this.house.pageNum;
+			this.getHouse();
+		},
 		chooseHouse(item) {
 			this.form.houseId = item.id;
 			this.form.houseName = item.name;
@@ -389,10 +440,13 @@ export default {
 			this.$forceUpdate();
 		},
 		getHouse() {
-			let data = { status: 1, page: 1, pageSize: 999, projectId: this.form.projectId, keyWord: this.housekeyWord };
+			if(this.house.isLastPage) return;
+			let data = { status: 1, page: this.house.pageNum, pageSize: 15, projectId: this.form.projectId, keyWord: this.housekeyWord };
 			house.list(data).then(res => {
 				console.log('l-', res);
-				this.house = res.list;
+				this.house.isLastPage = res.isLastPage;
+				if (this.house.pageNum == 1) this.house.list = res.list;
+				else this.house.list = this.house.list.concat(res.list);
 				// if (this.pageNum == 1) this.list = res.list;
 				// else this.list = this.list.concat(res.list);
 			});
@@ -433,8 +487,11 @@ export default {
 				pageSize: this.pageSize
 			};
 			api.list(data).then(res => {
-				console.log('l-', res);
+				this.total = res.total;
 				this.isLastPage = res.isLastPage;
+				res.list.map(m=>{
+					m.offerBuyTime = m.offerBuyTime?m.offerBuyTime.substr(0, 10):"--";
+				})
 				if (this.pageNum == 1) this.list = res.list;
 				else this.list = this.list.concat(res.list);
 

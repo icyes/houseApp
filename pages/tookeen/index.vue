@@ -1,10 +1,10 @@
-<!-- 访客登记 -->
+<!-- 拓展客户 -->
 <template>
 	<view class="flex-full">
 		<!-- header 头 -->
 		<cu-custom bgColor="bg-gradual-blue" isBack="true">
 			<block slot="backText">返回</block>
-			<block slot="content">来访客户</block>
+			<block slot="content">拓展客户</block>
 			<block slot="right">
 				<view class="action"><view class="cu-load load-cuIcon" :class="!isLoad ? 'loading' : 'over'"></view></view>
 			</block>
@@ -12,7 +12,7 @@
 		<!-- 列表头部  -->
 		<div class="sticky-top">
 			<list-bar
-				text="访客"
+				text="拓展客户"
 				:total="total"
 				@showModal="
 					v => {
@@ -46,18 +46,12 @@
 								{{ item.name }}
 								<text class="margin-left-sm" :class="item.sex === 1 ? 'text-blue cuIcon-male' : 'text-pink cuIcon-female'"></text>
 							</view>
-							<view class="text-df cu-capsule">
-								<text class="cu-tag bg-cyan text-white padding-xs">
-									<text class="cuIcon-time margin-right-xs"></text>
-									来访日期:
-								</text>
-								<text class="cu-tag line-cyan">{{ item.comingTime.substr(0, 10) }}</text>
+							<view class="text-df">
+								<text class="cuIcon-emoji padding-right-xs"></text>
+								年龄：{{ item.age || '--' }}
 							</view>
 						</view>
-						<view class=" text-df padding-bottom-sm text-cut" style="width: calc(100%-60rpx);">
-							<text class="cuIcon-location padding-right-xs"></text>
-							地址：{{ item.address }}
-						</view>
+
 						<view class="flex justify-between padding-bottom-sm align-center">
 							<view class="text-df">
 								<text class="cuIcon-phone padding-right-xs"></text>
@@ -71,11 +65,11 @@
 						<view class="flex justify-between align-center">
 							<view class="text-df">
 								<text class="cuIcon-home padding-right-xs"></text>
-								意向楼层：{{ item.purposeFloor || '--' }}
+								意向产品：{{ item.purposePro || '--' }}
 							</view>
 							<view>
-								<text class="cuIcon-recharge padding-right-xs"></text>
-								意向价格：{{ item.purposePrice || '--' }}
+								<text class="cuIcon-explore padding-right-xs"></text>
+								拓客区域：{{ item.tookeenAddress || '--' }}
 							</view>
 						</view>
 					</view>
@@ -93,17 +87,14 @@
 		<!-- 顶部搜搜弹窗 -->
 		<filtrate-modal :keyWord="keyWord" @input="v => (this.keyWord = v)" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 		<!-- 添加弹窗 -->
-		<cu-modal :modalName="modalName == 'viewModal' || modalName == 'formModal' ? 'formModal' : ''" :text="'客户'" @submit="submit" @hideModal="hideModal" :isUpdate="isUpdate">
+		<cu-modal
+			:modalName="modalName == 'viewModal' || modalName == 'formModal' ? 'formModal' : ''"
+			:text="'拓展客户'"
+			@submit="submit"
+			@hideModal="hideModal"
+			:isUpdate="isUpdate"
+		>
 			<view class="cu-list sm-border menu text-left solid-top">
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">来访日期</text></view>
-					<view class="action flex-treble">
-						<picker mode="date" :value="form.comingTime" :start="startDate" :end="endDate" @change="bindDateChange">
-							<view v-if="form.comingTime" class="uni-input">{{ form.comingTime.substr(0, 10) }}</view>
-							<view v-else class="text-gray">选择来访日期</view>
-						</picker>
-					</view>
-				</view>
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">姓名</text></view>
 					<view class="action flex-treble"><input type="text" placeholder="填写姓名" placeholder-class="text-gray" v-model="form.name" /></view>
@@ -137,10 +128,6 @@
 					</picker>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">居住地址</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写居住地址" placeholder-class="text-gray" v-model="form.address" /></view>
-				</view>
-				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">职业类型</text></view>
 					<picker
 						class="flex-treble"
@@ -156,113 +143,14 @@
 						<view v-else class="text-gray">选择职业类型</view>
 					</picker>
 				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">家庭结构</text></view>
-					<picker
-						class="flex-treble"
-						@change="
-							e => {
-								this.form.homeStructure = family[e.target.value];
-							}
-						"
-						:value="family.indexOf(form.homeStructure) !== -1 ? family.indexOf(form.homeStructure) : 0"
-						:range="family"
-					>
-						<view v-if="form.homeStructure" class="uni-input">{{ form.homeStructure }}</view>
-						<view v-else class="text-gray">选择家庭结构</view>
-					</picker>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">客户来源</text></view>
-					<picker
-						class="flex-treble"
-						@change="
-							e => {
-								this.form.sourceWay = Number(e.target.value) + 1;
-							}
-						"
-						:value="form.sourceWay ? form.sourceWay - 1 : 0"
-						:range="sourceWayArray"
-					>
-						<view v-if="form.sourceWay" class="uni-input">{{ sourceWayArray[form.sourceWay - 1] }}</view>
-						<view v-else class="text-gray">选择客户来源</view>
-					</picker>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">产品需求</text></view>
-					<!-- <view class="action flex-treble"><input type="text" placeholder="填写产品需求" placeholder-class="text-gray" v-model="form.productRequirement" /></view> -->
-					<picker class="flex-treble" mode="multiSelector" @change="onProductDemand" @columnchange="changeProductDemand" :range="productDemand">
-						<view v-if="form.productRequirement" class="uni-input">{{ form.productRequirement }}</view>
-						<view v-else class="text-gray">选择产品需求</view>
-					</picker>
-				</view>
 
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">面积需求</text></view>
-					<picker
-						class="flex-treble"
-						@change="
-							e => {
-								this.form.acreageRequirement = residentialDemand[e.target.value];
-							}
-						"
-						:value="residentialDemand.indexOf(form.acreageRequirement) !== -1 ? residentialDemand.indexOf(form.acreageRequirement) : 0"
-						:range="residentialDemand"
-					>
-						<view v-if="form.acreageRequirement" class="uni-input">{{ form.acreageRequirement }}</view>
-						<view v-else class="text-gray">选择面积需求</view>
-					</picker>
+					<view class="content flex-sub"><text class="text-grey">拓客区域</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="填写拓客区域" placeholder-class="text-gray" v-model="form.tookeenAddress" /></view>
 				</view>
 				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">意向楼层</text></view>
-					<!-- <view class="action flex-treble"><input type="text" placeholder="填写客户意向楼层" placeholder-class="text-gray" v-model="form.purposeFloor" /></view> -->
-					<picker
-						class="flex-treble"
-						@change="
-							e => {
-								this.form.purposeFloor = floor[e.target.value];
-							}
-						"
-						:value="floor.indexOf(form.purposeFloor) !== -1 ? floor.indexOf(form.purposeFloor) : 0"
-						:range="floor"
-					>
-						<view v-if="form.purposeFloor" class="uni-input">{{ form.purposeFloor }}</view>
-						<view v-else class="text-gray">选择客户意向楼层</view>
-					</picker>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">意向价格</text></view>
-					<!-- <view class="action flex-treble"><input type="text" placeholder="填写客户意向价格" placeholder-class="text-gray" v-model="form.purposePrice" /></view> -->
-					<picker class="flex-treble" mode="multiSelector" @change="onPurposePrice" @columnchange="changePurposePrice" :range="purposePrice">
-						<view v-if="form.purposePrice" class="uni-input">{{ form.purposePrice }}</view>
-						<view v-else class="text-gray">选择客户意向价格</view>
-					</picker>
-				</view>
-
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">客户意向</text></view>
-					<!-- <view class="action flex-treble"><input type="text" placeholder="填写客户意向" placeholder-class="text-gray" v-model="form.purpose" /></view> -->
-					<picker
-						class="flex-treble"
-						@change="
-							e => {
-								this.form.purpose = customerIntention[e.target.value];
-							}
-						"
-						:value="customerIntention.indexOf(form.purpose) !== -1 ? customerIntention.indexOf(form.purpose) : 0"
-						:range="customerIntention"
-					>
-						<view v-if="form.purpose" class="uni-input">{{ form.purpose }}</view>
-						<view v-else class="text-gray">选择客户意向</view>
-					</picker>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">关注点</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写关注点" placeholder-class="text-gray" v-model="form.focusPoint" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">抗拒点</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写客户抗拒点" placeholder-class="text-gray" v-model="form.resistPoint" /></view>
+					<view class="content flex-sub"><text class="text-grey">意向产品</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="填写意向产品" placeholder-class="text-gray" v-model="form.purposePro" /></view>
 				</view>
 
 				<view class="cu-item flex">
@@ -275,7 +163,7 @@
 </template>
 
 <script>
-import customer from '@/api/customer.js';
+import tookeen from '@/api/tookeen.js';
 import util from '@/utils/index.js';
 import {
 	businessPrise,
@@ -298,23 +186,11 @@ const defForm = {
 	name: '', //* 姓名
 	sex: 0, //性别
 	mobile: '', //* 联系方式
-	comingTime: '', //*来访日期
 	age: null, //年龄
-	address: '', //居住地址
 	profession: '', //职业类型
-	homeStructure: '', //家庭结构
-	sourceWay: null, //客户来源
-	buyMotive: null, //置业动机
-	productRequirement: '', //产品需求
-	acreageRequirement: '', //面积需求
-	purposeFloor: '', //意向楼层
-	purposePrice: '', //意向价格
-	purpose: '', // 客户意向
-	payWay: '', //付款方式
-	focusPoint: '', //关注点
-	resistPoint: '', //抗拒点
+	purposePro: '', // 意向产品
+	tookeenAddress: '', //拓客区域
 	remark: '' //备注
-
 	// userId: 0 // 置业顾问Id
 };
 export default {
@@ -488,7 +364,7 @@ export default {
 				page: this.pageNum,
 				pageSize: this.pageSize
 			};
-			customer.list(data).then(res => {
+			tookeen.list(data).then(res => {
 				this.total = res.total;
 				this.isLastPage = res.isLastPage;
 				if (this.pageNum == 1) this.list = res.list;
@@ -517,7 +393,7 @@ export default {
 		// 删除
 		onDel(id) {
 			id = typeof id == 'object' ? id : [id];
-			customer.del(id).then(r => {
+			tookeen.del(id).then(r => {
 				util.toast('删除成功');
 				// this.getList()
 				this.list = this.list.filter(m => m.id != id);
@@ -597,16 +473,13 @@ export default {
 			let result = true;
 			/* mobile: '', //* 联系方式
 			name: '', //* 姓名
-			comingTime: '', //*来访日期 */
-			let { mobile, name, comingTime } = this.form;
+			*/
+			let { mobile, name } = this.form;
 			if (!mobile) {
 				util.toast('联系方式不能为空');
 				result = false;
 			} else if (!name) {
 				util.toast('姓名不能为空');
-				result = false;
-			} else if (!comingTime) {
-				util.toast('来访日期不能为空');
 				result = false;
 			}
 			return result;
@@ -616,8 +489,8 @@ export default {
 			if (!this.check()) return;
 			let data = { ...this.form };
 			data = this.objFilter(data);
-			const save = data => customer.save(data);
-			const update = data => customer.update(data);
+			const save = data => tookeen.save(data);
+			const update = data => tookeen.update(data);
 			const submit = data.id ? update : save;
 			submit(data).then(r => {
 				let txt = this.isUpdate ? '更新' : '添加';

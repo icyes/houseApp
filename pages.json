@@ -79,6 +79,18 @@
 			"style": {
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "pages/tookeen/index", // 项目管理
+			"style": {
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/tookeen/detail", // 项目管理
+			"style": {
+				"enablePullDownRefresh": false
+			}
 		}
 	],
 	"globalStyle": {

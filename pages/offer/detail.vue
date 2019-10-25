@@ -114,7 +114,21 @@
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">年龄</text></view>
-						<view class="action flex-treble"><input type="text" placeholder="年龄" placeholder-class="text-gray" v-model="form.age" /></view>
+						<!-- <view class="action flex-treble"><input type="text" placeholder="年龄" placeholder-class="text-gray" v-model="form.age" /></view> -->
+				<picker
+				:disabled="isEdit ? false : true"
+					class="flex-treble"
+					@change="
+						e => {
+							this.form.age = Age[e.target.value];
+						}
+					"
+					:value="Age.indexOf(form.age) !== -1 && Age.indexOf(form.age) < Age.length ? Age.indexOf(form.age) : 0"
+					:range="Age"
+				>
+					<view v-if="form.age" class="uni-input">{{ form.age }}</view>
+					<view v-else class="text-gray">选择客户年龄</view>
+				</picker>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">家庭结构</text></view>
@@ -196,7 +210,7 @@
 import api from '@/api/offerbuy.js';
 import util from '@/utils';
 import house from '@/api/house.js';
-import { gender, realEstate, statusArray, customerSource, family, professional } from '@/utils/common/data.js';
+import {Age, gender, realEstate, statusArray, customerSource, family, professional } from '@/utils/common/data.js';
 const defForm = {
 	projectId: null,
 	id: null, //[up *]
@@ -227,6 +241,7 @@ export default {
 			realEstate, //置业动机
 			family, //家庭结构
 			professional, //职业类型
+			Age,
 			form: defForm,
 			sexArray: gender
 		};

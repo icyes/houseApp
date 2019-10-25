@@ -8,7 +8,7 @@
 			</block>
 		</cu-custom>
 		<!-- 列表头部 -->
-		<list-bar text="来电登记" @showModal="v => (modalName = v)" />
+		<list-bar text="来电登记" :total="total" @showModal="v =>{this.form=Object.assign({},defForm);this.modalName = v}" />
 		<!-- 顶部搜搜弹窗 -->
 		<filtrate-modal :keyWord="keyWord" @input="v => (this.keyWord = v)" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 		<!-- 添加弹窗 -->
@@ -90,7 +90,7 @@
 				<view
 					class="cu-item margin-tb padding-tb light shadow shadow-lg  bg-white"
 					style="min-height: 180rpx;"
-					@tap="link(`./detail?id=${item.id}&indexes=${index}`)"
+					@tap="link(`./detail?id=${item.id}&indexes=${index}&projectId=${form.projectId}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
 					v-for="(item, index) in list"
 					:key="index"
@@ -173,6 +173,7 @@ export default {
 		});
 
 		return {
+			total:null,
 			// 滚动窗口位置
 			scrollTop: 0,
 
@@ -183,6 +184,7 @@ export default {
 			sourceWayArray: customerSource,
 			statusArray: statusArray,
 			sexArray: gender,
+			defForm,
 			form: defForm,
 			// 列表
 			list: null,
@@ -222,9 +224,9 @@ export default {
 		this.pageNum = 1;
 		this.isLastPage = false;
 		this.getList();
+		this.isRefresh = false;
 		setTimeout(function() {
 			uni.stopPullDownRefresh();
-			this.isRefresh = false;
 		}, 1000);
 	},
 	// 上拉触底
@@ -286,7 +288,7 @@ export default {
 				pageSize: this.pageSize
 			};
 			api.list(data).then(res => {
-				console.log('l-', res);
+				this.total = res.total;
 				this.isLastPage = res.isLastPage;
 				console.log('pageNum', this.pageNum);
 				if (this.pageNum > 1) this.list = this.list.concat(res.list);

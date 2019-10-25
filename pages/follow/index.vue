@@ -8,7 +8,7 @@
 			</block>
 		</cu-custom>
 		<!-- 列表头部 -->
-		<list-bar text="跟进列表" @showModal="v => (modalName = v)" />
+		<list-bar text="跟进列表" :total="total" @showModal="v =>{this.form=Object.assign({},defForm);this.modalName = v}" />
 		<!-- 顶部搜搜弹窗 -->
 		<filtrate-modal :keyWord="keyWord" @input="v => (this.keyWord = v)" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 		<!-- 添加弹窗 -->
@@ -36,7 +36,7 @@
 					<view class="content flex-sub"><text class="text-grey">联系详情</text></view>
 					<view class="action flex-treble"><input type="text" placeholder="联系详情" placeholder-class="text-gray" v-model="form.contactDetail" /></view>
 				</view>
-				
+
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">回访日期</text></view>
 					<view class="action flex-treble">
@@ -52,9 +52,9 @@
 		<empty-data :show="isEmpty"></empty-data>
 		<!-- 列表 -->
 		<view :class="!isEmpty ? 'show' : 'hide'">
-			<view class="cu-list menu-avatar">
+			<view class="cu-list menu-avatar ">
 				<view
-					class="cu-item"
+					class="cu-item margin-tb padding-tb light shadow shadow-lg  bg-white"
 					style="min-height:180rpx"
 					@tap="link(`./detail?id=${item.id}&indexes=${index}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
@@ -66,26 +66,42 @@
 					:data-target="'move-box-' + index"
 				>
 					<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
-					<view class="content" style="left:60rpx;">
-						<view class="text-grey">{{ item.name }}</view>
-						<view class="text-gray text-sm">
-							联系方式:{{item.contactWay}}
+					<view class="content flex-sub" style="left:60rpx;">
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view class="text-grey">{{ item.name }}</view>
+							<view class="text-df cu-capsule">
+								<text class="cu-tag bg-cyan text-white padding-xs">
+									<text class="cuIcon-time margin-right-xs"></text>
+									回访日期:
+								</text>
+								<text class="cu-tag line-cyan">{{ item.nextVisitTime.substr(0, 10) }}</text>
+							</view>
 						</view>
-						<view class="text-gray text-sm">
-							联系详情:{{item.contactDetail}}
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view class="text-df">
+								<text class="cuIcon-phone padding-right-xs"></text>
+								手机号：{{ item.mobile }}
+							</view>
 						</view>
-					</view>
-					<view class="action padding-right" style="width: auto;text-align: right;">
-						<view class="text-grey text-sm">手机号:{{item.mobile}}</view>
-						<view class="text-grey text-sm round">回访日期:{{item.nextVisitTime.substr(0,10)}}</view>
-						<view class="text-grey text-sm round">主题:{{item.subject}}</view>
+						<view class="padding-bottom-sm">
+							<text class="cuIcon-creative padding-right-xs"></text>
+							主题：{{ item.subject || '--' }}
+						</view>
+						<view class="text-df padding-bottom-sm text-cut">
+							<text class="cuIcon-addressbook padding-right-xs"></text>
+							联系方式:{{ item.contactWay }}
+						</view>
+						<view class="text-df padding-bottom-sm text-cut">
+							<text class="cuIcon-phone padding-right-xs"></text>
+							联系详情:{{ item.contactDetail }}
+						</view>
 					</view>
 					<view class="move">
 						<view class="bg-cyan" @tap.stop="onEdit(item)">编辑</view>
 						<view class="bg-red" @tap.stop="onCheckDel(item.id)">删除</view>
 					</view>
 				</view>
-				<view v-if="pageNum>1" class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view>
+				<view v-if="pageNum > 1" class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view>
 			</view>
 			<!-- 回到顶部 -->
 			<back-top :show="backTop" />
@@ -99,14 +115,14 @@ import util from '@/utils/index.js';
 
 const defForm = {
 	id: null, //[up *]
-	projectId:null,//项目id
+	projectId: null, //项目id
 	contactWay: '', // 联系方式
 	subject: '', // 主题
 	contactDetail: '', //联系详情
 	nextVisitTime: '', //下次回访日期
 	// userId:null,//职业顾问Id
 	name: null, //客户姓名
-	mobile: null, //客户电话
+	mobile: null //客户电话
 };
 export default {
 	data() {
@@ -115,6 +131,8 @@ export default {
 		});
 
 		return {
+			total:null,
+			defForm,
 			// 滚动窗口位置
 			scrollTop: 0,
 
@@ -138,7 +156,13 @@ export default {
 		};
 	},
 	onLoad(option) {
-		this.form.projectId = Number(option.id)
+		let {name,mobile,showAddModal} = option;
+		if(showAddModal){
+			this.modalName = "formModal";
+			this.form.name = name;
+			this.form.mobile = mobile;
+		}
+		this.form.projectId = Number(option.id);
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -159,21 +183,21 @@ export default {
 		}
 	},
 	// 下拉
-	isPullDown:false,
+	isPullDown: false,
 	onPullDownRefresh() {
-		if(this.isPullDown) return;
+		if (this.isPullDown) return;
 		this.isPullDown = true;
 		this.pageNum = 1;
 		this.isLastPage = false;
 		this.getList();
+		this.isPullDown = false;
 		setTimeout(function() {
 			uni.stopPullDownRefresh();
-			this.isPullDown = false;
 		}, 1000);
 	},
 	// 上拉触底
 	onReachBottom() {
-		if (this.isLastPage||this.isPullDown) return;
+		if (this.isLastPage || this.isPullDown) return;
 		++this.pageNum;
 		this.getList();
 	},
@@ -220,12 +244,13 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
-				projectId:this.form.projectId,
+				projectId: this.form.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
 			};
 			api.list(data).then(res => {
+				this.total = res.total;
 				this.isLastPage = res.isLastPage;
 				if (this.pageNum == 1) this.list = res.list;
 				else this.list = this.list.concat(res.list);
@@ -298,7 +323,6 @@ export default {
 		},
 		// 选择日期
 		bindDateChange: function(e) {
-			
 			this.form.nextVisitTime = e.target.value;
 		},
 		// 选择性别

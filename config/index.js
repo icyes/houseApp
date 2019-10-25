@@ -1,3 +1,4 @@
+const type =0
 export default{
-	HTTPURL:"http://47.100.7.6:9090"
-}
+	HTTPURL:"https://www.hhzy.top/hhzy"
+}	

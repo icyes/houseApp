@@ -1,8 +1,12 @@
 <template>
 	<view class=" cu-bar bg-white solid-bottom ">
 		<view class="action">
-			<text class="cuIcon-title text-orange "></text>
-			{{text}}
+			<!-- <text class="cuIcon-title text-orange "></text> -->
+			
+			<view  class=" cu-capsule round">
+				<view class=" cu-tag bg-blue">{{text}}总数</view>
+				<view class=" cu-tag line-blue">{{total||0}}条 </view>
+			</view>
 		</view>
 		<view class="action">
 			<button class="cu-btn round bg-green margin-right" @tap="showModal" data-target="formModal">添加</button>
@@ -24,6 +28,10 @@ export default {
 		text:{
 			type:String,
 			default:""
+		},
+		total:{
+			type:Number,
+			default:null
 		}
 	},
 	methods: {

@@ -8,7 +8,16 @@
 			</block>
 		</cu-custom>
 		<!-- 列表头部 -->
-		<list-bar text="认筹列表" @showModal="v => (modalName = v)" />
+		<list-bar
+			text="认筹列表"
+			:total="total"
+			@showModal="
+				v => {
+					this.form = Object.assign({}, defForm);
+					this.modalName = v;
+				}
+			"
+		/>
 		<!-- 顶部搜搜弹窗 -->
 		<filtrate-modal :keyWord="keyWord" @input="v => (this.keyWord = v)" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 		<!-- 添加弹窗 -->
@@ -24,27 +33,169 @@
 				</view>
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">身份证</text></view>
-					<view class="action flex-treble"><input type=" number" placeholder="身份证" placeholder-class="text-gray" v-model="form.idCard" /></view>
+					<view class="action flex-treble"><input type="idcard" placeholder="身份证" placeholder-class="text-gray" v-model="form.idCard" /></view>
 				</view>
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">身份证地址</text></view>
 					<view class="action flex-treble"><input type="text" placeholder="身份证地址" placeholder-class="text-gray" v-model="form.idAddress" /></view>
 				</view>
-				<view class="cu-item flex">
+				<!-- <view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">工作单位</text></view>
 					<view class="action flex-treble"><input type="text" placeholder="工作单位" placeholder-class="text-gray" v-model="form.company" /></view>
-				</view>
+				</view> -->
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">单位地址</text></view>
 					<view class="action flex-treble"><input type="text" placeholder="工作单位地址" placeholder-class="text-gray" v-model="form.companyAddress" /></view>
 				</view>
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">认筹金</text></view>
-					<view class="action flex-treble"><input type="number" placeholder="认筹金" placeholder-class="text-gray" v-model="form.identifyPrice" /></view>
+					<view class="action flex-treble"><input type="digit" placeholder="认筹金" placeholder-class="text-gray" v-model="form.identifyPrice" /></view>
 				</view>
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">vip卡号</text></view>
 					<view class="action flex-treble"><input type="text" placeholder="vip" placeholder-class="text-gray" v-model="form.vipCard" /></view>
+				</view>
+	<!-- 			<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">买售状态</text></view>
+					<picker
+						class="flex-treble"
+						@change="
+							e => {
+								this.form.sellStatus = sellStatus[e.target.value].value;
+							}
+						"
+						range-key="title"
+						:value="form.sellStatus ? form.sellStatus - 1 : 0"
+						:range="sellStatus"
+					>
+						<view v-if="form.sellStatus" class="uni-input">{{ sellStatus[form.sellStatus - 1].title }}</view>
+						<view v-else class="text-gray">选择买售状态</view>
+					</picker>
+				</view> -->
+	<!-- 			<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">退卡日期</text></view>
+					<picker
+						class="flex-treble"
+						mode="date"
+						:value="form.refundTime"
+						:start="startDate"
+						:end="endDate"
+						@change="
+							e => {
+								this.form.refundTime = e.target.value ? e.target.value.substr(0, 10) : '--';
+							}
+						"
+					>
+						<view v-if="form.refundTime" class="uni-input">{{ form.refundTime }}</view>
+						<view v-else class="text-gray">选择退卡日期</view>
+					</picker>
+				</view> -->
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">认筹日期</text></view>
+					<!-- <view class="action flex-treble"><input type="text" placeholder="认筹日期" placeholder-class="text-gray" v-model="form.identifyTime" /></view> -->
+					<picker
+						class="flex-treble"
+						mode="date"
+						:value="form.identifyTime"
+						:start="startDate"
+						:end="endDate"
+						@change="
+							e => {
+								this.form.identifyTime = e.target.value ? e.target.value.substr(0, 10) : '--';
+							}
+						"
+					>
+						<view v-if="form.identifyTime" class="uni-input">{{ form.identifyTime }}</view>
+						<view v-else class="text-gray">选择认筹日期</view>
+					</picker>
+				</view>
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">职业</text></view>
+					<!-- <view class="action flex-treble"><input type="text" placeholder="职业" placeholder-class="text-gray" v-model="form.profession" /></view> -->
+					<picker
+						class="flex-treble"
+						@change="
+							e => {
+								this.form.profession = professional[e.target.value];
+							}
+						"
+						:value="professional.indexOf(form.profession) !== -1 ? professional.indexOf(form.profession) : 0"
+						:range="professional"
+					>
+						<view v-if="form.profession" class="uni-input">{{ form.profession }}</view>
+						<view v-else class="text-gray">选择职业类型</view>
+					</picker>
+				</view>
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">年龄</text></view>
+					<!-- <view class="action flex-treble"><input type="text" placeholder="年龄" placeholder-class="text-gray" v-model="form.age" /></view> -->
+					<picker
+						class="flex-treble"
+						@change="
+							e => {
+								this.form.age = Age[e.target.value];
+							}
+						"
+						:value="Age.indexOf(form.age) !== -1 && Age.indexOf(form.age) < Age.length ? Age.indexOf(form.age) : 0"
+						:range="Age"
+					>
+						<view v-if="form.age" class="uni-input">{{ form.age }}</view>
+						<view v-else class="text-gray">选择客户年龄</view>
+					</picker>
+				</view>
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">产品需求</text></view>
+					<!-- <view class="action flex-treble"><input type="text" placeholder="产品需求" placeholder-class="text-gray" v-model="form.productRequirement" /></view> -->
+					<picker class="flex-treble" mode="multiSelector" @change="onProductDemand" @columnchange="changeProductDemand" :range="productDemand">
+						<view v-if="form.productRequirement" class="uni-input">{{ form.productRequirement }}</view>
+						<view v-else class="text-gray">选择产品需求</view>
+					</picker>
+				</view>
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">购买力评估</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="购买力评估" placeholder-class="text-gray" v-model="form.purpose" /></view>
+				</view>
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">认筹途径</text></view>
+					<!-- <view class="action flex-treble"><input type="text" placeholder="认筹途径" placeholder-class="text-gray" v-model="form.sourceWay" /></view> -->
+					<picker
+						class="flex-treble"
+						@change="
+							e => {
+								this.form.sourceWay = Number(e.target.value) + 1;
+							}
+						"
+						:value="form.sourceWay ? form.sourceWay - 1 : 0"
+						:range="sourceWayArray"
+					>
+						<view v-if="form.sourceWay" class="uni-input">{{ sourceWayArray[form.sourceWay - 1] }}</view>
+						<view v-else class="text-gray">选择认筹途径</view>
+					</picker>
+				</view>
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">置业动机</text></view>
+					<!-- <view class="action flex-treble"><input type="text" placeholder="置业动机" placeholder-class="text-gray" v-model="form.buyMotive" /></view> -->
+					<picker
+						class="flex-treble"
+						@change="
+							e => {
+								this.form.buyMotive = realEstate[e.target.value];
+							}
+						"
+						:value="realEstate.indexOf(form.buyMotive) !== -1 ? realEstate.indexOf(form.buyMotive) : 0"
+						:range="realEstate"
+					>
+						<view v-if="form.buyMotive" class="uni-input">{{ form.buyMotive }}</view>
+						<view v-else class="text-gray">选择置业动机</view>
+					</picker>
+				</view>
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">意向价格</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="意向价格" placeholder-class="text-gray" v-model="form.purposePrice" /></view>
+				</view>
+				<view class="cu-item flex">
+					<view class="content flex-sub"><text class="text-grey">备注</text></view>
+					<view class="action flex-treble"><input type="text" placeholder="备注" placeholder-class="text-gray" v-model="form.remark" /></view>
 				</view>
 			</view>
 		</cu-modal>
@@ -54,7 +205,7 @@
 		<view :class="!isEmpty ? 'show' : 'hide'">
 			<view class="cu-list menu-avatar">
 				<view
-					class="cu-item"
+					class="cu-item margin-tb light shadow shadow-lg  bg-white"
 					style="min-height: 120px;"
 					@tap="link(`./detail?id=${item.id}&indexes=${index}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
@@ -66,33 +217,98 @@
 					:data-target="'move-box-' + index"
 				>
 					<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
-					<view class="content" style="left:30rpx">
-						<view class="text-grey">{{ item.name }}</view>
-						<view class="text-gray text-sm">
-							<!-- <text class=" text-red  margin-right-xs"></text> -->
-							身份证：{{item.idCard}}
+					<view class="content  padding-tb overhide relative flex-sub">
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view
+								class="tip text-white font-size-12"
+								:class="[item.sellStatus == 0 ? 'bg-yellow' : '', item.sellStatus == 1 ? 'bg-green' : '', item.sellStatus == 2 ? 'bg-red' : '']"
+							>
+								{{ offerSattus[item.sellStatus] }}
+							</view>
+							<view class="margin-left-xl padding-left-sm text-grey">{{ item.name }}</view>
+							<view v-if="item.vipCard" class="text-df cu-capsule">
+								<text class="cu-tag bg-orange text-white padding-xs">
+									<text class="cuIcon-vip margin-right-xs"></text>
+									vip号:
+								</text>
+								<text class="cu-tag line-orange">{{ item.vipCard }}</text>
+							</view>
 						</view>
-						<view class="text-gray text-sm">
-							身份证地址：{{item.idAddress}}
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view class="text-df">
+								<text class="cuIcon-phone padding-right-xs"></text>
+								手机号：{{ item.mobile }}
+							</view>
+							<view>
+								<text class="text-red cuIcon-coin padding-right-xs"></text>
+								认筹金：
+								<text>{{ item.identifyPrice || '--' }}</text>
+							</view>
 						</view>
-						<view class="text-gray text-sm">
+						<view class="text-df padding-bottom-sm">
+							<text class=" cuIcon-searchlist  margin-right-xs"></text>
+							身份证：{{ item.idCard }}
+						</view>
+						<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-addressbook  margin-right-xs"></text>
+							身份证地址：{{ item.idAddress }}
+						</view>
+						<!-- 		<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-activity  margin-right-xs"></text>
 							工作单位：{{item.company}}
+						</view> -->
+						<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-locationfill  margin-right-xs"></text>
+							单位地址：{{ item.companyAddress||"--" }}
 						</view>
-						<view class="text-gray text-sm">
-							单位地址：{{item.companyAddress}}
+			<!-- 			<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-locationfill  margin-right-xs"></text>
+							买售状态：{{ item.sellStatus }}
 						</view>
+						<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-locationfill  margin-right-xs"></text>
+							退卡日期：{{ item.refundTime }}
+						</view>
+						<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-locationfill  margin-right-xs"></text>
+							认筹日期：{{ item.identifyTime }}
+						</view>
+						<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-locationfill  margin-right-xs"></text>
+							职业：{{ item.profession }}
+						</view>
+						<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-locationfill  margin-right-xs"></text>
+							年龄：{{ item.age }}
+						</view>
+						<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-locationfill  margin-right-xs"></text>
+							产品需求：{{ item.productRequirement }}
+						</view>
+						<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-locationfill  margin-right-xs"></text>
+							购买力评估：{{ item.purpose }}
+						</view>
+						<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-locationfill  margin-right-xs"></text>
+							认筹途径：{{ item.sourceWay }}
+						</view>
+						<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-locationfill  margin-right-xs"></text>
+							置业动机：{{ item.buyMotive }}
+						</view>
+						<view class="text-df text-cut padding-bottom-sm">
+							<text class=" cuIcon-locationfill  margin-right-xs"></text>
+							意向价格：{{ item.purposePrice }}
+						</view> -->
 					</view>
-					<view class="action padding-right flex-zero" style="width: auto;text-align: right;">
-						<view class="text-orange text-sm">vip号：{{item.vipCard}}</view>	
-						<view class="text-grey text-sm">手机号：{{item.mobile}}</view>
-						<view class="cu-tag round bg-grey sm">认筹金：{{item.identifyPrice}}</view>
-					</view>
+
 					<view class="move">
 						<view class="bg-cyan" @tap.stop="onEdit(item)">编辑</view>
 						<view class="bg-red" @tap.stop="onCheckDel(item.id)">删除</view>
 					</view>
 				</view>
-				<view v-if="pageNum>1" class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view>
+				<view v-if="pageNum > 1" class="cu-load bg-grey" :class="!isLastPage ? 'loading' : 'over'"></view>
 			</view>
 			<!-- 回到顶部 -->
 			<back-top :show="backTop" />
@@ -103,6 +319,7 @@
 <script>
 import api from '@/api/identify.js';
 import util from '@/utils/index.js';
+import { sellStatus, professional, Age, productDemand,realEstate,sourceWayArray,offerSattus } from '@/utils/common/data.js';
 // 认筹登记表
 const defForm = {
 	id: null, //[up *]
@@ -111,10 +328,19 @@ const defForm = {
 	idCard: '', //*身份证
 	idAddress: '', //身份证地址
 	company: null, //工作单位
-	companyAddress: "", //工作单位地址
+	companyAddress: '', //工作单位地址
 	identifyPrice: '', //认筹金
-	vipCard:"" //vip卡号
-
+	vipCard: '', //vip卡号
+	sellStatus: null,
+	identifyTime: null,
+	refundTime: null,
+	profession: null,
+	age: null,
+	productRequirement: null,
+	purpose: null,
+	sourceWay: null,
+	buyMotive: null,
+	purposePrice: null
 };
 export default {
 	data() {
@@ -123,6 +349,8 @@ export default {
 		});
 
 		return {
+			total: null,
+			defForm,
 			// 滚动窗口位置
 			scrollTop: 0,
 
@@ -130,7 +358,15 @@ export default {
 			listTouchStart: 0,
 			listTouchDirection: null,
 			// 性别选择索引下标
-			sourceWayArray: ['自然上访', '员工邀约', '老客户介绍', '路过', '朋友介绍', '广告媒体', '其他'],
+			// dataArray--
+			Age, //年龄
+			productDemand, //产品需求
+			professional, //职业
+			sellStatus, //售卖状态
+			realEstate,//置业动机
+			sourceWayArray,
+			offerSattus,
+			// sourceWayArray: ['自然上访', '员工邀约', '老客户介绍', '路过', '朋友介绍', '广告媒体', '其他'],
 			statusArray: ['来电', '认筹', '签约', '购买'],
 			sexArray: ['男', '女'],
 			form: defForm,
@@ -146,7 +382,7 @@ export default {
 		};
 	},
 	onLoad(option) {
-		this.form.projectId = option.id
+		this.form.projectId = option.id;
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -167,21 +403,21 @@ export default {
 		}
 	},
 	// 下拉
-	isPullDown:false,
+	isPullDown: false,
 	onPullDownRefresh() {
-		if(this.isPullDown) return;
-		this.isPullDown =true
+		if (this.isPullDown) return;
+		this.isPullDown = true;
 		this.pageNum = 1;
 		this.isLastPage = false;
 		this.getList();
+		this.isPullDown = false;
 		setTimeout(function() {
 			uni.stopPullDownRefresh();
-			this.isPullDown = false;
 		}, 1000);
 	},
 	// 上拉触底
 	onReachBottom() {
-		if (this.isLastPage||this.isPullDown) return;
+		if (this.isLastPage || this.isPullDown) return;
 		++this.pageNum;
 		this.getList();
 	},
@@ -203,6 +439,23 @@ export default {
 		}
 	},
 	methods: {
+		// 产品需求
+		onProductDemand: function(e) {
+			let {
+				target: { value }
+			} = e;
+			let i_0 = !!value[0] ? value[0] : 0;
+			let i_1 = !!value[1] ? value[1] : 0;
+			this.form.productRequirement = this.productDemand[0][i_0] + ':' + this.productDemand[1][i_1];
+		},
+		changeProductDemand: function(e) {
+			let {
+				detail: { column, value }
+			} = e;
+			if (column === 0 && value === 0) this.productDemand.splice(1, 1, ['凤大公路底商', '购物中心商铺', '主题街区商铺', '办公']);
+			else if (column === 0 && value === 1) this.productDemand.splice(1, 1, ['高层', '洋房', '排屋', '公寓']);
+			this.$forceUpdate();
+		},
 		// 实时监听滚动
 		scroll: function(e) {
 			this.scrollTop = e.detail.scrollTop;
@@ -228,13 +481,13 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
-				projectId:this.form.projectId,
+				projectId: this.form.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
 			};
 			api.list(data).then(res => {
-				console.log('l-', res);
+				this.total = res.total;
 				this.isLastPage = res.isLastPage;
 				if (this.pageNum == 1) this.list = res.list;
 				else this.list = this.list.concat(res.list);

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App'
-
+import moment from "moment"
 //注册全局公用函数
 import "@/utils/common/func.js"
 
@@ -52,6 +52,9 @@ Vue.component('drawer-modal', DrawerModal)
 // Vue.component('drawer-page',DrawerPage)
 // 
 Vue.config.productionTip = false
+
+// 时间格式化工具
+Vue.prototype.$moment = moment;
 
 App.mpType = 'app'
 

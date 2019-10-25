@@ -6,6 +6,12 @@
   
   （QQ交流群：240787041）
 */
+/* ==================
+        字体大小
+ ==================== */
+ .font-size-12{
+	 font-size: 12px;
+ }
 
 /* ==================
         初始化
@@ -44,6 +50,13 @@ image {
 /* ==================
 		定位
  ==================== */
+.overhide{
+	overflow: hidden;
+}
+
+.overhide-y{
+	overflow-y: hidden;
+}
 
 .absolute {
 	position: absolute !important;
@@ -61,6 +74,13 @@ image {
         布局
  ==================== */
 
+.tip{
+	position: absolute;
+	top:10px;
+	left:-20px;
+	padding: 0 20px;
+	transform: rotate(-45deg);
+}
 
 .box-ellipse {
 	/* 只设置左下角和右下角的圆角 */
@@ -3880,64 +3900,120 @@ scroll-view.cu-steps .cu-item {
 	box-shadow: 6upx 6upx 8upx rgba(26, 26, 26, 0.2);
 }
 
+.light.shadow[class*="-red"] {
+	box-shadow: 6upx 6upx 8upx rgba(204, 69, 59, 0.1);
+}
+
+.light.shadow[class*="-orange"] {
+	box-shadow: 6upx 6upx 8upx rgba(217, 109, 26, 0.1);
+}
+
+.light.shadow[class*="-yellow"] {
+	box-shadow: 6upx 6upx 8upx rgba(224, 170, 7, 0.1);
+}
+
+.light.shadow[class*="-olive"] {
+	box-shadow: 6upx 6upx 8upx rgba(124, 173, 55, 0.1);
+}
+
+.light.shadow[class*="-green"] {
+	box-shadow: 6upx 6upx 8upx rgba(48, 156, 63, 0.1);
+}
+
+.light.shadow[class*="-cyan"] {
+	box-shadow: 6upx 6upx 8upx rgba(28, 187, 180, 0.1);
+}
+
+.light.shadow[class*="-blue"] {
+	box-shadow: 6upx 6upx 8upx rgba(0, 102, 204, 0.1);
+}
+
+.light.shadow[class*="-purple"] {
+	box-shadow: 6upx 6upx 8upx rgba(88, 48, 156, 0.1);
+}
+
+.light.shadow[class*="-mauve"] {
+	box-shadow: 6upx 6upx 8upx rgba(133, 33, 150, 0.1);
+}
+
+.light.shadow[class*="-pink"] {
+	box-shadow: 6upx 6upx 8upx rgba(199, 50, 134, 0.1);
+}
+
+.light.shadow[class*="-brown"] {
+	box-shadow: 6upx 6upx 8upx rgba(140, 88, 53, 0.1);
+}
+
+.light.shadow[class*="-grey"] {
+	box-shadow: 6upx 6upx 8upx rgba(114, 130, 138, 0.1);
+}
+
+.light.shadow[class*="-gray"] {
+	box-shadow: 6upx 6upx 8upx rgba(114, 130, 138, 0.1);
+}
+
+.light.shadow[class*="-black"] {
+	box-shadow: 6upx 6upx 8upx rgba(26, 26, 26, 0.1);
+}
+
 .light.shadow[class*="-white"] {
 	box-shadow: 6upx 6upx 8upx rgba(26, 26, 26, 0.1);
 }
 
 .text-shadow[class*="-red"] {
-	text-shadow: 6upx 6upx 8upx rgba(204, 69, 59, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(204, 69, 59, 0.1);
 }
 
 .text-shadow[class*="-orange"] {
-	text-shadow: 6upx 6upx 8upx rgba(217, 109, 26, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(217, 109, 26, 0.1);
 }
 
 .text-shadow[class*="-yellow"] {
-	text-shadow: 6upx 6upx 8upx rgba(224, 170, 7, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(224, 170, 7, 0.1);
 }
 
 .text-shadow[class*="-olive"] {
-	text-shadow: 6upx 6upx 8upx rgba(124, 173, 55, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(124, 173, 55, 0.1);
 }
 
 .text-shadow[class*="-green"] {
-	text-shadow: 6upx 6upx 8upx rgba(48, 156, 63, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(48, 156, 63, 0.1);
 }
 
 .text-shadow[class*="-cyan"] {
-	text-shadow: 6upx 6upx 8upx rgba(28, 187, 180, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(28, 187, 180, 0.1);
 }
 
 .text-shadow[class*="-blue"] {
-	text-shadow: 6upx 6upx 8upx rgba(0, 102, 204, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(0, 102, 204, 0.1);
 }
 
 .text-shadow[class*="-purple"] {
-	text-shadow: 6upx 6upx 8upx rgba(88, 48, 156, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(88, 48, 156, 0.1);
 }
 
 .text-shadow[class*="-mauve"] {
-	text-shadow: 6upx 6upx 8upx rgba(133, 33, 150, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(133, 33, 150, 0.1);
 }
 
 .text-shadow[class*="-pink"] {
-	text-shadow: 6upx 6upx 8upx rgba(199, 50, 134, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(199, 50, 134, 0.1);
 }
 
 .text-shadow[class*="-brown"] {
-	text-shadow: 6upx 6upx 8upx rgba(140, 88, 53, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(140, 88, 53, 0.1);
 }
 
 .text-shadow[class*="-grey"] {
-	text-shadow: 6upx 6upx 8upx rgba(114, 130, 138, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(114, 130, 138, 0.1);
 }
 
 .text-shadow[class*="-gray"] {
-	text-shadow: 6upx 6upx 8upx rgba(114, 130, 138, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(114, 130, 138, 0.1);
 }
 
 .text-shadow[class*="-black"] {
-	text-shadow: 6upx 6upx 8upx rgba(26, 26, 26, 0.2);
+	text-shadow: 6upx 6upx 8upx rgba(26, 26, 26, 0.1);
 }
 
 .bg-img {

@@ -5,11 +5,12 @@
 			<block slot="content">{{ form.name }}</block>
 		</cu-custom>
 
-		<view class="cu-bar bg-white solid-bottom sticky-top" :class="isEdit ? '' : ''">
+		<view class="cu-bar bg-white solid-bottom sticky-top flex justify-between" :class="isEdit ? '' : ''">
 			<view class="action">
 				<text class="cuIcon-titles text-orange "></text>
 				访客详情
 			</view>
+			<button class="cu-btn  bg-orange margin-right" @tap="()=>addFollow()">添加跟进</button>
 			<view class="action">
 				<text :class="isEdit ? 'text-green' : 'text-grey'" class="padding-lr">编辑</text>
 				<switch :class="isEdit ? 'checked' : ''" :checked="isEdit ? true : false" @change="IsEdit"></switch>
@@ -42,7 +43,22 @@
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">年龄</text></view>
 						<view class="action flex-treble">
-							<input type=" number" :disabled="isEdit ? false : true" placeholder="填写年龄" placeholder-class="text-gray" v-model="form.age" />
+							<!-- 
+							<input type=" number" :disabled="isEdit ? false : true" placeholder="填写年龄" placeholder-class="text-gray" v-model="form.age" /> -->
+							<picker
+							:disabled="isEdit ? false : true"
+								class="flex-treble"
+								@change="
+									e => {
+										this.form.age = Age[e.target.value];
+									}
+								"
+								:value="Age.indexOf(form.age) !== -1 &&Age.indexOf(form.age)<Age.length? Age.indexOf(form.age) : 0"
+								:range="Age"
+							>
+								<view v-if="form.age" class="uni-input">{{ form.age }}</view>
+								<view v-else class="text-gray">选择客户年龄</view>
+							</picker>
 						</view>
 					</view>
 					<view class="cu-item flex">
@@ -253,7 +269,8 @@ import {
 	statusArray,
 	customerSource,
 	family,
-	professional
+	professional,
+	Age
 } from '@/utils/common/data.js';
 const defForm = {
 	id: null, //[up *]
@@ -284,6 +301,7 @@ export default {
 		return {
 			isload: false,
 			isEdit: false,
+			projectId:null,
 			// 性别选择索引下标
 			sourceWayArray: customerSource,
 			sexArray: gender,
@@ -292,6 +310,7 @@ export default {
 			businessPrise, //商业价格
 			residentialPrice, //住宅价格
 			family,
+			Age,
 			floor, //意向楼层
 			customerIntention, //客户意向
 			professional, //职业类型
@@ -301,11 +320,12 @@ export default {
 	},
 	onLoad(option) {
 		console.log(option);
-		let { id, indexes } = option;
+		let { id, indexes,projectId } = option;
 		this.id = id;
+		this.projectId = projectId;
+		console.log('this.pp--',this.projectId);
 		this.indexes = indexes;
 		this.getDetail();
-		console.log('page', getCurrentPages());
 	},
 	computed: {
 		oldCusomterShow() {
@@ -313,12 +333,17 @@ export default {
 		}
 	},
 	methods: {
+		addFollow(){
+			let form = this.form;
+			let projectId = this.projectId;
+			console.log('this.projectId',projectId);
+			let url = `/pages/follow/index?id=${projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}`;
+			util.navigateTo(url);
+		},
 		onPurposePrice: function(e) {
-			// console.log(e);
 			let {
 				target: { value }
 			} = e;
-			// console.log(value);
 			let i_0 = !!value[0] ? value[0] : 0;
 			let i_1 = !!value[1] ? value[1] : 0;
 			this.form.purposePrice = this.purposePrice[1][i_1];
