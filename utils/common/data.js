@@ -1,3 +1,19 @@
+// 房屋状态
+// 0-未售",1-‘在售’，2-‘已售’
+export const houseStatus = ['未售','在售','已售'];
+
+// 房屋类型
+export const houseType = [
+  {
+    value: 1,
+    title: '住宅',
+  },
+  {
+    value: 2,
+    title: '商铺',
+  },
+];
+
 export const sourceWayArray= ['自然上访', '员工邀约', '老客户介绍', '路过', '朋友介绍', '广告媒体', '其他']
 // 售卖状态 1-已购买商铺 2-已购买住宅 3-已退卡
 export const sellStatus = [
@@ -33,7 +49,7 @@ export const professional = [
 
 // 家庭结构
 export const family = [
-	"单生",
+	"单身",
 	"二口之家",
 	"三口之家",
 	"三代同堂",

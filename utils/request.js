@@ -23,13 +23,21 @@ export default function(url, method, data = {}, header = {}) {
 			method: method || METHOD.GET,
 			header: header,
 			success: function(res) {
-				let {data:{data,status,msg}} = res
+				let {
+					data: {
+						data,
+						status,
+						msg
+					}
+				} = res
 				if (status == 200) {
 					resolve(data);
-				} else if(status === 401){
+				} else if (status === 401) {
 					util.toast('登入已过期，请重新登入')
-					storage.clear();
-					util.navigateTo('/pages/login/login')
+					setTimeout(() => {
+						storage.clear();
+						util.navigateTo('/pages/login/login')
+					}, 1000)
 				} else {
 					util.toast(msg)
 					// reject(msg);

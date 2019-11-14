@@ -1,5 +1,5 @@
 <template>
-	<view class="flex-full">
+	<view class="flex-full overhide-x">
 		<cu-custom bgColor="bg-gradual-blue" isBack="true">
 			<block slot="backText">返回</block>
 			<block slot="content">来电登记</block>
@@ -78,7 +78,7 @@
 				</view>
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">备注</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /></view>
+					<view class="action flex-treble"><input style="width: unset;" auto-height placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /></view>
 				</view>
 			</view>
 		</cu-modal>

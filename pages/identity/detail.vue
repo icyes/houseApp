@@ -4,11 +4,21 @@
 			<block slot="backText">返回</block>
 			<block slot="content">{{ form.name }}</block>
 		</cu-custom>
-
-		<view class="cu-bar bg-white solid-bottom sticky-top" :class="isEdit ? 'margin-top' : ''">
+		<view v-if="showMenu" class="page-mask" @touchmove.stop="()=>false"  @click="showMenu=false"/>
+		<view class="cu-bar bg-white solid-bottom " :class="!showMenu ? 'sticky-top' : ''">
 			<view class="action">
 				<text class="cuIcon-titles text-orange "></text>
 				认筹详情
+			</view>
+			<view class="cu-btn round line-green relative" style="z-index: 12;">
+				<span @click="showMenu=!showMenu" style="z-index: 10;">
+					<text class="cuIcon-forward"></text>
+					拓联
+				</span>
+			
+				<view class="absolute" style="height: 100%;z-index: 1;" >
+					<view @click="addFollow('offer')" class="cu-btn round bg-green " style="transition: all .5s ease-in;  " :style="showMenu?'left: 160rpx;;opacity:1':'left: 0rpx;opacity:0'">认购</view>
+				</view>
 			</view>
 			<view class="action">
 				<text :class="isEdit ? 'text-green' : 'text-grey'" class="padding-lr">编辑</text>
@@ -168,6 +178,7 @@ import {check,defForm} from "./verify.js"
 export default {
 	data() {
 		return {
+				showMenu:false,
 			isEdit: false,
 			form: defForm,
 			statusArray: ['来电', '认筹', '签约', '购买'],
@@ -195,6 +206,14 @@ export default {
 		}
 	},
 	methods: {
+		addFollow:function(target){
+			if(!this.showMenu)return;
+			let form = this.form;
+			let projectId = this.id;
+			let url = `/pages/${target}/index?id=${projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}`;
+			this.showMenu = false;
+			util.navigateTo(url);
+		},
 		// 产品需求
 		onProductDemand: function(e) {
 			let {

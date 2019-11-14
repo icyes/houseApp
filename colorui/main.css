@@ -58,6 +58,11 @@ image {
 	overflow-y: hidden;
 }
 
+.overhide-x{
+	overflow-x: hidden;
+}
+
+
 .absolute {
 	position: absolute !important;
 }
@@ -110,7 +115,7 @@ image {
 
 .sticky-top {
 	position: sticky !important;
-	top: 128rpx;
+	top: 140rpx;
 	z-index: 10;
 }
 

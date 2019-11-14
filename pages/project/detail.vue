@@ -15,7 +15,7 @@
 		</view> -->
 		</view>
 		<view class="cu-list grid" :class="['col-' + gridCol, gridBorder ? '' : 'no-border']">
-			<view class="cu-item" v-for="(item, index) in cuIconList" :key="index" v-if="index < gridCol * 2">
+			<view class="cu-item" v-for="(item, index) in cuIconList" :key="index" v-if="index < gridCol * 3">
 				<navigator :url="item.link + '?id=' + id">
 					<view :class="['cuIcon-' + item.cuIcon, 'text-' + item.color]">
 						<view class="cu-tag badge" v-if="item.badge != 0">
@@ -82,13 +82,14 @@ export default {
 					name: '拓展客户',
 					link: '/pages/tookeen/index'
 				},
-				// {
-				// 	cuIcon: 'clothesfill',
-				// 	color: 'blue',
-				// 	badge: 0,
-				// 	name: '签约登记',
-				// 	link: '/pages/sign/index'
-				// }
+				{
+					cuIcon: 'sponsor',
+					color: 'orange',
+					badge: 0,
+					name: '房屋计算',
+					link: '/pages/compute/index'
+				},
+			
 			]
 		};
 	},

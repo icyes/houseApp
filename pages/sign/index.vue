@@ -1,5 +1,5 @@
 <template>
-	<view class="flex-full">
+	<view class="flex-full overhide-x">
 		<cu-custom bgColor="bg-gradual-blue" isBack="true">
 			<block slot="backText">返回</block>
 			<block slot="content">签约登记</block>

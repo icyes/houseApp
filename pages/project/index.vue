@@ -1,14 +1,10 @@
 <template>
-	<view class="flex-full">
-<!-- 		<cu-custom bgColor="bg-gradual-blue">
-			<block slot="content">项目列表</block>
-		</cu-custom> -->
+	<view class="flex-full overhide-x">
 		<div class="box-ellipse relative flex-center">
 			<image :src="topImg"
 			 mode="widthFix" class="response"></image>
 			 <text class="text-bold absolute text-white text-shadow -black" style="font-size: 30px;top:100px;opacity:0.9;">华和置业</text>
 		</div>
-		
 		<!-- 退出 -->
 		<div class="fixed shadow text-right bg-white padding-sm padding-right text-gray" 
 		style="top:200px;width: 80px;border-radius:0 50px 50px 0;animationDelay:1.5s"
@@ -100,7 +96,6 @@ export default {
 	
 	},
 	onPageScroll(res) {
-		// console.log(res);
 		if (!this.backTop && res.scrollTop > 200) {
 			this.backTop = true;
 		} else if (this.backTop && res.scrollTop < 200) {
@@ -173,7 +168,6 @@ export default {
 		},
 		// 获取列表
 		getList() {
-			// this.isLoad = false;
 			let data = {
 				page: this.pageNum,
 				pageSize: this.pageSize
@@ -183,10 +177,6 @@ export default {
 				// this.isLastPage = res.isLastPage;
 				if (this.pageNum == 1) this.list = res;
 				else this.list = this.list.concat(res);
-// 
-// 				setTimeout(() => {
-// 					this.isLoad = true;
-// 				}, 500);
 			});
 		},
 		// 编辑

@@ -47,6 +47,12 @@ Vue.component('paging', Paging)
 import DrawerModal from '@/components/DrawerModal.vue'
 Vue.component('drawer-modal', DrawerModal)
 
+
+// 数字输入框
+import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
+Vue.component('number-box', uniNumberBox)
+
+
 // 页面抽屉
 // import DrawerPage from '@/components/DrawerPage.vue'
 // Vue.component('drawer-page',DrawerPage)

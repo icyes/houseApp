@@ -1,6 +1,6 @@
 <!-- 访客登记 -->
 <template>
-	<view class="flex-full">
+	<view class="flex-full overhide-x">
 		<!-- header 头 -->
 		<cu-custom bgColor="bg-gradual-blue" isBack="true">
 			<block slot="backText">返回</block>
@@ -267,7 +267,7 @@
 
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">备注</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /></view>
+					<view class="action flex-treble"><input  style="width: unset;" auto-height type="text" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /></view>
 				</view>
 			</view>
 		</cu-modal>
@@ -417,10 +417,10 @@ export default {
 			} = e;
 			let i_0 = !!value[0] ? value[0] : 0;
 			let i_1 = !!value[1] ? value[1] : 0;
-			this.form.productRequirement = this.productDemand[0][i_0] + ':' + this.productDemand[1][i_1];
+			this.form.productRequirement =  this.productDemand[1][i_1];
 		},
 		changeProductDemand: function(e) {
-			console.log('this.productDemand', e);
+			
 			let {
 				detail: { column, value }
 			} = e;
@@ -592,4 +592,14 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+	
+	.page {
+		height: 100Vh;
+		width: 100vw;
+	}
+	
+	.page.show {
+		overflow: hidden;
+	}
+</style>

@@ -1,5 +1,5 @@
 <template>
-	<view class="flex-full">
+	<view class="flex-full overhide-x">
 		<cu-custom bgColor="bg-gradual-blue" isBack="true">
 			<block slot="backText">返回</block>
 			<block slot="content">认购登记</block>
@@ -341,7 +341,14 @@ export default {
 		};
 	},
 	onLoad(option) {
-		this.form.projectId = option.id;
+		let {name,mobile,showAddModal} = option;
+		if(showAddModal){
+			this.cumodal = true;
+			this.form.name = name;
+			this.form.mobile = mobile;
+		}
+		this.form.projectId = Number(option.id);
+		// this.form.projectId = option.id;
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;

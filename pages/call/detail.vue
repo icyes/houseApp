@@ -4,13 +4,46 @@
 			<block slot="backText">返回</block>
 			<block slot="content">{{ form.name }}</block>
 		</cu-custom>
-
-		<view class="cu-bar bg-white solid-bottom sticky-top flex justify-between" :class="isEdit ? 'margin-top' : ''">
+		<view v-if="showMenu" class="page-mask" @touchmove.stop="() => false" @click="showMenu = false" />
+		<view class="cu-bar bg-white solid-bottom  flex justify-between" :class="[!showMenu ? 'sticky-top' : '', isEdit ? 'margin-top' : '']">
 			<view class="action">
 				<text class="cuIcon-titles text-orange "></text>
 				来电详情
 			</view>
-			<button class="cu-btn  bg-orange margin-right" @tap="() => addFollow()">添加跟进</button>
+			<view class="cu-btn round line-green relative" style="z-index: 12;">
+				<span @click="showMenu = !showMenu" style="z-index: 10;">
+					<text class="cuIcon-forward"></text>
+					拓联
+				</span>
+
+				<view class="absolute" style="height: 100%;z-index: 1;">
+					<view
+						@click="addFollow('follow')"
+						class="cu-btn round bg-green "
+						style="transition: all .5s ease-in;  "
+						:style="showMenu ? 'left: 160rpx;;opacity:1' : 'left: 0rpx;opacity:0'"
+					>
+						跟进
+					</view>
+					<view
+						@click="addFollow('identity')"
+						class="cu-btn round bg-green "
+						style="transition: all .5s ease-in;  "
+						:style="showMenu ? 'left: 100rpx;top: 20px;opacity:1' : 'left: 0rpx;top: -40px;opacity:0'"
+					>
+						认筹
+					</view>
+					<view
+						@click="addFollow('offer')"
+						class="cu-btn round bg-green "
+						style="transition: all .5s ease-in;  "
+						:style="showMenu ? 'left: 0rpx;top:30px;;opacity:1' : 'left: 0rpx;top:-60px;opacity:0'"
+					>
+						认购
+					</view>
+				</view>
+			</view>
+			<!-- <button class="cu-btn  bg-orange margin-right" @tap="() => addFollow()">添加跟进</button> -->
 			<view class="action">
 				<text :class="isEdit ? 'text-green' : 'text-grey'" class="padding-lr">编辑</text>
 				<switch :class="isEdit ? 'checked' : ''" :checked="isEdit ? true : false" @change="IsEdit"></switch>
@@ -104,7 +137,18 @@
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">备注</text></view>
 						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" />
+							<!-- <input type="text" :disabled="isEdit ? false : true" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /> -->
+							<textarea
+								v-if="!showMenu"
+								style="width: unset;"
+								auto-height
+								type="text"
+								:disabled="isEdit ? false : true"
+								placeholder="填写备注"
+								placeholder-class="text-gray"
+								v-model="form.remark"
+							/>
+							<view v-if="showMenu">{{ form.remark }}</view>
 						</view>
 					</view>
 
@@ -135,6 +179,7 @@ const defForm = {
 export default {
 	data() {
 		return {
+			showMenu: false,
 			isEdit: false,
 			form: defForm,
 			sourceWayArray: customerSource,
@@ -157,19 +202,24 @@ export default {
 		}
 	},
 	methods: {
-		addFollow() {
+		addFollow(target) {
+			if(!this.showMenu)return;
 			let form = this.form;
 			let projectId = this.projectId;
-			console.log('this.projectId', projectId);
-			let url = `/pages/follow/index?id=${projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}`;
+			let url = `/pages/${target}/index?id=${projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}`;
+			this.showMenu = false;
 			util.navigateTo(url);
 		},
 		// 获得用户详情
 		getDetail() {
+			util.showLoading();
 			api.info(this.id).then(res => {
 				console.log(res);
 				this.form = { ...res };
 				this.oldform = { ...res };
+				util.hideLoading();
+			}).catch(e=>{
+				util.hideLoading();
 			});
 		},
 		// 切换编辑

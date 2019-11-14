@@ -4,7 +4,8 @@
 		{
 			"path": "pages/login/login",
 			"style": {
-				"navigationBarTitleText": "登录"
+				"navigationBarTitleText": "登录",
+				 "navigationBarTextStyle": "black"
 			}
 		},
 		{
@@ -81,13 +82,25 @@
 			}
 		},
 		{
-			"path": "pages/tookeen/index", // 项目管理
+			"path": "pages/tookeen/index", // 拓展客户
 			"style": {
 				"enablePullDownRefresh": true
 			}
 		},
 		{
-			"path": "pages/tookeen/detail", // 项目管理
+			"path": "pages/tookeen/detail", // 拓展客户
+			"style": {
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/compute/index", // 房屋计算
+			"style": {
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/compute/detail", // 房屋计算
 			"style": {
 				"enablePullDownRefresh": false
 			}
@@ -99,8 +112,8 @@
 			"transparentTitle": "always",
 			"allowsBounceVertical": "NO"
 		},
-		"navigationBarBackgroundColor": "#0081ff",
-		"navigationBarTitleText": "ColorUi for UniApp",
+		"navigationBarBackgroundColor": "#fff",
+		"navigationBarTitleText": "",
 		"navigationStyle": "custom",
 		"navigationBarTextStyle": "white"
 	},

@@ -1,5 +1,5 @@
 <template>
-	<view class="flex-full">
+	<view class="flex-full overhide-x">
 		<cu-custom bgColor="bg-gradual-blue" isBack="true">
 			<block slot="backText">返回</block>
 			<block slot="content">认筹记录</block>
@@ -183,7 +183,7 @@
 								class="tip text-white font-size-12"
 								:class="[item.sellStatus == 0 ? 'bg-yellow' : '', item.sellStatus == 1 ? 'bg-green' : '', item.sellStatus == 2 ? 'bg-red' : '']"
 							>
-								{{ offerSattus[item.sellStatus] }}
+								{{ sellStatus[item.sellStatus].title }}
 							</view>
 							<view class="margin-left-xl padding-left-sm text-grey">{{ item.name }}</view>
 							<view v-if="item.vipCard" class="text-df cu-capsule">
@@ -280,7 +280,14 @@ export default {
 		};
 	},
 	onLoad(option) {
-		this.form.projectId = option.id;
+		let {name,mobile,showAddModal} = option;
+		if(showAddModal){
+			this.modalName = "formModal";
+			this.form.name = name;
+			this.form.mobile = mobile;
+		}
+		this.form.projectId = Number(option.id);
+		// this.form.projectId = option.id;	
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -518,4 +525,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+	
+	.tip{
+		top:17px !important;
+		left:-22px !important;
+		
+	}
+	
+</style>

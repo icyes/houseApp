@@ -1,170 +1,121 @@
-<!-- 拓展客户 -->
+<!-- 访客登记 -->
 <template>
 	<view class="flex-full overhide-x">
 		<!-- header 头 -->
 		<cu-custom bgColor="bg-gradual-blue" isBack="true">
 			<block slot="backText">返回</block>
-			<block slot="content">拓展客户</block>
+			<block slot="content">房屋计算</block>
 			<block slot="right">
 				<view class="action"><view class="cu-load load-cuIcon" :class="!isLoad ? 'loading' : 'over'"></view></view>
 			</block>
 		</cu-custom>
-		<!-- 列表头部  -->
-		<div class="sticky-top">
-			<list-bar
-				text="拓展客户"
-				:total="total"
-				@showModal="
-					v => {
-						this.form = Object.assign({}, defForm);
-						this.modalName = v;
-					}
-				"
-			/>
-		</div>
+		<view class="cu-bar bg-white search fixed" :style="[{top:CustomBar + 'px'}]">
+			<view class="search-form round">
+				<text class="cuIcon-search"></text>
+				<input type="text" v-model="keyWord" placeholder="输入搜索的关键词" confirm-type="search"></input>
+			</view>
+			<view class="action">
+				<button class="cu-btn bg-gradual-green shadow-blur round" @click="search">搜索</button>
+			</view>
+		</view>
+		<view class="cu-bar bg-white search " :style="[{top:CustomBar + 'px'}]">
+			<view class="cu-btn flex-center line-red margin-left-sm">房屋折扣</view>
+			<view class="">
+				<!-- <input class="bg-gray" type="digit" v-model="discount" placeholder="输入房屋折扣" ></input> -->
+				<number-box :value="discount" :min="0" :max="1" :step="0.1" @change="discountChange"/>
+			</view>
+			<view class="action">
+				<button  class="cu-btn bg-gradual-blue" @click="reset">重置</button>
+			</view>
+		</view>
 		<!-- 暂无数据 -->
 		<empty-data :show="isEmpty"></empty-data>
 		<!-- 列表 -->
-		<view :class="!isEmpty ? 'show' : 'hide'">
+		<view class="relative" :class="!isEmpty ? 'show' : 'hide'" :style="[{top: CustomBar + 'px'}]">
 			<view class="cu-list menu-avatar ">
 				<view
 					class="cu-item margin-tb padding-tb light shadow shadow-lg  bg-white"
 					style="min-height: 180rpx;"
-					@tap="link(`./detail?id=${item.id}&indexes=${index}&projectId=${form.projectId}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
 					v-for="(item, index) in list"
 					:key="index"
-					@touchstart="ListTouchStart"
-					@touchmove="ListTouchMove"
-					@touchend="ListTouchEnd"
 					:data-target="'move-box-' + index"
 				>
 					<!-- <view class="cu-avatar round lg" :style="[{ backgroundImage: 'url(https://ossweb-img.qq.com/images/lol/web201310/skin/big2100' + (index + 2) + '.jpg)' }]"></view> -->
 					<view class="content flex-sub">
 						<view class="flex justify-between padding-bottom-sm align-center">
 							<view class="text-grey">
-								{{ item.name }}
-								<text class="margin-left-sm" :class="item.sex === 1 ? 'text-blue cuIcon-male' : 'text-pink cuIcon-female'"></text>
+								房屋名称:{{ item.name }}
 							</view>
-							<view class="text-df">
-								<text class="cuIcon-emoji padding-right-xs"></text>
-								年龄：{{ item.age || '--' }}
-							</view>
+							<button class="cu-btn sm round line-red">{{discount == 1?'无折扣':discount*10+'折'}}</button>
+						
 						</view>
-
 						<view class="flex justify-between padding-bottom-sm align-center">
 							<view class="text-df">
-								<text class="cuIcon-phone padding-right-xs"></text>
-								手机号：{{ item.mobile }}
+								<text class="cu-tag bg-red text-white padding-xs">
+									折扣单价:
+								</text>
+								<text class="cu-tag line-red">{{ item.acreagePrice*discount }} ￥</text>
 							</view>
-							<view>
-								<text class="cuIcon-service padding-right-xs"></text>
-								职业：{{ item.profession || '--' }}
+							<view class="text-df cu-capsule">
+								<text class="cu-tag bg-red text-white padding-xs">
+									折扣总价:
+								</text>
+								<text class="cu-tag line-red">{{ item.discount }} ￥</text>
 							</view>
 						</view>
-						<view class="flex justify-between align-center">
+						
+						
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view class="text-df">
+								<text class="cuIcon-location padding-right-xs"></text>
+								建筑面积：{{ item.acreage }} m²
+							</view>
 							<view class="text-df">
 								<text class="cuIcon-home padding-right-xs"></text>
-								意向产品：{{ item.purposePro || '--' }}
-							</view>
-							<view>
-								<text class="cuIcon-explore padding-right-xs"></text>
-								拓客区域：{{ item.tookeenAddress || '--' }}
+								房源类别：{{ item.type !=null?houseType[item.type-1].title : '--' }}
 							</view>
 						</view>
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view class="text-df">
+								<text class="cuIcon-goods padding-right-xs"></text>
+								建面单价：{{ item.acreagePrice }} ￥/m²
+							</view>
+							<view class="text-df cu-capsule">
+								<text class="cu-tag bg-cyan text-white padding-xs">
+									状态:
+								</text>
+								<text class="cu-tag line-cyan">{{ item.status !=null ?houseStatus[item.status ] : '--'  }}</text>
+							</view>
+						</view>
+						<view class="flex justify-between padding-bottom-sm align-center">
+							<view>
+								<text class="cuIcon-moneybag padding-right-xs"></text>
+								商铺总价：{{ item.amountPrice || '--' }} ￥
+							</view>
+						</view>
+			
 					</view>
 					<view class="action padding-right " style="width: auto;text-align:right"></view>
-					<view class="move">
-						<view class="bg-cyan" @tap.stop="onEdit(item)">编辑</view>
-						<view class="bg-red" @tap.stop="onCheckDel(item.id)">删除</view>
-					</view>
 				</view>
 				<paging v-if="pageNum > 1" :loading="!isLastPage" />
 			</view>
 			<!-- 回到顶部 -->
 			<back-top :show="backTop" @backTop="scrollTop = 0" />
 		</view>
-		<!-- 顶部搜搜弹窗 -->
-		<filtrate-modal :keyWord="keyWord" @input="v => (this.keyWord = v)" :modalName="modalName" @hideModal="hideModal" @reset="searchReset" @sure="search" />
 		<!-- 添加弹窗 -->
-		<cu-modal
-			:modalName="modalName == 'viewModal' || modalName == 'formModal' ? 'formModal' : ''"
-			:text="'拓展客户'"
-			@submit="submit"
-			@hideModal="hideModal"
-			:isUpdate="isUpdate"
-		>
+		<cu-modal :modalName="modalName == 'viewModal' || modalName == 'formModal' ? 'formModal' : ''" :text="'房屋计算'" @submit="submit" @hideModal="hideModal" :isUpdate="isUpdate">
 			<view class="cu-list sm-border menu text-left solid-top">
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">姓名</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写姓名" placeholder-class="text-gray" v-model="form.name" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">性别</text></view>
-					<picker class="flex-treble" @change="bindSexChange" :value="sexIdx" :range="sexArray">
-						<view v-if="form.sex" class="uni-input">{{ sexArray[form.sex - 1] }}</view>
-						<view v-else class="text-gray">选择性别</view>
-					</picker>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">手机号</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写手机号码" placeholder-class="text-gray" v-model="form.mobile" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">年龄</text></view>
-					<!-- <view class="action flex-treble"><input type=" number" placeholder="填写年龄" placeholder-class="text-gray" v-model="form.age" /></view> -->
-					<picker
-						class="flex-treble"
-						@change="
-							e => {
-								this.form.age = Age[e.target.value];
-							}
-						"
-						:value="Age.indexOf(form.age) !== -1 && Age.indexOf(form.age) < Age.length ? Age.indexOf(form.age) : 0"
-						:range="Age"
-					>
-						<view v-if="form.age" class="uni-input">{{ form.age }}</view>
-						<view v-else class="text-gray">选择客户年龄</view>
-					</picker>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">职业类型</text></view>
-					<picker
-						class="flex-treble"
-						@change="
-							e => {
-								this.form.profession = professional[e.target.value];
-							}
-						"
-						:value="professional.indexOf(form.productRequirement) !== -1 ? professional.indexOf(form.productRequirement) : 0"
-						:range="professional"
-					>
-						<view v-if="form.profession" class="uni-input">{{ form.profession }}</view>
-						<view v-else class="text-gray">选择职业类型</view>
-					</picker>
-				</view>
 
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">拓客区域</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写拓客区域" placeholder-class="text-gray" v-model="form.tookeenAddress" /></view>
-				</view>
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">意向产品</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写意向产品" placeholder-class="text-gray" v-model="form.purposePro" /></view>
-				</view>
-
-				<view class="cu-item flex">
-					<view class="content flex-sub"><text class="text-grey">备注</text></view>
-					<view class="action flex-treble"><input type="text" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /></view>
-				</view>
 			</view>
 		</cu-modal>
 	</view>
 </template>
 
 <script>
-import tookeen from '@/api/tookeen.js';
+import house from '@/api/house.js';
 import util from '@/utils/index.js';
+import {check,defForm} from "./verify.js"
 import {
 	businessPrise,
 	residentialPrice,
@@ -178,21 +129,11 @@ import {
 	customerSource,
 	family,
 	professional,
-	Age
+	Age,
+	houseStatus,
+	houseType
 } from '@/utils/common/data.js';
-const defForm = {
-	projectId: null, //项目id
-	id: null, //[up *]
-	name: '', //* 姓名
-	sex: 0, //性别
-	mobile: '', //* 联系方式
-	age: null, //年龄
-	profession: '', //职业类型
-	purposePro: '', // 意向产品
-	tookeenAddress: '', //拓客区域
-	remark: '' //备注
-	// userId: 0 // 置业顾问Id
-};
+
 export default {
 	data() {
 		const currentDate = this.getDate({
@@ -200,6 +141,10 @@ export default {
 		});
 
 		return {
+			discount:1,//几折
+			houseType,
+			houseStatus,
+			CustomBar:this.CustomBar,
 			total: null,
 			// 页面抽屉显示判断
 			drawerShow: false,
@@ -237,7 +182,6 @@ export default {
 	},
 
 	onLoad(option) {
-		console.log(option);
 		this.form.projectId = option.id;
 		this.getList();
 		uni.$on('update', obj => {
@@ -269,7 +213,6 @@ export default {
 
 	// 滚动
 	onPageScroll(res) {
-		// console.log(res);
 		let { scrollTop } = res;
 		this.scrollTop = scrollTop;
 		if (!this.backTop && scrollTop > 200) {
@@ -296,12 +239,19 @@ export default {
 		}
 	},
 	methods: {
+		// 折扣变化
+		discountChange(e){
+			console.log(e,this.discount);
+			this.discount = e;
+			 this.list&&this.list.map(m=>{
+				 console.log(m);
+				m.discount = this.$formatNumber((Number(m.amountPrice)*Number(e)).toFixed(2));	
+			})
+		},
 		onPurposePrice: function(e) {
-			// console.log(e);
 			let {
 				target: { value }
 			} = e;
-			// console.log(value);
 			let i_0 = !!value[0] ? value[0] : 0;
 			let i_1 = !!value[1] ? value[1] : 0;
 			this.form.purposePrice = this.purposePrice[1][i_1];
@@ -315,17 +265,15 @@ export default {
 			this.$forceUpdate();
 		},
 		onProductDemand: function(e) {
-			// console.log(e);
 			let {
 				target: { value }
 			} = e;
-			// console.log(value);
 			let i_0 = !!value[0] ? value[0] : 0;
 			let i_1 = !!value[1] ? value[1] : 0;
-			this.form.productRequirement = this.productDemand[0][i_0] + ':' + this.productDemand[1][i_1];
+			this.form.productRequirement =  this.productDemand[1][i_1];
 		},
 		changeProductDemand: function(e) {
-			console.log('this.productDemand', e);
+			
 			let {
 				detail: { column, value }
 			} = e;
@@ -342,6 +290,9 @@ export default {
 		link(url) {
 			util.navigateTo(url);
 		},
+		reset(){
+			this.discount = 1;
+		},
 		// 重置搜索
 		searchReset() {
 			this.keyWord = '';
@@ -352,7 +303,7 @@ export default {
 		},
 		// 搜索
 		search() {
-			this.hideModal();
+			// this.hideModal();
 			this.getList();
 		},
 		// 获取列表
@@ -364,9 +315,13 @@ export default {
 				page: this.pageNum,
 				pageSize: this.pageSize
 			};
-			tookeen.list(data).then(res => {
+			house.list(data).then(res => {
 				this.total = res.total;
 				this.isLastPage = res.isLastPage;
+				res.list.map(m=>{
+					// 折扣价
+					m.discount = this.$formatNumber(m.amountPrice*this.discount);
+				})
 				if (this.pageNum == 1) this.list = res.list;
 				else this.list = this.list.concat(res.list);
 
@@ -393,7 +348,7 @@ export default {
 		// 删除
 		onDel(id) {
 			id = typeof id == 'object' ? id : [id];
-			tookeen.del(id).then(r => {
+			customer.del(id).then(r => {
 				util.toast('删除成功');
 				// this.getList()
 				this.list = this.list.filter(m => m.id != id);
@@ -420,7 +375,6 @@ export default {
 		},
 		// 显示添加弹框
 		showModal(e) {
-			// console.log(e);
 			// 设置页面滚动，防止遮罩层下拉刷新
 			util.pageScrollTo(10);
 			// 弹窗滚动条
@@ -468,29 +422,13 @@ export default {
 			day = day > 9 ? day : '0' + day;
 			return `${year}-${month}-${day}`;
 		},
-		// 验证表单
-		check() {
-			let result = true;
-			/* mobile: '', //* 联系方式
-			name: '', //* 姓名
-			*/
-			let { mobile, name } = this.form;
-			if (!mobile) {
-				util.toast('联系方式不能为空');
-				result = false;
-			} else if (!name) {
-				util.toast('姓名不能为空');
-				result = false;
-			}
-			return result;
-		},
 		// 提交表单
 		submit() {
-			if (!this.check()) return;
+			if (!check(this.form)) return;
 			let data = { ...this.form };
 			data = this.objFilter(data);
-			const save = data => tookeen.save(data);
-			const update = data => tookeen.update(data);
+			const save = data => customer.save(data);
+			const update = data => customer.update(data);
 			const submit = data.id ? update : save;
 			submit(data).then(r => {
 				let txt = this.isUpdate ? '更新' : '添加';
@@ -514,4 +452,11 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+	
+	page {
+		height: 100Vh;
+		width: 100vw;
+	}
+	
+</style>

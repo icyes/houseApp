@@ -24,7 +24,7 @@
 							<input :disabled="isEdit ? false : true" type="text" placeholder="客户姓名" placeholder-class="text-gray" v-model="form.name" />
 						</view>
 					</view>
-					<view class="cu-item flex">
+					<view class="cu-item flex" @click="makePhone(form.mobile)">
 						<view class="content flex-sub"><text class="text-grey">手机号</text></view>
 						<view class="action flex-treble">
 							<input :disabled="isEdit ? false : true" type="text" placeholder="客户电话" placeholder-class="text-gray" v-model="form.mobile" />
@@ -108,6 +108,16 @@ export default {
 		}
 	},
 	methods: {
+		// 打电话
+		makePhone(phoneNumber){
+			if(!phoneNumber){
+				util.toast("请先添加电话号码");
+				return
+			}
+			uni.makePhoneCall({
+			    phoneNumber,
+			});
+		},
 		// 获得用户详情
 		getDetail() {
 			api.info(this.id).then(res => {
