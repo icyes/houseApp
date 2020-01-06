@@ -47,7 +47,7 @@
 							<view class="text-grey">
 								房屋名称:{{ item.name }}
 							</view>
-							<button class="cu-btn sm round line-red">{{discount == 1?'无折扣':discount*10+'折'}}</button>
+							<button class="cu-btn sm round line-red">{{discount == 1?'无折扣':Number(discount*10).toFixed(2)+'折'}}</button>
 						
 						</view>
 						<view class="flex justify-between padding-bottom-sm align-center">
@@ -55,7 +55,7 @@
 								<text class="cu-tag bg-red text-white padding-xs">
 									折扣单价:
 								</text>
-								<text class="cu-tag line-red">{{ item.acreagePrice*discount }} ￥</text>
+								<text class="cu-tag line-red">{{ getFixPrice(item.acreagePrice*discount) }} ￥</text>
 							</view>
 							<view class="text-df cu-capsule">
 								<text class="cu-tag bg-red text-white padding-xs">
@@ -236,15 +236,19 @@ export default {
 		},
 		isUpdate() {
 			return this.form.id != null;
-		}
+		},
 	},
 	methods: {
+		// 保留两位小数
+		getFixPrice(price){
+			return price.toFixed(2)
+		},
 		// 折扣变化
 		discountChange(e){
-			console.log(e,this.discount);
+			e = Number(e).toFixed(2);
+			if(e<0||e>1) return
 			this.discount = e;
 			 this.list&&this.list.map(m=>{
-				 console.log(m);
 				m.discount = this.$formatNumber((Number(m.amountPrice)*Number(e)).toFixed(2));	
 			})
 		},
@@ -313,7 +317,8 @@ export default {
 				projectId: this.form.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
-				pageSize: this.pageSize
+				pageSize: this.pageSize,
+				status: 1
 			};
 			house.list(data).then(res => {
 				this.total = res.total;

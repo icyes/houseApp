@@ -24,7 +24,7 @@
 							<input :disabled="isEdit ? false : true" type="text" placeholder="客户姓名" placeholder-class="text-gray" v-model="form.name" />
 						</view>
 					</view>
-					<view class="cu-item flex" @click="makePhone(form.mobile)">
+					<view class="cu-item flex" @click="isEdit? false:util.makePhoneCall(form.mobile)">
 						<view class="content flex-sub"><text class="text-grey">手机号</text></view>
 						<view class="action flex-treble">
 							<input :disabled="isEdit ? false : true" type="text" placeholder="客户电话" placeholder-class="text-gray" v-model="form.mobile" />
@@ -33,21 +33,24 @@
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">联系方式</text></view>
 						<view class="action flex-treble">
-							<input :disabled="isEdit ? false : true" type="text" placeholder="联系方式" placeholder-class="text-gray" v-model="form.contactWay" />
+							<!-- <input :disabled="isEdit ? false : true" type="text" placeholder="联系方式" placeholder-class="text-gray" v-model="form.contactWay" /> -->
+						<textarea  :disabled="isEdit ? false : true" style="width: unset;" auto-height type="text"  placeholder="联系方式" placeholder-class="text-gray" v-model="form.contactWay" />
 						</view>
 					</view>
 
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">主题</text></view>
 						<view class="action flex-treble">
-							<input :disabled="isEdit ? false : true" type=" number" placeholder="主题" placeholder-class="text-gray" v-model="form.subject" />
+							<!-- <input :disabled="isEdit ? false : true" type=" number" placeholder="主题" placeholder-class="text-gray" v-model="form.subject" /> -->
+						<textarea  :disabled="isEdit ? false : true" style="width: unset;" auto-height type="text"  placeholder="主题" placeholder-class="text-gray" v-model="form.subject" />
 						</view>
 					</view>
 
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">联系详情</text></view>
 						<view class="action flex-treble">
-							<input :disabled="isEdit ? false : true" type="text" placeholder="联系详情" placeholder-class="text-gray" v-model="form.contactDetail" />
+							<!-- <input :disabled="isEdit ? false : true" type="text" placeholder="联系详情" placeholder-class="text-gray" v-model="form.contactDetail" /> -->
+						<textarea  :disabled="isEdit ? false : true" style="width: unset;" auto-height type="text"  placeholder="联系详情" placeholder-class="text-gray" v-model="form.contactDetail" />
 						</view>
 					</view>
 
@@ -87,6 +90,7 @@ const defForm = {
 export default {
 	data() {
 		return {
+			util,
 			isEdit: false,
 			form: defForm,
 			sourceWayArray: ['自然上访', '员工邀约', '老客户介绍', '路过', '朋友介绍', '广告媒体', '其他'],

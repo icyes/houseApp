@@ -181,9 +181,14 @@
 						<view class="flex justify-between padding-bottom-sm align-center">
 							<view
 								class="tip text-white font-size-12"
-								:class="[item.sellStatus == 0 ? 'bg-yellow' : '', item.sellStatus == 1 ? 'bg-green' : '', item.sellStatus == 2 ? 'bg-red' : '']"
+								:class="[
+									item.sellStatus == 0 ? 'bg-yellow' : '',
+									item.sellStatus == 1 ? 'bg-green' : '',
+									item.sellStatus == 2 ? 'bg-red' : '',
+									item.sellStatus == 3 ? 'bg-black' : ''
+								]"
 							>
-								{{ sellStatus[item.sellStatus].title }}
+								{{ sellStatus[item.sellStatus] }}
 							</view>
 							<view class="margin-left-xl padding-left-sm text-grey">{{ item.name }}</view>
 							<view v-if="item.vipCard" class="text-df cu-capsule">
@@ -213,12 +218,11 @@
 							<text class=" cuIcon-addressbook  margin-right-xs"></text>
 							身份证地址：{{ item.idAddress }}
 						</view>
-	
+
 						<view class="text-df text-cut padding-bottom-sm">
 							<text class=" cuIcon-locationfill  margin-right-xs"></text>
-							单位地址：{{ item.companyAddress||"--" }}
+							单位地址：{{ item.companyAddress || '--' }}
 						</view>
-
 					</view>
 
 					<view class="move">
@@ -237,8 +241,8 @@
 <script>
 import api from '@/api/identify.js';
 import util from '@/utils/index.js';
-import { sellStatus, professional, Age, productDemand,realEstate,sourceWayArray,offerSattus } from '@/utils/common/data.js';
-import {check,defForm} from "./verify.js"
+import { sellStatus, professional, Age, productDemand, realEstate, sourceWayArray, offerSattus } from '@/utils/common/data.js';
+import { check, defForm } from './verify.js';
 
 export default {
 	data() {
@@ -261,7 +265,7 @@ export default {
 			productDemand, //产品需求
 			professional, //职业
 			sellStatus, //售卖状态
-			realEstate,//置业动机
+			realEstate, //置业动机
 			sourceWayArray,
 			offerSattus,
 			// sourceWayArray: ['自然上访', '员工邀约', '老客户介绍', '路过', '朋友介绍', '广告媒体', '其他'],
@@ -280,14 +284,14 @@ export default {
 		};
 	},
 	onLoad(option) {
-		let {name,mobile,showAddModal} = option;
-		if(showAddModal){
-			this.modalName = "formModal";
+		let { name, mobile, showAddModal } = option;
+		if (showAddModal) {
+			this.modalName = 'formModal';
 			this.form.name = name;
 			this.form.mobile = mobile;
 		}
 		this.form.projectId = Number(option.id);
-		// this.form.projectId = option.id;	
+		// this.form.projectId = option.id;
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -526,11 +530,8 @@ export default {
 </script>
 
 <style>
-	
-	.tip{
-		top:17px !important;
-		left:-22px !important;
-		
-	}
-	
+.tip {
+	top: 15px !important;
+	left: -20px !important;
+}
 </style>

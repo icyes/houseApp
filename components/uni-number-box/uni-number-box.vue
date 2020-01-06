@@ -8,8 +8,10 @@
       :disabled="disabled"
       v-model="inputValue"
       class="uni-numbox__value"
-      type="number"
+      type="digit"
+	  @input="_onInput"
       @blur="_onBlur">
+	  <!-- 	  :value="value" -->
     <view
       :class="{'uni-numbox--disabled': inputValue >= max || disabled}"
       class="uni-numbox__plus"
@@ -60,6 +62,9 @@ export default {
     this.inputValue = +this.value
   },
   methods: {
+	  _onInput(event){
+		  
+	  },
     _calcValue (type) {
       if (this.disabled) {
         return

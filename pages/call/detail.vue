@@ -58,7 +58,7 @@
 							<input type="text" :disabled="isEdit ? false : true" placeholder="来电客户姓名" placeholder-class="text-gray" v-model="form.name" />
 						</view>
 					</view>
-					<view class="cu-item flex">
+					<view class="cu-item flex" @click="isEdit? false:util.makePhoneCall(form.mobile)">
 						<view class="content flex-sub"><text class="text-grey">手机号</text></view>
 						<view class="action flex-treble">
 							<input type="text" :disabled="isEdit ? false : true" placeholder="来电客户手机号" placeholder-class="text-gray" v-model="form.mobile" />
@@ -125,13 +125,15 @@
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">询问内容1</text></view>
 						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写询问内容1" placeholder-class="text-gray" v-model="form.askContentOne" />
+							<!-- <input type="text" :disabled="isEdit ? false : true" placeholder="填写询问内容1" placeholder-class="text-gray" v-model="form.askContentOne" /> -->
+						<textarea  :disabled="isEdit ? false : true" style="width: unset;" auto-height type="text"  placeholder="填写询问内容1" placeholder-class="text-gray" v-model="form.askContentOne" />
 						</view>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">询问内容2</text></view>
 						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写询问内容2" placeholder-class="text-gray" v-model="form.askContentTwo" />
+							<!-- <input type="text" :disabled="isEdit ? false : true" placeholder="填写询问内容2" placeholder-class="text-gray" v-model="form.askContentTwo" /> -->
+						<textarea  :disabled="isEdit ? false : true" style="width: unset;" auto-height type="text"  placeholder="填写询问内容2" placeholder-class="text-gray" v-model="form.askContentTwo" />
 						</view>
 					</view>
 					<view class="cu-item flex">
@@ -179,6 +181,7 @@ const defForm = {
 export default {
 	data() {
 		return {
+			util,
 			showMenu: false,
 			isEdit: false,
 			form: defForm,

@@ -4,20 +4,27 @@
 			<block slot="backText">返回</block>
 			<block slot="content">{{ form.name }}</block>
 		</cu-custom>
-		<view v-if="showMenu" class="page-mask" @touchmove.stop="()=>false"  @click="showMenu=false"/>
+		<view v-if="showMenu" class="page-mask" @touchmove.stop="() => false" @click="showMenu = false" />
 		<view class="cu-bar bg-white solid-bottom " :class="!showMenu ? 'sticky-top' : ''">
 			<view class="action">
 				<text class="cuIcon-titles text-orange "></text>
 				认筹详情
 			</view>
 			<view class="cu-btn round line-green relative" style="z-index: 12;">
-				<span @click="showMenu=!showMenu" style="z-index: 10;">
+				<span @click="showMenu = !showMenu" style="z-index: 10;">
 					<text class="cuIcon-forward"></text>
 					拓联
 				</span>
-			
-				<view class="absolute" style="height: 100%;z-index: 1;" >
-					<view @click="addFollow('offer')" class="cu-btn round bg-green " style="transition: all .5s ease-in;  " :style="showMenu?'left: 160rpx;;opacity:1':'left: 0rpx;opacity:0'">认购</view>
+
+				<view class="absolute" style="height: 100%;z-index: 1;">
+					<view
+						@click="addFollow('offer')"
+						class="cu-btn round bg-green "
+						style="transition: all .5s ease-in;  "
+						:style="showMenu ? 'left: 160rpx;;opacity:1' : 'left: 0rpx;opacity:0'"
+					>
+						认购
+					</view>
 				</view>
 			</view>
 			<view class="action">
@@ -30,37 +37,69 @@
 				<view class="cu-list sm-border menu text-left solid-top">
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">姓名</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="填写姓名" placeholder-class="text-gray" v-model="form.name" /></view>
+						<view class="action flex-treble">
+							<input :disabled="isEdit ? false : true" type="text" placeholder="填写姓名" placeholder-class="text-gray" v-model="form.name" />
+						</view>
 					</view>
-					<view class="cu-item flex">
+					<view class="cu-item flex" @click="isEdit ? false : util.makePhoneCall(form.mobile)">
 						<view class="content flex-sub"><text class="text-grey">手机号</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="填写手机号码" placeholder-class="text-gray" v-model="form.mobile" /></view>
+						<view class="action flex-treble">
+							<input :disabled="isEdit ? false : true" type="text" placeholder="填写手机号码" placeholder-class="text-gray" v-model="form.mobile" />
+						</view>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">身份证</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="idcard" placeholder="身份证" placeholder-class="text-gray" v-model="form.idCard" /></view>
+						<view class="action flex-treble">
+							<input :disabled="isEdit ? false : true" type="idcard" placeholder="身份证" placeholder-class="text-gray" v-model="form.idCard" />
+						</view>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">身份证地址</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="身份证地址" placeholder-class="text-gray" v-model="form.idAddress" /></view>
+						<view class="action flex-treble">
+							<!-- <input :disabled="isEdit ? false : true" type="text" placeholder="身份证地址" placeholder-class="text-gray" v-model="form.idAddress" /> -->
+							<textarea
+								:disabled="isEdit ? false : true"
+								style="width: unset;"
+								auto-height
+								type="text"
+								placeholder="身份证地址"
+								placeholder-class="text-gray"
+								v-model="form.idAddress"
+							/>
+						</view>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">单位地址</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="工作单位地址" placeholder-class="text-gray" v-model="form.companyAddress" /></view>
+						<view class="action flex-treble">
+							<!-- <input :disabled="isEdit ? false : true" type="text" placeholder="工作单位地址" placeholder-class="text-gray" v-model="form.companyAddress" /> -->
+							<textarea
+								:disabled="isEdit ? false : true"
+								style="width: unset;"
+								auto-height
+								type="text"
+								placeholder="工作单位地址"
+								placeholder-class="text-gray"
+								v-model="form.companyAddress"
+							/>
+						</view>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">认筹金</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="digit" placeholder="认筹金" placeholder-class="text-gray" v-model="form.identifyPrice" /></view>
+						<view class="action flex-treble">
+							<input :disabled="isEdit ? false : true" type="digit" placeholder="认筹金" placeholder-class="text-gray" v-model="form.identifyPrice" />
+						</view>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">vip卡号</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="vip卡号" placeholder-class="text-gray" v-model="form.vipCard" /></view>
+						<view class="action flex-treble">
+							<input :disabled="isEdit ? false : true" type="text" placeholder="vip卡号" placeholder-class="text-gray" v-model="form.vipCard" />
+						</view>
 					</view>
 
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">认筹日期</text></view>
 						<picker
-						:disabled="isEdit ? false : true"
+							:disabled="isEdit ? false : true"
 							class="flex-treble"
 							mode="date"
 							:value="form.identifyTime"
@@ -72,14 +111,14 @@
 								}
 							"
 						>
-							<view v-if="form.identifyTime" class="uni-input">{{ $moment(form.identifyTime).format("YYYY-MM-DD") }}</view>
+							<view v-if="form.identifyTime" class="uni-input">{{ $moment(form.identifyTime).format('YYYY-MM-DD') }}</view>
 							<view v-else class="text-gray">选择认筹日期</view>
 						</picker>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">职业</text></view>
 						<picker
-						:disabled="isEdit ? false : true"
+							:disabled="isEdit ? false : true"
 							class="flex-treble"
 							@change="
 								e => {
@@ -111,19 +150,28 @@
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">产品需求</text></view>
-						<picker :disabled="isEdit ? false : true" class="flex-treble" mode="multiSelector" @change="onProductDemand" @columnchange="changeProductDemand" :range="productDemand">
+						<picker
+							:disabled="isEdit ? false : true"
+							class="flex-treble"
+							mode="multiSelector"
+							@change="onProductDemand"
+							@columnchange="changeProductDemand"
+							:range="productDemand"
+						>
 							<view v-if="form.productRequirement" class="uni-input">{{ form.productRequirement }}</view>
 							<view v-else class="text-gray">选择产品需求</view>
 						</picker>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">购买力评估</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="购买力评估" placeholder-class="text-gray" v-model="form.purpose" /></view>
+						<view class="action flex-treble">
+							<input :disabled="isEdit ? false : true" type="text" placeholder="购买力评估" placeholder-class="text-gray" v-model="form.purpose" />
+						</view>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">认筹途径</text></view>
 						<picker
-						:disabled="isEdit ? false : true"
+							:disabled="isEdit ? false : true"
 							class="flex-treble"
 							@change="
 								e => {
@@ -140,7 +188,7 @@
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">置业动机</text></view>
 						<picker
-						:disabled="isEdit ? false : true"
+							:disabled="isEdit ? false : true"
 							class="flex-treble"
 							@change="
 								e => {
@@ -156,11 +204,24 @@
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">意向价格</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="意向价格" placeholder-class="text-gray" v-model="form.purposePrice" /></view>
+						<view class="action flex-treble">
+							<input :disabled="isEdit ? false : true" type="text" placeholder="意向价格" placeholder-class="text-gray" v-model="form.purposePrice" />
+						</view>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">备注</text></view>
-						<view class="action flex-treble"><input :disabled="isEdit ? false : true" type="text" placeholder="备注" placeholder-class="text-gray" v-model="form.remark" /></view>
+						<view class="action flex-treble">
+							<!-- <input :disabled="isEdit ? false : true" type="text" placeholder="备注" placeholder-class="text-gray" v-model="form.remark" /> -->
+							<textarea
+								:disabled="isEdit ? false : true"
+								style="width: unset;"
+								auto-height
+								type="text"
+								placeholder="备注"
+								placeholder-class="text-gray"
+								v-model="form.remark"
+							/>
+						</view>
 					</view>
 					<view v-if="isEdit" class="padding-lg flex flex-direction"></view>
 					<view v-if="isEdit" class="fixed-bottom padding flex flex-direction"><button @click="submit" class="cu-btn bg-green lg shadow-blur round">提交</button></view>
@@ -173,12 +234,13 @@
 <script>
 import api from '@/api/identify.js';
 import util from '@/utils';
-import { sellStatus, professional, Age, productDemand,realEstate,sourceWayArray, } from '@/utils/common/data.js';
-import {check,defForm} from "./verify.js"
+import { sellStatus, professional, Age, productDemand, realEstate, sourceWayArray } from '@/utils/common/data.js';
+import { check, defForm } from './verify.js';
 export default {
 	data() {
 		return {
-				showMenu:false,
+			util,
+			showMenu: false,
 			isEdit: false,
 			form: defForm,
 			statusArray: ['来电', '认筹', '签约', '购买'],
@@ -188,8 +250,8 @@ export default {
 			productDemand, //产品需求
 			professional, //职业
 			sellStatus, //售卖状态
-			realEstate,//置业动机
-			sourceWayArray,
+			realEstate, //置业动机
+			sourceWayArray
 		};
 	},
 	onLoad(option) {
@@ -200,17 +262,17 @@ export default {
 		this.getDetail();
 		console.log('page', getCurrentPages());
 	},
-	computed:{
+	computed: {
 		oldCusomterShow() {
 			return this.form.sourceWay == 3;
 		}
 	},
 	methods: {
-		addFollow:function(target){
-			if(!this.showMenu)return;
+		addFollow: function(target) {
+			if (!this.showMenu) return;
 			let form = this.form;
 			let projectId = this.id;
-			let url = `/pages/${target}/index?id=${projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}`;
+			let url = `/pages/${target}/index?id=${projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}&idAddress=${form.idAddress}&idCard=${form.idCard}`;
 			this.showMenu = false;
 			util.navigateTo(url);
 		},
@@ -236,13 +298,13 @@ export default {
 			api.info(this.id).then(res => {
 				console.log(res);
 				this.form = { ...res };
-				this.oldform = {...res};
+				this.oldform = { ...res };
 			});
 		},
 		// 切换编辑
 		IsEdit(e) {
-			let {value} = e.detail
-			if(!value) this.form = {...this.oldform} 
+			let { value } = e.detail;
+			if (!value) this.form = { ...this.oldform };
 			this.isEdit = value;
 		},
 
@@ -255,8 +317,8 @@ export default {
 			api.update(data).then(r => {
 				util.toast('更新成功');
 				this.isEdit = false;
-				this.oldform = {...this.form}
-				  uni.$emit('update',{indexes,data})
+				this.oldform = { ...this.form };
+				uni.$emit('update', { indexes, data });
 			});
 		},
 		// 选择来访日期
@@ -281,7 +343,7 @@ export default {
 			let year = date.getFullYear();
 			let month = date.getMonth() + 1;
 			let day = date.getDate();
-		
+
 			if (type === 'start') {
 				year = year - 60;
 			} else if (type === 'end') {
@@ -290,7 +352,7 @@ export default {
 			month = month > 9 ? month : '0' + month;
 			day = day > 9 ? day : '0' + day;
 			return `${year}-${month}-${day}`;
-		},
+		}
 	}
 };
 </script>

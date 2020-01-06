@@ -218,10 +218,11 @@
 							</picker>
 						</view>
 					</view>
-					<view class="cu-item flex">
+					<view class="cu-item flex ">
 						<view class="content flex-sub"><text class="text-grey">抗拒点</text></view>
-						<view class="action flex-treble">
-							<input type="text" :disabled="isEdit ? false : true" placeholder="填写客户抗拒点" placeholder-class="text-gray" v-model="form.resistPoint" />
+						<view class="action flex-treble padding-sm">
+							<!-- <input type="text" :disabled="isEdit ? false : true" placeholder="填写客户抗拒点" placeholder-class="text-gray" v-model="form.resistPoint" /> -->
+						<textarea  :disabled="isEdit ? false : true" style="width: unset;" auto-height type="text"  placeholder="填写抗拒点" placeholder-class="text-gray" v-model="form.resistPoint" />
 						</view>
 					</view>
 					<view class="cu-item flex">
@@ -309,7 +310,7 @@ export default {
 			if(!this.showMenu)return;
 			let form = this.form;
 			let projectId = this.projectId;
-			let url = `/pages/${target}/index?id=${projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}`;
+			let url = `/pages/${target}/index?id=${projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}&sex={form.sex}&address={form.address}`;
 			this.showMenu = false;
 			util.navigateTo(url);
 		},

@@ -41,7 +41,7 @@
 							<view v-else class="text-gray">选择性别</view>
 						</picker>
 					</view>
-					<view class="cu-item flex">
+					<view class="cu-item flex" @click="isEdit ? false : util.makePhoneCall(form.mobile)">
 						<view class="content flex-sub"><text class="text-grey">电话</text></view>
 						<view class="action flex-treble">
 							<input :disabled="isEdit ? false : true" type="text" placeholder="电话" placeholder-class="text-gray" v-model="form.mobile" />
@@ -56,7 +56,8 @@
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">通讯地址</text></view>
 						<view class="action flex-treble">
-							<input :disabled="isEdit ? false : true" type="text" placeholder="通讯地址" placeholder-class="text-gray" v-model="form.address" />
+							<!-- <input :disabled="isEdit ? false : true" type="text" placeholder="通讯地址" placeholder-class="text-gray" v-model="form.address" /> -->
+						<textarea  :disabled="isEdit ? false : true" style="width: unset;" auto-height type="text"  placeholder="通讯地址" placeholder-class="text-gray" v-model="form.address" />
 						</view>
 					</view>
 					<view class="cu-item flex">
@@ -93,7 +94,10 @@
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">工作区域</text></view>
-						<view class="action flex-treble"><input type="text" placeholder="工作区域" placeholder-class="text-gray" v-model="form.workAddress" /></view>
+						<view class="action flex-treble">
+							<!-- <input type="text" placeholder="工作区域" placeholder-class="text-gray" v-model="form.workAddress" /> -->
+						<textarea  :disabled="isEdit ? false : true" style="width: unset;" auto-height type="text"  placeholder="工作区域" placeholder-class="text-gray" v-model="form.workAddress" />
+						</view>
 					</view>
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">职业类型</text></view>
@@ -215,6 +219,7 @@ import {check,defForm} from "./verify.js"
 export default {
 	data() {
 		return {
+			util,
 			modalName:"",
 			house: [],
 			isEdit: false,

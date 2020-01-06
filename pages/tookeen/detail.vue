@@ -24,7 +24,7 @@
 							<input type="text" :disabled="isEdit ? false : true" placeholder="填写姓名" placeholder-class="text-gray" v-model="form.name" />
 						</view>
 					</view>
-					<view class="cu-item flex">
+					<view class="cu-item flex" @click="isEdit ? false : util.makePhoneCall(form.mobile)">
 						<view class="content flex-sub"><text class="text-grey">手机号</text></view>
 						<view class="action flex-treble">
 							<input type="text" :disabled="isEdit ? false : true" placeholder="填写手机号码" placeholder-class="text-gray" v-model="form.mobile" />
@@ -90,8 +90,9 @@
 					
 					<view class="cu-item flex">
 						<view class="content flex-sub"><text class="text-grey">备注</text></view>
-						<view class="action flex-treble">
-							<input  type="text" :disabled="isEdit ? false : true" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" />
+						<view class="action flex-treble padding-sm">
+							<!-- <input  type="text" :disabled="isEdit ? false : true" placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" /> -->
+						<textarea  :disabled="isEdit ? false : true" style="width: unset;" auto-height type="text"  placeholder="填写备注" placeholder-class="text-gray" v-model="form.remark" />
 						</view>
 					</view>
 					<view v-if="isEdit" class="padding-lg flex flex-direction"></view>
@@ -135,6 +136,7 @@ const defForm = {
 export default {
 	data() {
 		return {
+			util,
 			isload: false,
 			isEdit: false,
 			projectId:null,

@@ -341,11 +341,13 @@ export default {
 		};
 	},
 	onLoad(option) {
-		let {name,mobile,showAddModal} = option;
+		let {name,mobile,showAddModal,idCard,idAddress} = option;
 		if(showAddModal){
 			this.cumodal = true;
 			this.form.name = name;
 			this.form.mobile = mobile;
+			this.form.idAddress = idAddress;
+			this.form.idCard = idCard;
 		}
 		this.form.projectId = Number(option.id);
 		// this.form.projectId = option.id;

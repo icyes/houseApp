@@ -115,7 +115,7 @@ image {
 
 .sticky-top {
 	position: sticky !important;
-	top: 140rpx;
+	top: 128rpx;
 	z-index: 10;
 }
 
@@ -3857,7 +3857,7 @@ scroll-view.cu-steps .cu-item {
 	box-shadow: 6upx 6upx 8upx rgba(224, 170, 7, 0.2);
 }
 
-.shadow[class*="-olive"] {
+.shadow	="-olive"] {
 	box-shadow: 6upx 6upx 8upx rgba(124, 173, 55, 0.2);
 }
 

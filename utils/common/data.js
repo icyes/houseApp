@@ -16,11 +16,7 @@ export const houseType = [
 
 export const sourceWayArray= ['自然上访', '员工邀约', '老客户介绍', '路过', '朋友介绍', '广告媒体', '其他']
 // 售卖状态 1-已购买商铺 2-已购买住宅 3-已退卡
-export const sellStatus = [
-	{index:0,value:1,title:"已购买商铺"},
-	{index:1,value:2,title:"已购买住宅"},
-	{index:2,value:3,title:"已退卡"}
-]
+export const sellStatus =  ['已购买卡', '已购买商铺', '已购买住宅', '已退款'];
 
 // 认购状态 审核状态 0未审核 1 审核通过 2 审核驳回
 export const offerSattus = {
