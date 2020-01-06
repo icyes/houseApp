@@ -1,0 +1,17 @@
+{
+  "name": "houseApp",
+  "version": "1.0.0",
+  "description": "* 2019年8月28日 v1.0.0     * 第一次上传微信小程序",
+  "main": "main.js",
+  "dependencies": {
+    "moment": "^2.24.0",
+    "prettier": "^1.12.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -108,7 +108,7 @@
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">产品需求</text></view>
 					<!-- <view class="action flex-treble"><input type="text" placeholder="产品需求" placeholder-class="text-gray" v-model="form.productRequirement" /></view> -->
-					<picker class="flex-treble" mode="multiSelector" @change="onProductDemand" @columnchange="changeProductDemand" :range="productDemand">
+					<picker class="flex-treble"  :value="multiIndex" mode="multiSelector" @change="onProductDemand" @columnchange="changeProductDemand" :range="productDemand">
 						<view v-if="form.productRequirement" class="uni-input">{{ form.productRequirement }}</view>
 						<view v-else class="text-gray">选择产品需求</view>
 					</picker>
@@ -255,7 +255,7 @@ export default {
 			defForm,
 			// 滚动窗口位置
 			scrollTop: 0,
-
+			multiIndex: [0, 0],
 			modalName: null,
 			listTouchStart: 0,
 			listTouchDirection: null,
@@ -363,6 +363,7 @@ export default {
 			} = e;
 			if (column === 0 && value === 0) this.productDemand.splice(1, 1, ['凤大公路底商', '购物中心商铺', '主题街区商铺', '办公']);
 			else if (column === 0 && value === 1) this.productDemand.splice(1, 1, ['高层', '洋房', '排屋', '公寓']);
+			if (column == 0)this.multiIndex.splice(1,1,0);
 			this.$forceUpdate();
 		},
 		// 实时监听滚动

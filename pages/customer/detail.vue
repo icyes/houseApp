@@ -136,6 +136,7 @@
 								:disabled="isEdit ? false : true"
 								class="flex-treble"
 								mode="multiSelector"
+								:value="DemandIndex"
 								@change="onProductDemand"
 								@columnchange="changeProductDemand"
 								:range="productDemand"
@@ -211,6 +212,7 @@
 								mode="multiSelector"
 								@change="onPurposePrice"
 								@columnchange="changePurposePrice"
+								:value="multiIndex"
 								:range="purposePrice"
 							>
 								<view v-if="form.purposePrice" class="uni-input">{{ form.purposePrice }}</view>
@@ -282,6 +284,8 @@ export default {
 			sexArray: gender,
 			form: defForm,
 			purposePrice: [['商业', '住宅'], businessPrise],
+			multiIndex: [0, 0],
+			DemandIndex:[0,0],
 			businessPrise, //商业价格
 			residentialPrice, //住宅价格
 			family,
@@ -326,8 +330,9 @@ export default {
 			let {
 				detail: { column, value }
 			} = e;
-			if (column === 0 && value === 0) this.purposePrice.splice(1, 1, businessPrise);
-			else if (column === 0 && value === 1) this.purposePrice.splice(1, 1, residentialPrice);
+			if (column == 0 && value == 0) this.purposePrice[1]=businessPrise;
+			else if (column == 0 && value == 1) this.purposePrice[1]=residentialPrice;
+			if (column == 0)this.multiIndex.splice(1,1,0);
 			this.$forceUpdate();
 		},
 		onProductDemand: function(e) {
@@ -344,8 +349,14 @@ export default {
 			let {
 				detail: { column, value }
 			} = e;
-			if (column === 0 && value === 0) this.productDemand.splice(1, 1, ['凤大公路底商', '购物中心商铺', '主题街区商铺', '办公']);
-			else if (column === 0 && value === 1) this.productDemand.splice(1, 1, ['高层', '洋房', '排屋', '公寓']);
+		if (column == 0 && value == 0){
+			this.productDemand[1]=['凤大公路底商', '购物中心商铺', '主题街区商铺', '办公'];
+			this.DemandIndex.splice(1,1,0);
+		} 
+		else if (column == 0 && value == 1) {
+			this.productDemand[1]=['高层', '洋房', '排屋', '公寓'];
+			this.DemandIndex.splice(1,1,0);
+		}
 			this.$forceUpdate();
 		},
 		// 获得用户详情

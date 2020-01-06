@@ -98,12 +98,6 @@
 			"style": {
 				"enablePullDownRefresh": true
 			}
-		},
-		{
-			"path": "pages/compute/detail", // 房屋计算
-			"style": {
-				"enablePullDownRefresh": false
-			}
 		}
 	],
 	"globalStyle": {
@@ -120,11 +114,7 @@
 	"usingComponts": true,
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
-		"list": [{
-			"name": "表单", //模式名称
-			"path": "pages/component/form", //启动页面
-			"query": "" //启动参数
-		}]
+		"list": []
 	}
 
 }

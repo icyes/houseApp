@@ -191,7 +191,7 @@
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">产品需求</text></view>
 					<!-- <view class="action flex-treble"><input type="text" placeholder="填写产品需求" placeholder-class="text-gray" v-model="form.productRequirement" /></view> -->
-					<picker class="flex-treble" mode="multiSelector" @change="onProductDemand" @columnchange="changeProductDemand" :range="productDemand">
+					<picker class="flex-treble" mode="multiSelector" :value="DemandIndex" @change="onProductDemand" @columnchange="changeProductDemand" :range="productDemand">
 						<view v-if="form.productRequirement" class="uni-input">{{ form.productRequirement }}</view>
 						<view v-else class="text-gray">选择产品需求</view>
 					</picker>
@@ -233,7 +233,7 @@
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">意向价格</text></view>
 					<!-- <view class="action flex-treble"><input type="text" placeholder="填写客户意向价格" placeholder-class="text-gray" v-model="form.purposePrice" /></view> -->
-					<picker class="flex-treble" mode="multiSelector" @change="onPurposePrice" @columnchange="changePurposePrice" :range="purposePrice">
+					<picker class="flex-treble" mode="multiSelector" @change="onPurposePrice" :value="multiIndex" @columnchange="changePurposePrice" :range="purposePrice">
 						<view v-if="form.purposePrice" class="uni-input">{{ form.purposePrice }}</view>
 						<view v-else class="text-gray">选择客户意向价格</view>
 					</picker>
@@ -316,6 +316,8 @@ export default {
 			defForm,
 			form: defForm,
 			purposePrice: [['商业', '住宅'], businessPrise],
+			multiIndex: [0, 0],
+			DemandIndex:[0,0],
 			businessPrise, //商业价格
 			residentialPrice, //住宅价格
 			family,
@@ -404,11 +406,10 @@ export default {
 			this.form.purposePrice = this.purposePrice[1][i_1];
 		},
 		changePurposePrice: function(e) {
-			let {
-				detail: { column, value }
-			} = e;
-			if (column === 0 && value === 0) this.purposePrice.splice(1, 1, businessPrise);
-			else if (column === 0 && value === 1) this.purposePrice.splice(1, 1, residentialPrice);
+			let {column, value } = e.detail;
+			if (column == 0 && value == 0) this.purposePrice[1]=businessPrise;
+			else if (column == 0 && value == 1) this.purposePrice[1]=residentialPrice;
+			if (column == 0)this.multiIndex.splice(1,1,0);
 			this.$forceUpdate();
 		},
 		onProductDemand: function(e) {
@@ -424,8 +425,14 @@ export default {
 			let {
 				detail: { column, value }
 			} = e;
-			if (column === 0 && value === 0) this.productDemand.splice(1, 1, ['凤大公路底商', '购物中心商铺', '主题街区商铺', '办公']);
-			else if (column === 0 && value === 1) this.productDemand.splice(1, 1, ['高层', '洋房', '排屋', '公寓']);
+			if (column == 0 && value == 0){
+				this.productDemand[1]=['凤大公路底商', '购物中心商铺', '主题街区商铺', '办公'];
+				this.DemandIndex.splice(1,1,0);
+			} 
+			else if (column == 0 && value == 1) {
+				this.productDemand[1]=['高层', '洋房', '排屋', '公寓'];
+				this.DemandIndex.splice(1,1,0);
+			}
 			this.$forceUpdate();
 		},
 		// 实时监听滚动

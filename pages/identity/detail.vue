@@ -154,6 +154,7 @@
 							:disabled="isEdit ? false : true"
 							class="flex-treble"
 							mode="multiSelector"
+							:value="multiIndex"
 							@change="onProductDemand"
 							@columnchange="changeProductDemand"
 							:range="productDemand"
@@ -240,6 +241,7 @@ export default {
 	data() {
 		return {
 			util,
+			multiIndex: [0, 0],
 			showMenu: false,
 			isEdit: false,
 			form: defForm,
@@ -283,7 +285,7 @@ export default {
 			} = e;
 			let i_0 = !!value[0] ? value[0] : 0;
 			let i_1 = !!value[1] ? value[1] : 0;
-			this.form.productRequirement = this.productDemand[0][i_0] + ':' + this.productDemand[1][i_1];
+			this.form.productRequirement = this.productDemand[1][i_1];
 		},
 		changeProductDemand: function(e) {
 			let {
@@ -291,6 +293,7 @@ export default {
 			} = e;
 			if (column === 0 && value === 0) this.productDemand.splice(1, 1, ['凤大公路底商', '购物中心商铺', '主题街区商铺', '办公']);
 			else if (column === 0 && value === 1) this.productDemand.splice(1, 1, ['高层', '洋房', '排屋', '公寓']);
+			if (column == 0)this.multiIndex.splice(1,1,0);
 			this.$forceUpdate();
 		},
 		// 获得用户详情
