@@ -75,7 +75,7 @@
 								}
 							"
 						>
-							<view v-if="form.offerBuyTime" class="uni-input">{{ form.offerBuyTime }}</view>
+							<view v-if="form.offerBuyTime" class="uni-input">{{ $moment(form.offerBuyTime).format("YYYY-MM-DD") }}</view>
 							<view v-else class="text-gray">选择认购日期</view>
 						</picker>
 					</view>
@@ -304,6 +304,7 @@ export default {
 		});
 
 		return {
+			projectId:null,
 			total:null,
 			defForm,
 			housekeyWord: '',
@@ -325,7 +326,7 @@ export default {
 			realEstate, //置业动机
 			family, //家庭结构
 			professional, //职业类型
-			form: defForm,
+			form: {...defForm},
 			Age,
 			offerSattus, //认购状态
 			// 列表
@@ -341,7 +342,9 @@ export default {
 		};
 	},
 	onLoad(option) {
-		let {name,mobile,showAddModal,idCard,idAddress} = option;
+		let {name,mobile,showAddModal,idCard,idAddress,id} = option;
+		this.projectId= Number(id);
+		
 		if(showAddModal){
 			this.cumodal = true;
 			this.form.name = name;
@@ -349,8 +352,6 @@ export default {
 			this.form.idAddress = idAddress;
 			this.form.idCard = idCard;
 		}
-		this.form.projectId = Number(option.id);
-		// this.form.projectId = option.id;
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -412,13 +413,13 @@ export default {
 	methods: {
 		// 房屋搜索
 		houseSearch(){
-			console.log("house",this.housekeyWord)
 			this.house={list:[],isLastPage:false,pageNum:1}
 			this.getHouse()
 		},
 		// 显示房屋列表
 		showHouseModal() {
 			this.house={list:[],isLastPage:false,pageNum:1}
+			this.$forceUpdate()
 			this.getHouse();
 			this.modalName = 'DrawerModalL';
 		},
@@ -434,7 +435,7 @@ export default {
 		},
 		getHouse() {
 			if(this.house.isLastPage) return;
-			let data = { status: 1, page: this.house.pageNum, pageSize: 15, projectId: this.form.projectId, keyWord: this.housekeyWord };
+			let data = { status: 1, page: this.house.pageNum, pageSize: 15, projectId: this.projectId, keyWord: this.housekeyWord };
 			house.list(data).then(res => {
 				console.log('l-', res);
 				this.house.isLastPage = res.isLastPage;
@@ -474,7 +475,7 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
-				projectId: this.form.projectId,
+				projectId: this.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
@@ -549,7 +550,7 @@ export default {
 		//
 		hideCuModal() {
 			this.cumodal = false;
-			this.form = { ...defForm };
+			this.form = { ...this.defForm};
 		},
 		// 影藏弹窗
 		hideModal(e) {
@@ -598,7 +599,7 @@ export default {
 		// 提交表单
 		submit() {
 			if (!check(this.form)) return;
-			let data = { ...this.form };
+			let data = { ...this.form,projectId:this.projectId };
 			data = this.objFilter(data);
 			const save = data => api.save(data);
 			const update = data => api.update(data);

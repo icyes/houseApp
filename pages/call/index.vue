@@ -62,7 +62,7 @@
 
 				<view class="cu-item flex">
 					<view class="content flex-sub"><text class="text-grey">获取途径</text></view>
-					<picker class="flex-treble" @change="bindSourceWayChange" :value="form.acquiringWay - 1" :range="sourceWayArray">
+					<picker class="flex-treble" @change="bindSourceWayChange" :value="form.acquiringWay?(form.acquiringWay - 1):0" :range="sourceWayArray">
 						<view v-if="form.acquiringWay" class="uni-input">{{ sourceWayArray[form.acquiringWay - 1] }}</view>
 						<view v-else class="text-gray">选择获取途径</view>
 					</picker>
@@ -90,7 +90,7 @@
 				<view
 					class="cu-item margin-tb padding-tb light shadow shadow-lg  bg-white"
 					style="min-height: 180rpx;"
-					@tap="link(`./detail?id=${item.id}&indexes=${index}&projectId=${form.projectId}`)"
+					@tap="link(`./detail?id=${item.id}&indexes=${index}&projectId=${projectId}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
 					v-for="(item, index) in list"
 					:key="index"
@@ -155,7 +155,6 @@ import util from '@/utils/index.js';
 import { gender, statusArray, customerSource } from '@/utils/common/data.js';
 const defForm = {
 	id: null, //*
-	projectId: null, //项目id
 	name: null, //来电客户姓名
 	mobile: null, //手机号
 	sex: 1, //来电客户性别
@@ -173,6 +172,7 @@ export default {
 		});
 
 		return {
+			projectId: null, //项目id
 			total:null,
 			// 滚动窗口位置
 			scrollTop: 0,
@@ -185,7 +185,7 @@ export default {
 			statusArray: statusArray,
 			sexArray: gender,
 			defForm,
-			form: defForm,
+			form: {...defForm},
 			// 列表
 			list: null,
 			keyWord: '', //搜索关键字姓名和手机
@@ -198,7 +198,7 @@ export default {
 		};
 	},
 	onLoad(option) {
-		this.form.projectId = Number(option.id);
+		this.projectId = Number(option.id);
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -282,7 +282,7 @@ export default {
 			if (!this.isLoad) return;
 			this.isLoad = false;
 			let data = {
-				objectId: this.form.projectId,
+				objectId: this.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
@@ -413,7 +413,7 @@ export default {
 		// 提交表单
 		submit() {
 			// if (!this.check()) return;
-			let data = { ...this.form };
+			let data = { ...this.form,projectId:this.projectId };
 			data = this.objFilter(data);
 			const save = data => api.save(data);
 			const update = data => api.update(data);

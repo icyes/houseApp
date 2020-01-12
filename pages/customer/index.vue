@@ -30,7 +30,7 @@
 				<view
 					class="cu-item margin-tb padding-tb light shadow shadow-lg  bg-white"
 					style="min-height: 180rpx;"
-					@tap="link(`./detail?id=${item.id}&indexes=${index}&projectId=${form.projectId}`)"
+					@tap="link(`./detail?id=${item.id}&indexes=${index}&projectId=${projectId}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
 					v-for="(item, index) in list"
 					:key="index"
@@ -301,6 +301,7 @@ export default {
 		});
 
 		return {
+			projectId:null,
 			total: null,
 			// 页面抽屉显示判断
 			drawerShow: false,
@@ -314,7 +315,7 @@ export default {
 			sourceWayArray: customerSource,
 			sexArray: gender,
 			defForm,
-			form: defForm,
+			form: {...defForm},
 			purposePrice: [['商业', '住宅'], businessPrise],
 			multiIndex: [0, 0],
 			DemandIndex:[0,0],
@@ -340,7 +341,7 @@ export default {
 	},
 
 	onLoad(option) {
-		this.form.projectId = option.id;
+		this.projectId = option.id;
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -461,7 +462,7 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
-				projectId: this.form.projectId,
+				projectId: this.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
@@ -572,7 +573,7 @@ export default {
 		// 提交表单
 		submit() {
 			if (!check(this.form)) return;
-			let data = { ...this.form };
+			let data = { ...this.form,projectId:this.projectId };
 			data = this.objFilter(data);
 			const save = data => customer.save(data);
 			const update = data => customer.update(data);

@@ -167,7 +167,7 @@
 				<view
 					class="cu-item margin-tb light shadow shadow-lg  bg-white"
 					style="min-height: 120px;"
-					@tap="link(`./detail?id=${item.id}&indexes=${index}`)"
+					@tap="link(`./detail?id=${item.id}&indexes=${index}&projectId=${projectId}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
 					v-for="(item, index) in list"
 					:key="index"
@@ -251,6 +251,7 @@ export default {
 		});
 
 		return {
+			projectId:null,
 			total: null,
 			defForm,
 			// 滚动窗口位置
@@ -271,7 +272,7 @@ export default {
 			// sourceWayArray: ['自然上访', '员工邀约', '老客户介绍', '路过', '朋友介绍', '广告媒体', '其他'],
 			statusArray: ['来电', '认筹', '签约', '购买'],
 			sexArray: ['男', '女'],
-			form: defForm,
+			form: {...defForm},
 			// 列表
 			list: null,
 			keyWord: '', //搜索关键字姓名和手机
@@ -290,8 +291,7 @@ export default {
 			this.form.name = name;
 			this.form.mobile = mobile;
 		}
-		this.form.projectId = Number(option.id);
-		// this.form.projectId = option.id;
+		this.projectId = Number(option.id);
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -391,7 +391,7 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
-				projectId: this.form.projectId,
+				projectId: this.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
@@ -503,7 +503,7 @@ export default {
 		// 提交表单
 		submit() {
 			if (!check(this.form)) return;
-			let data = { ...this.form };
+			let data = { ...this.form,projectId:this.projectId };
 			data = this.objFilter(data);
 			const save = data => api.save(data);
 			const update = data => api.update(data);
@@ -514,12 +514,6 @@ export default {
 				this.hideModal();
 
 				if (this.isUpdate) {
-					// this.list.some((m, i,a) => {
-					// 	if (m.id == data.id) {
-					// 		a[i] = Object.assign(a[i],data);
-					// 		return true;
-					// 	}
-					// });
 					this.form = Object.assign(this.form, data);
 				} else {
 					this.getList();

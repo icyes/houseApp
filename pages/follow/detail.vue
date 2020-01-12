@@ -78,7 +78,6 @@ import api from '@/api/follow.js';
 import util from '@/utils';
 const defForm = {
 	id: null, //[up *]
-	projectId:null,//项目id
 	contactWay: '', // 联系方式
 	subject: '', // 主题
 	contactDetail: '', //联系详情
@@ -90,6 +89,7 @@ const defForm = {
 export default {
 	data() {
 		return {
+			projectId:null,//项目id
 			util,
 			isEdit: false,
 			form: defForm,
@@ -104,7 +104,6 @@ export default {
 		this.id = id;
 		this.indexes = indexes;
 		this.getDetail();
-		console.log('page', getCurrentPages());
 	},
 	computed: {
 		oldCusomterShow() {
@@ -125,7 +124,6 @@ export default {
 		// 获得用户详情
 		getDetail() {
 			api.info(this.id).then(res => {
-				console.log(res);
 				this.form = { ...res };
 				this.oldform = { ...res };
 			});

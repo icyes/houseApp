@@ -248,6 +248,14 @@ export default {
 		}
 	},
 	methods: {
+		// 影藏弹窗
+		hideModal(e) {
+			this.modalName = null;
+			// 为了让窗口显示时，滚动到最顶部，先改变滚动位置，才能生效
+			setTimeout(() => {
+				this.scrollTop = 100;
+			}, 300);
+		},
 		chooseHouse(item) {
 			this.form.houseId = item.id;
 			this.form.houseName = item.name;

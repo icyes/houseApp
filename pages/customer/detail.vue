@@ -282,7 +282,7 @@ export default {
 			// 性别选择索引下标
 			sourceWayArray: customerSource,
 			sexArray: gender,
-			form: defForm,
+			form: {...defForm},
 			purposePrice: [['商业', '住宅'], businessPrise],
 			multiIndex: [0, 0],
 			DemandIndex:[0,0],

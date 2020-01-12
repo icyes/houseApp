@@ -241,6 +241,7 @@ export default {
 	data() {
 		return {
 			util,
+			projectId:null,
 			multiIndex: [0, 0],
 			showMenu: false,
 			isEdit: false,
@@ -257,10 +258,10 @@ export default {
 		};
 	},
 	onLoad(option) {
-		console.log(option);
-		let { id, indexes } = option;
+		let { id, indexes,projectId } = option;
 		this.id = id;
 		this.indexes = indexes;
+		this.projectId = projectId;
 		this.getDetail();
 		console.log('page', getCurrentPages());
 	},
@@ -273,8 +274,7 @@ export default {
 		addFollow: function(target) {
 			if (!this.showMenu) return;
 			let form = this.form;
-			let projectId = this.id;
-			let url = `/pages/${target}/index?id=${projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}&idAddress=${form.idAddress}&idCard=${form.idCard}`;
+			let url = `/pages/${target}/index?id=${this.projectId}&name=${form.name}&mobile=${form.mobile}&showAddModal=${true}&idAddress=${form.idAddress}&idCard=${form.idCard}`;
 			this.showMenu = false;
 			util.navigateTo(url);
 		},
@@ -299,7 +299,6 @@ export default {
 		// 获得用户详情
 		getDetail() {
 			api.info(this.id).then(res => {
-				console.log(res);
 				this.form = { ...res };
 				this.oldform = { ...res };
 			});

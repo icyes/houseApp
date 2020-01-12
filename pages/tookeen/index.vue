@@ -30,7 +30,7 @@
 				<view
 					class="cu-item margin-tb padding-tb light shadow shadow-lg  bg-white"
 					style="min-height: 180rpx;"
-					@tap="link(`./detail?id=${item.id}&indexes=${index}&projectId=${form.projectId}`)"
+					@tap="link(`./detail?id=${item.id}&indexes=${index}&projectId=${projectId}`)"
 					:class="modalName == 'move-box-' + index ? 'move-cur' : ''"
 					v-for="(item, index) in list"
 					:key="index"
@@ -181,7 +181,6 @@ import {
 	Age
 } from '@/utils/common/data.js';
 const defForm = {
-	projectId: null, //项目id
 	id: null, //[up *]
 	name: '', //* 姓名
 	sex: 0, //性别
@@ -200,6 +199,7 @@ export default {
 		});
 
 		return {
+			projectId: null, //项目id
 			total: null,
 			// 页面抽屉显示判断
 			drawerShow: false,
@@ -213,7 +213,7 @@ export default {
 			sourceWayArray: customerSource,
 			sexArray: gender,
 			defForm,
-			form: defForm,
+			form: {...defForm},
 			purposePrice: [['商业', '住宅'], businessPrise],
 			businessPrise, //商业价格
 			residentialPrice, //住宅价格
@@ -237,8 +237,7 @@ export default {
 	},
 
 	onLoad(option) {
-		console.log(option);
-		this.form.projectId = option.id;
+		this.projectId = option.id;
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -359,7 +358,7 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
-				projectId: this.form.projectId,
+				projectId: this.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
@@ -487,7 +486,7 @@ export default {
 		// 提交表单
 		submit() {
 			if (!this.check()) return;
-			let data = { ...this.form };
+			let data = { ...this.form ,projectId:this.projectId};
 			data = this.objFilter(data);
 			const save = data => tookeen.save(data);
 			const update = data => tookeen.update(data);

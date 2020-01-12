@@ -1,7 +1,6 @@
 import util from '@/utils/index.js';
 // 访客记录表
 export const defForm = {
-	projectId: null, //项目id
 	id: null, //[up *]
 	name: '', //* 姓名
 	sex: null, //性别

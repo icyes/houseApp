@@ -115,7 +115,6 @@ import util from '@/utils/index.js';
 
 const defForm = {
 	id: null, //[up *]
-	projectId: null, //项目id
 	contactWay: '', // 联系方式
 	subject: '', // 主题
 	contactDetail: '', //联系详情
@@ -143,7 +142,7 @@ export default {
 			sourceWayArray: ['自然上访', '员工邀约', '老客户介绍', '路过', '朋友介绍', '广告媒体', '其他'],
 			statusArray: ['来电', '认筹', '签约', '购买'],
 			sexArray: ['男', '女'],
-			form: defForm,
+			form: {...defForm},
 			// 列表
 			list: null,
 			keyWord: '', //搜索关键字姓名和手机
@@ -162,7 +161,7 @@ export default {
 			this.form.name = name;
 			this.form.mobile = mobile;
 		}
-		this.form.projectId = Number(option.id);
+		this.projectId = Number(option.id);
 		this.getList();
 		uni.$on('update', obj => {
 			let { indexes, data } = obj;
@@ -244,7 +243,7 @@ export default {
 		getList() {
 			this.isLoad = false;
 			let data = {
-				projectId: this.form.projectId,
+				projectId: this.projectId,
 				keyWord: this.keyWord,
 				page: this.pageNum,
 				pageSize: this.pageSize
@@ -317,7 +316,7 @@ export default {
 			this.modalName = null;
 			// 为了让窗口显示时，滚动到最顶部，先改变滚动位置，才能生效
 			setTimeout(() => {
-				this.form = { ...defForm };
+				this.form = Object.assign(this.form,this.defForm);
 				this.scrollTop = 100;
 			}, 300);
 		},
@@ -375,7 +374,7 @@ export default {
 		// 提交表单
 		submit() {
 			// if (!this.check()) return;
-			let data = { ...this.form };
+			let data = { ...this.form ,projectId:this.projectId};
 			data = this.objFilter(data);
 			const save = data => api.save(data);
 			const update = data => api.update(data);

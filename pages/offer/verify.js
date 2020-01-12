@@ -1,7 +1,6 @@
 	import util from '@/utils/index.js';
 		// 验证表单
 	export const defForm = {
-		projectId: null,
 		id: null, //[up *]
 		name: null, //认购者信息
 		sex: 1, //性别
